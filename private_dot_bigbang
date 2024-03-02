@@ -1,0 +1,116 @@
+export BIGBANG_VERSION="2024-03-02"
+
+# If this script is not sourced, it does nothing
+(return 0 2>/dev/null) || kill -INT $$
+
+# Useful aliases
+alias z='tmux attach'
+alias k=just
+alias l=ls
+alias ll="ls -lh"
+alias la="ls -la"
+alias cls="clear"
+alias L=less
+alias croc='croc --relay europe.cybermoped.com'
+
+# chezmoi management
+alias cz="chezmoi"
+[ -e /usr/share/bash-completion/completions/chezmoi ] && {
+	. /usr/share/bash-completion/completions/chezmoi 
+}
+complete -o default -o nospace -F __start_chezmoi cz
+
+# PATH
+[ -d ${HOME}/bin ] && export PATH=${PATH}:${HOME}/bin
+
+# MANPATH
+[ -d "${HOME}/.local/share/man" ] && \
+	export MANPATH=${MANPATH}:${HOME}/.local/share/man
+
+## just completion and alias
+which just > /dev/null && {
+	[ -e /usr/share/bash-completions/completion/just ] && {
+		. /usr/share/bash-completions/completion/just 
+	} || {
+		source <(just --completions bash)
+	}
+	complete -F _just -o bashdefault -o default k
+}
+
+## fzf completion (arch)
+[ -e /usr/share/fzf/completion.bash ] && \
+	source /usr/share/fzf/completion.bash
+## fzf completion (ubuntu)
+[ -e /usr/local/share/bash-completion/completions/fzf-completion.bash ] && \
+	source /usr/local/share/bash-completion/completions/fzf-completion.bash 
+
+# sudo aliases and their completions
+sudoc() {
+	prog=${1:-cryptsetup}
+	which ${prog} > /dev/null 2>&1 || return
+	alias ${prog:0:3}="sudo ${prog}"
+	. "/usr/share/bash-completion/completions/${prog}"
+	complete -F _${prog} ${prog:0:3}
+}
+complete -W "cryptsetup btrfs" sudoc
+# systemctl and btrfs can always be safely aliased 
+# however, cryptsetup causes bash -c '. ~/.bigbang' to fail
+sudoc systemctl
+sudoc btrfs
+
+# Useful exports
+export LESS="FRIX"
+export EDITOR=vim
+export GIT_PAGER="less -erX"
+export TERM=xterm-256color
+
+# ANSI colors
+# BASIC
+export RED="\e[0;31m" GRN="\e[0;32m" YEL="\e[0;33m"
+export BLU="\e[0;34m" MAG="\e[0;35m" CYA="\e[0;36m"
+# BRIGHT
+export BRED="\e[0;91m" BGRN="\e[0;92m" BYEL="\e[0;93m"
+export BBLU="\e[0;94m" BMAG="\e[0;95m" BCYA="\e[0;96m"
+# BOLD (GRAS)
+export GRED="\e[1;31m" GGRN="\e[1;32m" GYEL="\e[1;33m"
+export GBLU="\e[1;34m" GMAG="\e[1;35m" GCYA="\e[1;36m"
+# BRIGHT AND BOLD
+export BGRED="\e[1;91m" BGGRN="\e[1;92m" BGYEL="\e[1;93m"
+export BGBLU="\e[1;94m" BGMAG="\e[1;95m" BGCYA="\e[1;96m"
+# SPECIAL
+export BOL="\e[1m" REV="\e[7m" UND="\e[4m" NOC="\e[0m"
+
+# Control functions
+header() { echo -e "\e[1;93;44m\e[K${@}\e[K${NOC}" ; }
+ok()     { echo -e "${GGRN}${@}${NOC}" ; }
+blue()   { echo -e "${BLU}${@}${NOC}"  ; }
+warn()   { echo -e "${GYEL}${@}${NOC}" ; }
+fail()   { echo -e "${GRED}${@}${NOC}" ; }
+bold()   { echo -e "${BOL}${@}${NOC}"  ; }
+die()    { fail ${@} ; exit 42 ; }
+export -f header ok blue warn fail bold die
+
+# rename a file or directory with vim-like behaviour
+en() {
+	oldname="${@}"
+	read -p "> " -ei "${oldname}" "newname"
+	mv -iv "${oldname}" "${newname}"
+}
+
+PS1="[\u@\h \W]\$"
+[ -e ~/.workstation ] && PS1="\h:\w\$ "
+
+# show when in chezmoi subshell
+[ -z ${CHEZMOI_SUBSHELL} ] || PS1="${BGYEL}[chezmoi]${NOC}-${PS1}"
+
+alias bigbang='. ${HOME}/.bigbang ; blue "bigbang v${BIGBANG_VERSION}"'
+
+# Wipe history when we close shell
+finish() {
+  history -c
+  > $HOME/.bash_history
+	clear
+}
+trap finish EXIT
+
+# vim: filetype=bash

@@ -97,7 +97,7 @@ en() {
 	mv -iv "${oldname}" "${newname}"
 }
 
-PS1="[\u@\h \W]\$"
+PS1="[\u@\h \W]\$ "
 [ -e ~/.workstation ] && PS1="\h:\w\$ "
 
 # show when in chezmoi subshell

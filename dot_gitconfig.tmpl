@@ -1,0 +1,24 @@
+[user]
+	name = {{ .chezmoi.username }}
+	email = {{ .chezmoi.username }}@{{ .chezmoi.hostname }}.lyderic.net
+
+[core]
+	editor = vim
+
+[push]
+	default = simple
+
+[alias]
+	a = add
+	b = branch -avv
+	cav = commit -a -v
+	ci = commit
+	co = checkout
+	l = log --oneline --show-notes --decorate --graph -10
+	ld = log --date=format:\"%d/%m/%y %H:%M\" --pretty=format:\"%cd [%h] %s\"
+	ll = log --date=format:\"%d/%m/%y %H:%M\" --pretty=format:\"* %Creset%cd %C(yellow)%h%Creset%d %s\" -10 -- .
+	ls = show --name-status
+	ignored = ls-files --other --ignored --exclude-standard
+	s = status -bs
+[pull]
+	rebase = false

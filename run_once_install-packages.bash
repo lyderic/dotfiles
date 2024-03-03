@@ -32,6 +32,8 @@ ubuntu() {
 	curl -sL --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh \
 		| sudo bash -s -- --to /usr/local/bin && ok "just successfully installed"
 	}
+	# bat is in ubuntu's repo but gets installed as 'batcat'
+	sudo ln -s /usr/bin/batcat /usr/bin/bat
 }
 
 # DISPLAY
@@ -47,6 +49,7 @@ export NOC="\e[0m"
 # Packages that are common to arch and ubuntu
 read -r -d '' COMMON_PACKAGES << \
 ----------------------------------------------------------------
+bat
 bash
 bash-completion
 curl
@@ -62,7 +65,6 @@ vim
 # Packages present only on archlinux
 read -r -d '' ARCH_PACKAGES << \
 ----------------------------------------------------------------
-bat
 croc
 diffutils
 duf

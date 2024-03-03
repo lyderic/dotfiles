@@ -2,9 +2,12 @@
 
 main() {
 	[ -e "${HOME}/.bigbang" ] || die "no .bigbang found!"
-	grep --quiet ".bigbang" "${HOME}/.bashrc" || {
-		echo "source \$HOME/.bigbang" | tee -a "${HOME}/.bashrc"
-	}
+	for name in bigbang workstation ; do
+		[ -e "${HOME}/.${name}" ] || continue
+		grep --quiet "${name}" "${HOME}/.bashrc" || {
+			echo "source \$HOME/.${name}" | tee -a "${HOME}/.bashrc"
+		}
+	done
 	cyan ".bashrc set"
 }
 

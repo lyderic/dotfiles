@@ -33,7 +33,7 @@ ubuntu() {
 		| sudo bash -s -- --to /usr/local/bin && ok "just successfully installed"
 	}
 	# bat is in ubuntu's repo but gets installed as 'batcat'
-	sudo ln -s /usr/bin/batcat /usr/bin/bat
+	[ -x /usr/bin/bat ] || sudo ln -s /usr/bin/batcat /usr/bin/bat
 }
 
 # DISPLAY

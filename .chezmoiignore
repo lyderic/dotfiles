@@ -1,3 +1,20 @@
-{{ if (not (stat (joinPath .chezmoi.homeDir ".workstation"))) }}
+{{/*
+1. We check that the config file exist at all.
+2. Then we check if there is a workstation variable and if
+   it set to true
+If the 'workstation' variable is not found or set to false,
+then we write '.workstation' in the ignore file.
+So, to have this file deployed on a workstation,
+create the file '~/.config/chezmoi/chezmoi.yaml' with 
+the following content:
+data:
+  workstation: true
+*/}}
+{{- with .chezmoi.config.data -}}
+{{- with .workstation -}}
+{{- else -}}
 .workstation
-{{ end }}
+{{- end -}}
+{{- else -}}
+.workstation
+{{- end }}

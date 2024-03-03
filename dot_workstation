@@ -21,11 +21,6 @@ alias xclip="xclip -selection c"
 # easily reload workstation init and show version
 alias workstation='. ${HOME}/.workstation ; blue "workstation v${WORKSTATION_VERSION}"'
 
-# hoc always run as root
-command -v hoc > /dev/null && {
-	alias hoc="sudo /usr/local/bin/hoc"
-}
-
 # nice display of .tsv files
 alias colpsv='column -ts "|"'
 

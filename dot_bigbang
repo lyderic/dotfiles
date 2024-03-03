@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="2024-03-02"
+export BIGBANG_VERSION="2024-03-03"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -98,10 +98,6 @@ en() {
 }
 
 PS1="[\u@\h \W]\$ "
-[ -e ~/.workstation ] && PS1="\h:\w\$ "
-
-# show when in chezmoi subshell
-[ -z ${CHEZMOI_SUBSHELL} ] || PS1="${BGYEL}[chezmoi]${NOC}-${PS1}"
 
 alias bigbang='. ${HOME}/.bigbang ; blue "bigbang v${BIGBANG_VERSION}"'
 
@@ -112,5 +108,13 @@ finish() {
 	clear
 }
 trap finish EXIT
+
+[ -e ~/.workstation ] && {
+	PS1="\h:\w\$ "
+	source ~/.workstation
+}
+
+# show when in chezmoi subshell
+[ -z ${CHEZMOI_SUBSHELL} ] || PS1="${BGYEL}[chezmoi]${NOC}-${PS1}"
 
 # vim: filetype=bash

@@ -26,7 +26,7 @@ arch() {
 ubuntu() {
 	local packages="${COMMON_PACKAGES} ${UBUNTU_PACKAGES}"
 	header "ubuntu packages"
-	sudo apt update && sudo apt -y install ${packages}
+	sudo apt-get update && sudo apt-get -y install ${packages}
 	# As of 22.04, just is not in ubuntu's repos :(
 	[ -x /usr/local/bin/just ] || {
 	curl -sL --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh \

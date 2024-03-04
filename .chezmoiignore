@@ -10,16 +10,18 @@ workstation, create the file '~/.config/chezmoi/chezmoi.yaml' with
 the following content:
 data:
   workstation: true
-We use a similar mecanism to manage ~/justfile. Only the machines
 that allow it will have it.
 */}}
+
 {{ chezmoi:template:missing-key=zero }}
 {{- with .workstation -}}
 {{- else -}}
 {{- print ".workstation\n" -}}
 {{- print ".gnupg/gpg-agent.conf\n" -}}
 {{- end -}}
-{{- with .justfile -}}
-{{- else -}}
+
+{{/* Don't overwrite ~/justfile if found */}}
+{{- if stat (joinPath .chezmoi.homeDir "justfile") -}}
 {{- print "justfile\n" -}}
 {{- end -}}
+

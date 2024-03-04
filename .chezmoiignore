@@ -2,16 +2,24 @@
 We check the workstation variable in the config file
 (~/.config/chezmoi/chezmoi.yaml).
 If the 'workstation' variable is not found, if it is set to false,
-or if the config file doesn't exist, then we write '.workstation'
-in the ignore file.
+or if the config file doesn't exist, then we write the files that
+go only on a workstation (~/.workstation, ~/.gnupg/gpg-agent.conf,
+etc.) to the ignore file.
 Therefore, to have the .workstation dotfile deployed on a 
 workstation, create the file '~/.config/chezmoi/chezmoi.yaml' with 
 the following content:
 data:
   workstation: true
+We use a similar mecanism to manage ~/justfile. Only the machines
+that allow it will have it.
 */}}
 {{ chezmoi:template:missing-key=zero }}
 {{- with .workstation -}}
 {{- else -}}
-{{ print ".workstation\n" }}
+{{- print ".workstation\n" -}}
+{{- print ".gnupg/gpg-agent.conf\n" -}}
+{{- end -}}
+{{- with .justfile -}}
+{{- else -}}
+{{- print "justfile\n" -}}
 {{- end -}}

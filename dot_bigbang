@@ -109,6 +109,9 @@ finish() {
 }
 trap finish EXIT
 
+# Always get correct title in Gnome Terminal's tabs
+PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME}\007"'
+
 [ -e ~/.workstation ] && {
 	PS1="\h:\w\$ "
 	source ~/.workstation

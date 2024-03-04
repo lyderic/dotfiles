@@ -105,7 +105,4 @@ fi
 	ssh-add -l > /dev/null || ssa && echo -e "${GRN}[ssa] ssh keys loaded${NOC}"
 }
 
-# Always get correct title in Gnome Terminal's tabs
-PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME}\007"'
-
 # vim: filetype=sh

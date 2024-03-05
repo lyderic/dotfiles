@@ -53,9 +53,9 @@ geolocate:
 version:
 	# {{version}}
 
-# DYNAMIC VARIABLES & SETTINGS
+# DYNAMIC VARIABLES, SETTINGS AND IMPORTS
 
+import? "justfile-host"
 distro := `grep ^ID= /etc/os-release | cut -d= -f2`
-
 set shell := ["bash","-uc"]
 # vim: ft=make

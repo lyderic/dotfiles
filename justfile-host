@@ -1,0 +1,12 @@
+alias ss := sstatus
+
+# [ss] status
+@sstatus:
+	neofetch
+	duf --only local
+
+# what does this machine do?
+quid:
+	# This machine does stuff
+
+# vim: ft=make

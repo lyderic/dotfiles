@@ -25,3 +25,8 @@ that allow it will have it.
 {{- print "justfile\n" -}}
 {{- end -}}
 
+{{/* Don't overwrite ~/justfile-host if found */}}
+{{- if stat (joinPath .chezmoi.homeDir "justfile-host") -}}
+{{- print "justfile-host\n" -}}
+{{- end -}}
+

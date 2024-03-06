@@ -16,6 +16,10 @@ machine-update:
 	#!/bin/bash
 	chezmoi update
 	blue "distro: {{distro}}"
+	[ -x /sbin/apk ] && {
+		sudo apk -U upgrade
+		sudo apk -v cache clean
+	}
 	[ -x /usr/bin/apt ] && {
 		sudo apt-get -y update
 		sudo apt-get -y upgrade

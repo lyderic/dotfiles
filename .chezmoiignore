@@ -19,8 +19,3 @@ that allow it will have it.
 {{- print ".workstation\n" -}}
 {{- print ".gnupg/gpg-agent.conf\n" -}}
 {{- end -}}
-
-{{/* Don't overwrite ~/justfile if found */}}
-{{- if stat (joinPath .chezmoi.homeDir "justfile") -}}
-{{- print "justfile\n" -}}
-{{- end -}}

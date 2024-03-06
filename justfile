@@ -1,9 +1,9 @@
-version := "202403041315"
+common-version := "202403062028"
 
 alias up  := machine-update
-alias ve  := version
 alias col := colors
 alias geo := geolocate
+alias var := variables
 
 _listing:
 	@printf "${BLU}{{justfile()}}${NOC}\n"
@@ -49,9 +49,9 @@ colors:
 geolocate:
 	curl -sf "http://ip-api.com/line/?fields=query,city,country,isp"
 
-# [ve]rsion of this script
-version:
-	# {{version}}
+# [var] evaluate variables
+variables:
+	just --evaluate
 
 # DYNAMIC VARIABLES, SETTINGS AND IMPORTS
 

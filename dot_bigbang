@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="2024-03-03"
+export BIGBANG_VERSION="2024-03-07"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -97,7 +97,7 @@ en() {
 	mv -iv "${oldname}" "${newname}"
 }
 
-PS1="[\u@\h \W]\$ "
+PS1='[\u@\h \W]\$ '
 
 alias bigbang='. ${HOME}/.bigbang ; blue "bigbang v${BIGBANG_VERSION}"'
 
@@ -113,7 +113,7 @@ trap finish EXIT
 PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME%%.*}\007"'
 
 [ -e ~/.workstation ] && {
-	PS1="\h:\w\$ "
+	PS1='\h:\w\$ '
 	source ~/.workstation
 }
 

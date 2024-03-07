@@ -14,9 +14,9 @@ _listing:
 [no-exit-message]
 up *confirm="true":
 	#!/bin/bash
-	blue "[chezmoi]"
+	echo -e "\e[34m[chezmoi]\e[0m"
 	chezmoi update
-	blue "[distro:{{distro}}]"
+	echo -e "\e[34m[distro:{{distro}}]\e[0m"
 	[ -x /sbin/apk ] && {
 		sudo apk -U upgrade
 		sudo apk -v cache clean

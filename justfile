@@ -1,6 +1,5 @@
-common-version := "202403062116"
+common-version := "202403071022"
 
-alias up  := machine-update
 alias col := colors
 alias geo := geolocate
 alias var := variables
@@ -10,28 +9,30 @@ _listing:
 	@just --unsorted --list --list-heading='' --list-prefix=' • ' \
 		| grep -v 'alias for'
 
-# [up]date distribution and configuration
+# if 'false' updates are unattended
+# [up]date distro and config
 [no-exit-message]
-machine-update: 
+up *confirm="true":
 	#!/bin/bash
+	blue "[chezmoi]"
 	chezmoi update
-	blue "distro: {{distro}}"
+	blue "[distro:{{distro}}]"
 	[ -x /sbin/apk ] && {
 		sudo apk -U upgrade
 		sudo apk -v cache clean
 	}
 	[ -x /usr/bin/apt ] && {
-		sudo apt-get -y update
-		sudo apt-get -y upgrade
-		sudo apt-get -y dist-upgrade
-		sudo apt-get -y autoremove
-		sudo apt-get -y autoclean
-		sudo apt-get -y clean
+		[ "{{confirm}}" == "true" ] && yes="-y"
+		sudo apt-get ${yes} update
+		sudo apt-get ${yes} upgrade
+		sudo apt-get ${yes} dist-upgrade
+		sudo apt-get ${yes} autoremove
+		sudo apt-get ${yes} autoclean
+		sudo apt-get ${yes} clean
 	}
-	[ -x /usr/bin/flatpak ] && flatpak update
-	[ -x /usr/bin/snap ] && sudo snap refresh
 	[ -x /usr/bin/pacman ] && {
-			sudo pacman -Syu
+		[ "{{confirm}}" == "true" ] || noconfirm="--noconfirm"
+			sudo pacman -Syu ${noconfirm}
 			sudo paccache -rk 1
 	}
 

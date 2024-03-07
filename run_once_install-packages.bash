@@ -49,13 +49,14 @@ export NOC="\e[0m"
 # Packages that are common to arch and ubuntu
 read -r -d '' COMMON_PACKAGES << \
 ----------------------------------------------------------------
-bat
 bash
 bash-completion
+bat
 curl
 file
 git
 htop
+less
 sudo
 tmux
 tree

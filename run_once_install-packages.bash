@@ -7,6 +7,7 @@ main() {
 	case "${DISTRO}" in
 		"ubuntu"|"debian") ubuntu ;;
 		"arch"|"archarm")  arch   ;;
+		"alpine")          alpine ;;
 		*) die "${DISTRO}: only archlinux and ubuntu are supported" ;;
 	esac
 	cyan "base packages installed"
@@ -34,6 +35,12 @@ ubuntu() {
 	}
 	# bat is in ubuntu's repo but gets installed as 'batcat'
 	[ -x /usr/bin/bat ] || sudo ln -s /usr/bin/batcat /usr/bin/bat
+}
+
+alpine() {
+	header "alpine packages"
+	sudo apk update
+	sudo apk add ${COMMON_PACKAGES}
 }
 
 # DISPLAY

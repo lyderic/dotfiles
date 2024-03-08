@@ -38,9 +38,10 @@ ubuntu() {
 }
 
 alpine() {
+	local packages="${COMMON_PACKAGES} ${ARCH_PACKAGES}"
 	header "alpine packages"
 	sudo apk update
-	sudo apk add ${COMMON_PACKAGES}
+	sudo apk add ${packages}
 }
 
 # DISPLAY
@@ -62,6 +63,7 @@ bat
 curl
 file
 git
+grep
 htop
 less
 sudo

@@ -101,6 +101,7 @@ fzf
 gdu
 just
 the_silver_searcher
+vimdiff
 which
 ----------------------------------------------------------------
 

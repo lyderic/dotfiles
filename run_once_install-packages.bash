@@ -38,7 +38,7 @@ ubuntu() {
 }
 
 alpine() {
-	local packages="${COMMON_PACKAGES} ${ARCH_PACKAGES}"
+	local packages="${COMMON_PACKAGES} ${ALPINE_PACKAGES}"
 	header "alpine packages"
 	sudo apk update
 	sudo apk add ${packages}
@@ -90,6 +90,18 @@ which
 read -r -d '' UBUNTU_PACKAGES << \
 ----------------------------------------------------------------
 silversearcher-ag
+----------------------------------------------------------------
+
+# Packages present only on alpine
+read -r -d '' ALPINE_PACKAGES << \
+----------------------------------------------------------------
+croc
+diffutils
+fzf
+gdu
+just
+the_silver_searcher
+which
 ----------------------------------------------------------------
 
 main ${@}

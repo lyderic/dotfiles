@@ -1,0 +1,61 @@
+*litt*  Litt User Manual
+
+A 'litt' file is a file with extension 'lkl'.
+
+It is basically a markdown file with a couple of additions,
+notably:
+
+1. The keymap is set to 'lkaccents' (allows [e -> é etc.)
+2. Spelling is activated in French
+3. File is sanitized each time it is saved (non breaking spaces added etc.)
+4. Some abbreviations are set (e.g. ete -> été)
+5. The revision system is loaded (see below)
+6. Command JournalTime is added 
+
+===========================================================================
+
+SHORTCUTS
+
+To list the litt related shorcuts, make sure you are in a .lkl buffer
+and hit: <leader>h
+
+===========================================================================
+
+THE REVISION SYSTEM
+
+A "revision" is any bold text between square brackets. That is to say, as we
+use markdown, notes surrounded by '[**' and '**]'.
+
+To search revisions and open them in a Quickfix window, use the :Revision()
+function (shortcut: <leader>re).
+
+To insert a revision while in insert more, hit '[' three time ([[[).
+
+===========================================================================
+
+FILES
+
+.vim
+├── doc
+│   ├── litt.txt [this help]
+│   └── tags
+├── ftdetect
+│   └── litt.vim [set up a "litt" file type]
+├── ftplugin
+│   └── litt
+│       ├── abbreviations.vim [useful iabbr to write French]
+│       ├── help.vim [what is displayed with <leader>h]
+│       ├── main.vim [various setups]
+│       ├── revision.vim [the "revision" system]
+│       └── sanitize.vim [sanitize at each buffer write]
+├── keymap
+│   └── lkaccents.vim [French accents: [e -> é etc.]
+├── plugin
+│   └── goyo.vim [distraction-free writing]
+├── spell
+│   ├── fr.utf-8.spl
+│   └── fr.utf-8.sug
+└── syntax
+    └── litt.vim [basically a copy of markdown syntax]
+
+vim: ft=help

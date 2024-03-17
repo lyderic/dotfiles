@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="2024-03-16"
+export BIGBANG_VERSION="2024-03-17"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -78,11 +78,15 @@ export GBLU="\e[1;34m" GMAG="\e[1;35m" GCYA="\e[1;36m"
 # BRIGHT AND BOLD
 export BGRED="\e[1;91m" BGGRN="\e[1;92m" BGYEL="\e[1;93m"
 export BGBLU="\e[1;94m" BGMAG="\e[1;95m" BGCYA="\e[1;96m"
+# BACKGROUNDS
+export BKRED="\e[41m" BKGRN="\e[42m" BKYEL="\e[43m"
+export BKBLU="\e[44m" BKMAG="\e[45m" BKCYA="\e[46m"
 # SPECIAL
-export BOL="\e[1m" REV="\e[7m" UND="\e[4m" NOC="\e[0m"
+export BOL="\e[1m" DIM="\e[2m" ITA="\e[3m"
+export UND="\e[4m" REV="\e[7m" NOC="\e[0m"
 
 # Control functions
-header() { echo -e "\e[1;93;44m\e[K${@}\e[K${NOC}" ; }
+header() { echo -e "${BYEL}${BOL}${BKBLU}\e[K${@}${NOC}" ; }
 ok()     { echo -e "${GGRN}${@}${NOC}" ; }
 blue()   { echo -e "${BLU}${@}${NOC}"  ; }
 cyan()   { echo -e "${CYA}${@}${NOC}"  ; }

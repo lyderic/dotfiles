@@ -53,19 +53,19 @@ colors:
 # show ANSI codes
 ansi:
 	#!/bin/bash
-	for i in $(seq 1 4) ; do
-		echo -ne "\e[${i}m ${i}\e[m "
-	done
-	# we don't display 5 & 6, as they are blinking
-	# which is annoying to the eye
-	echo -e " 5  6 \e[7m 7\e[m"
-	for i in $(seq 31 37) ; do
-		echo -ne "\e[${i}m${i} "
+	for i in 1 2 3 4 7 9; do
+		echo -ne "\e[${i}m  ${i}\e[m "
+	done ; echo
+	for i in $(seq 30 37) ; do
+		echo -ne "\e[${i}m ${i} "
 	done ; echo -e "\e[m"
-	for i in $(seq 91 97) ; do
-		echo -ne "\e[${i}m${i} "
+	for i in $(seq 90 97) ; do
+		echo -ne "\e[${i}m ${i} "
 	done ; echo -e "\e[m"
-	for i in $(seq 41 47) ; do
+	for i in $(seq 40 47) ; do
+		echo -ne "\e[${i}m ${i} "
+	done ; echo -e "\e[m"
+	for i in $(seq 100 107) ; do
 		echo -ne "\e[${i}m${i} "
 	done ; echo -e "\e[m"
 

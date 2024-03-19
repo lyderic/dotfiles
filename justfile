@@ -50,6 +50,25 @@ colors:
 	done | column -t 
 	printf "${NOC}"
 
+# show ANSI codes
+ansi:
+	#!/bin/bash
+	for i in $(seq 1 4) ; do
+		echo -ne "\e[${i}m ${i}\e[m "
+	done
+	# we don't display 5 & 6, as they are blinking
+	# which is annoying to the eye
+	echo -e " 5  6 \e[7m 7\e[m"
+	for i in $(seq 31 37) ; do
+		echo -ne "\e[${i}m${i} "
+	done ; echo -e "\e[m"
+	for i in $(seq 91 97) ; do
+		echo -ne "\e[${i}m${i} "
+	done ; echo -e "\e[m"
+	for i in $(seq 41 47) ; do
+		echo -ne "\e[${i}m${i} "
+	done ; echo -e "\e[m"
+
 # [geo] where am I?
 geolocate:
 	curl -sf "http://ip-api.com/line/?fields=query,city,country,isp"

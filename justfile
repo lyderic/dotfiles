@@ -36,7 +36,12 @@ up *confirm="true":
 		[ "{{confirm}}" == "true" ] || noconfirm="--noconfirm"
 			sudo pacman -Syu ${noconfirm}
 			sudo paccache -rk 1
-			printf "\e[7;93m";sudo pacdiff -o;printf "\e[m"
+			printf "\e[7;93m"
+			reviews=$(sudo pacdiff -o)
+			orphans=$(sudo pacman -Qtd)
+			[ -z "${reviews}" ] || echo "*** REVIEWS ***\n${reviews}"
+			[ -z "${orphans}" ] || echo "*** ORPHANS ***\n${orphans}"
+			printf "\e[m"
 	}
 
 # [col] show bigbang colors

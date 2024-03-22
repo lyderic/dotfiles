@@ -44,6 +44,12 @@ up *confirm="true":
 			printf "\e[m"
 	}
 
+# remove archlinux orphans
+[no-exit-message]
+arch-remove-orphans:
+	pacman -Qtd
+	sudo pacman -Qtdq | sudo pacman -Rns -
+
 # [col] show bigbang colors
 colors:
 	#!/bin/bash

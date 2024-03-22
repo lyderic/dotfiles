@@ -39,8 +39,8 @@ up *confirm="true":
 			printf "\e[7;93m"
 			reviews=$(sudo pacdiff -o)
 			orphans=$(sudo pacman -Qtd)
-			[ -z "${reviews}" ] || echo "*** REVIEWS ***\n${reviews}"
-			[ -z "${orphans}" ] || echo "*** ORPHANS ***\n${orphans}"
+			[ -z "${reviews}" ] || echo -e "*** REVIEWS ***\n${reviews}"
+			[ -z "${orphans}" ] || echo -e "*** ORPHANS ***\n${orphans}"
 			printf "\e[m"
 	}
 

@@ -34,6 +34,7 @@ up *confirm="true":
 		[ "{{confirm}}" == "true" ] || noconfirm="--noconfirm"
 			sudo pacman -Syu ${noconfirm}
 			sudo paccache -rk 1
+			printf "\e[7;93m";sudo pacdiff -o;printf "\e[m"
 	}
 
 # [col] show bigbang colors

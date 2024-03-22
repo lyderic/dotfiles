@@ -16,6 +16,8 @@ up *confirm="true":
 	#!/bin/bash
 	echo -e "\e[34m[chezmoi]\e[0m"
 	chezmoi update
+	echo -e "\e[34m[chezmoi (root)]\e[0m"
+	sudo chezmoi update
 	echo -e "\e[34m[distro:{{distro}}]\e[0m"
 	[ -x /sbin/apk ] && {
 		sudo apk -U upgrade

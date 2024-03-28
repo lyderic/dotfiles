@@ -47,6 +47,7 @@ up *confirm="true":
 # remove archlinux orphans
 [no-exit-message]
 arch-remove-orphans:
+	[ -x /usr/bin/pacman ]
 	pacman -Qtd
 	sudo pacman -Qtdq | sudo pacman -Rns -
 

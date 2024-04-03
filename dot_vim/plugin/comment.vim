@@ -13,9 +13,9 @@ function! s:comment(...)
 	normal! my
 	let l:idx = a:1
 	for l:line in getline(a:1,a:2)
-		let l:comcom = l:idx.'s/^/'.l:comstr.'/'
+		let l:comcom = l:idx.'s/\v^(\s*)/\1'.l:comstr.'/'
 		if l:line =~ '^\s*'.l:comstr
-			let l:comcom = l:idx.'s/^\s*'.l:comstr.'//'
+			let l:comcom = l:idx.'s/\v^(\s*)'.l:comstr.'/\1/'
 		endif
 		silent! execute l:comcom
 		let l:idx += 1

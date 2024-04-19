@@ -1,0 +1,12 @@
+#!/usr/bin/env -S just --justfile
+
+_listing:
+	@printf "${BLU}{{justfile()}}${NOC}\n"
+	@{{justfile()}} --unsorted --list --list-heading='' --list-prefix=' • ' \
+		#| grep -v 'alias for'
+
+test:
+	# something to test
+
+set shell := ["bash","-uc"]
+# vim: ft=make

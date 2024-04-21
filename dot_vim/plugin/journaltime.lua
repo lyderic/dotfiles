@@ -5,17 +5,13 @@ function main()
 	end
 	local now = os.date("*t", os.time())
 	local message = localise(lang[vim.b.langnr], now)
-	local b = vim.buffer()
-	local pos = vim.window().line
-	-- if current line not empty, we insert a new line first
-	if vim.line() ~= "" then
-		b:insert("", pos)
-		b:insert(message, pos + 1)
-		vim.command("normal }jo")
+	if string.len(vim.line()) > 0 then
+		vim.command("normal 2o")
 	else
-		b:insert(message, pos)
-		vim.command("normal jo")
+		vim.command("normal o")
 	end
+	vim.command("normal i"..message)
+	vim.command("normal 2o")
 end
 
 function usage()

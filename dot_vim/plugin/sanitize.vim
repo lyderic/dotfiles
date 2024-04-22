@@ -38,8 +38,8 @@ function s:firstpass(r)
 	silent! execute a:r.'s/\.\.\./…/g'
 	"French quotes
 	silent! execute a:r.'s/\v"(.{-})"/« \1 »/g'
-	"nbsp before double punctuation (between 'iskeyword' and ?!;:»)
-	silent! execute a:r.'s/\v([A-Za-z0-9.])\s*([?!;:»])/\1 \2/g'
+	"nbsp before double punctuation (between 'iskeyword' and ?!;:»%)
+	silent! execute a:r.'s/\v([A-Za-z0-9.])\s*([?!;:»%])/\1 \2/g'
 	"space after some punctuation (between ?!;:», and a letter)
 	"note: we exclude '.' because of the URLs e.g. 'lyderic.com' would
 	"become 'lyderic. com'

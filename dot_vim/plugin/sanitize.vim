@@ -38,12 +38,14 @@ function s:firstpass(r)
 	silent! execute a:r.'s/\.\.\./…/g'
 	"French quotes
 	silent! execute a:r.'s/\v"(.{-})"/« \1 »/g'
-	"nbsp before double punctuation (between 'iskeyword' and ?!;:»%)
-	silent! execute a:r.'s/\v([A-Za-z0-9.])\s*([?!;:»%])/\1 \2/g'
+	"nbsp before double punctuation (between 'iskeyword' and ?!;:%€)
+	silent! execute a:r.'s/\v(\k)\s*([?!;:%€])/\1 \2/g'
+	"nbsp before » (between 'iskeyword' or punctuation and »)
+	silent! execute a:r.'s/\v(\k|[.?!])\s*»/\1 »/g'
 	"space after some punctuation (between ?!;:», and a letter)
-	"note: we exclude '.' because of the URLs e.g. 'lyderic.com' would
-	"become 'lyderic. com'
-	silent! execute a:r.'s/\v([?!;:»,])([A-Za-z])/\1 \2/g'
+	"note: we don't include '.' otherwise URLs e.g. 'a.b.com' would
+	"become 'a. b. com'
+	silent! execute a:r.'s/\v([?!;:»,])(\K)/\1 \2/g'
 	"nbsp after dialog quadratin at beginning of line
 	silent! execute a:r.'s/\v^—\s*(.)/— \1/'
 	"nbsp after/before — (ignoring at beginning of line)
@@ -69,15 +71,17 @@ function s:secondpass(r)
 	silent! execute a:r.'s/\v([0-2][0-9]) :\s*([0-5][0-9])/\1:\2/'
 	silent! execute a:r.'s/\v([0-2][0-9]):\s*([0-5][0-9]) :\s*([0-5][0-9])/\1:\2:\3/'
 	"space between » and ?!;:
+	"e.g. foo »bar becomes: foo » bar
 	silent! execute a:r.'s/\v»\s*([?!;:])/» \1/g'
 	"space between ?!;: and « 
+	"e.g. foo ?« becomes: foo ? «
 	silent! execute a:r.'s/\v([?!;:])\s*«/\1 «/g'
 endfunction
 command! -range Sanitize call Sanitize(<line1>,<line2>)
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Notes:
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " \v: set 'magic' flag : avoids many \-escapes
 " \k: anything that is defined in 'iskeyword'
 " \K: like \k, but excluding digits

@@ -28,9 +28,11 @@ loadkeymap
 {e ê
 ;e ê
 }e ë
+=e ë
 {E Ê
 ;E Ê
 }E Ë
+=E Ë
 ;i î
 [i î
 ]i î

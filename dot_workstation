@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="2024-03-14"
+export WORKSTATION_VERSION="2024-04-30"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
@@ -32,7 +32,7 @@ alias t=toto
 complete -W "$(~/scripts/toto --summary)" t
 
 # justfile scripts completion
-for script in bax caldb upda bwman skel pullall jots toto remo rrestic lc ; do
+for script in bax caldb upda bwmgr skel pullall jots toto remo rrestic lc ; do
 	command -v ${script} > /dev/null && {
 		complete -W "$(~/scripts/${script} --summary)" ${script}
 	}

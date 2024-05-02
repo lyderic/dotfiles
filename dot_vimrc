@@ -318,6 +318,8 @@ let g:lkhelp = [
 	\g:mapleader.'z  call FZF',
 	\'Quickfix Navigation: ]q :cnext, [q :cprevious',
 	\'Folds Navigation: za: toggle, [z: start, ]z: end',
+	\'                  zj: next, zk: prev, zi: ignore all',
+	\'                  zr: open all, zm: close all',
 \]
 function! LeaderHelp()
 	echo join(g:lkhelp, "\n")

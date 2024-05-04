@@ -77,8 +77,7 @@ function s:secondpass(r)
 	"e.g. foo ?« becomes: foo ? «
 	silent! execute a:r.'s/\v([?!;:])\s*«/\1 «/g'
 	"there shouldn't be a space nor a nbsp after 'vim' on the last
-	"line of a document, because this is a vim modeline
-	"Fortunately there are no word ending in 'vim' in French ;)
+	"line of a document, because we want to allow vim modelines
 	silent! execute '$s/\<vim :/vim:/'
 endfunction
 command! -range Sanitize call Sanitize(<line1>,<line2>)

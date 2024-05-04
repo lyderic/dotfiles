@@ -313,6 +313,7 @@ let g:lkhelp = [
 	\g:mapleader.'n  toggle number',
 	\g:mapleader.'N  toggle relativenumber',
 	\g:mapleader.'p  switch buffer',
+	\g:mapleader.'s  search in directory tree',
 	\g:mapleader.'x  switch syntax on/off',
 	\g:mapleader.'xx switch French spell checking on/off',
 	\g:mapleader.'z  call FZF',
@@ -359,3 +360,15 @@ if !exists("*GetBuffers")
 endif
 command! -buffer GetBuffers call GetBuffers()
 nnoremap <leader>c :CountInRange 
+
+"Search for string in dir/subdirs
+function! Search()
+	let l:selected = input("Search for: ")
+	if l:selected == ""
+		return
+	endif
+	execute 'vimgrep /' . l:selected . '/j **/*'
+	copen
+endfunction
+command! Search call Search()
+nnoremap <leader>s :Search<cr>

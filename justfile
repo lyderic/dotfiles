@@ -6,8 +6,8 @@ alias var := variables
 
 _listing:
 	@printf "${BLU}{{justfile()}}${NOC}\n"
-	@just --unsorted --list --list-heading='' --list-prefix=' • ' \
-		| grep -v 'alias for'
+	@just --no-aliases --unsorted --list \
+		--list-heading='' --list-prefix=' • '
 
 # if 'false' updates are unattended
 # [up]date distro and config

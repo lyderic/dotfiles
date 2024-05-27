@@ -1,11 +1,10 @@
-export BIGBANG_VERSION="2024-03-17"
+export BIGBANG_VERSION="2024-05-27"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
 
 # Useful aliases
 alias z='tmux attach'
-alias k=just
 alias l=ls
 alias ll="ls -lh"
 alias la="ls -la"
@@ -30,11 +29,11 @@ complete -o default -o nospace -F __start_chezmoi cz
 
 ## just completion and alias
 which just > /dev/null && {
-	[ -e /usr/share/bash-completions/completion/just ] && {
-		. /usr/share/bash-completions/completion/just 
-	} || {
-		source <(just --completions bash)
-	}
+	alias k=just
+	alias kk='just --choose'
+	# see https://github.com/casey/just/issues/2094
+	# to find out why the sed expression below is needed
+	source <(just --completions bash | sed -r -e 's/^(\s+")\$1"\)$/\1just")/')
 	complete -F _just -o bashdefault -o default k
 }
 

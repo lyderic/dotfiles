@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="2024-05-27"
+export BIGBANG_VERSION="2024-06-06"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -33,7 +33,8 @@ which just > /dev/null && {
 	alias kk='just --choose'
 	# see https://github.com/casey/just/issues/2094
 	# to find out why the sed expression below is needed
-	source <(just --completions bash | sed -r -e 's/^(\s+")\$1"\)$/\1just")/')
+	#source <(just --completions bash | sed -r -e 's/^(\s+")\$1"\)$/\1just")/')
+	source <(just --completions bash)
 	complete -F _just -o bashdefault -o default k
 }
 

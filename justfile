@@ -1,8 +1,9 @@
-common-version := "202403071022"
+common-version := "202406190846"
 
 alias col := colors
 alias geo := geolocate
 alias var := variables
+alias dim := dimensions
 
 _listing:
 	@printf "${BLU}{{justfile()}}${NOC}\n"
@@ -91,6 +92,10 @@ geolocate:
 # [var] evaluate variables
 variables:
 	just --evaluate
+
+# [dim] terminal dimensions
+@dimensions:
+	echo "$(tput cols) x $(tput lines)"
 
 # DYNAMIC VARIABLES, SETTINGS AND IMPORTS
 

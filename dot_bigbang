@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="2024-07-14"
+export BIGBANG_VERSION="2024-07-24"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -12,6 +12,7 @@ alias cls="clear"
 alias L=less
 alias stamp='date +"%Y%m%d%M%H%S"'
 alias croc='croc --relay europe.cybermoped.com'
+alias machinectl='sudo machinectl'
 
 # chezmoi management
 alias cz="chezmoi"
@@ -53,12 +54,10 @@ sudoc() {
 	. "/usr/share/bash-completion/completions/${prog}"
 	complete -F _${prog} ${prog:0:3}
 }
-#complete -W "cryptsetup btrfs" sudoc
-# systemctl, btrfs and machinectl can be safely aliased 
+# systemctl and btrfs can be safely aliased 
 # however, cryptsetup causes bash -c '. ~/.bigbang' to fail
 sudoc systemctl
 sudoc btrfs
-sudoc machinectl
 
 # Useful exports
 export LESS="FRIX"

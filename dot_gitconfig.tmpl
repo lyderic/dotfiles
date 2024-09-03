@@ -8,6 +8,9 @@
 [push]
 	default = simple
 
+[pull]
+	rebase = false
+
 [alias]
 	a = add
 	b = branch -avv
@@ -21,5 +24,3 @@
 	ignored = ls-files --other --ignored --exclude-standard
 	s = status -bs
 	url = config get remote.origin.url
-[pull]
-	rebase = false

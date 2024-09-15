@@ -17,7 +17,10 @@ arch() {
 	local packages="${COMMON_PACKAGES} ${ARCH_PACKAGES}"
 	header "pacman setup"
 	grep '^ParallelDownloads' /etc/pacman.conf || {
-		sudo sed -i -e 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
+		sudo sed -i \
+			-e 's/^#ParallelDownloads/ParallelDownloads/' \
+			-e 's/^#Color/Color/' \
+		/etc/pacman.conf
 		warn "ParallelDownloads uncommented in /etc/pacman.conf"
 	}
 	header "arch packages"

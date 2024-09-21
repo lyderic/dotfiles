@@ -93,6 +93,6 @@ variables:
 
 import? "justfile-host"
 distro := `grep ^ID= /etc/os-release | cut -d= -f2`
-confirm := "false"
+confirm := "true"
 set shell := ["bash","-uc"]
 # vim: ft=make

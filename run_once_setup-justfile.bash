@@ -10,3 +10,5 @@ import? "justfile-host"
 import  "justfile-common"
 
 # vim: ft=make' | tee "${FILE}"
+
+echo -e "\e[36mjustfile set\e[0m"

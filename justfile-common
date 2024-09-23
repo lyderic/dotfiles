@@ -5,11 +5,6 @@ alias geo := geolocate
 alias var := variables
 alias dim := dimensions
 
-_listing:
-	@just --list --no-aliases --unsorted \
-		--list-heading=$'\e[34m{{justfile()}}\e[m\n' \
-		--list-prefix=' • ' | sed -e 's/ • \[/[/'
-
 # if 'false' updates are unattended
 # [up]date distro and config
 [group('common')]
@@ -89,9 +84,13 @@ variables:
 @dimensions:
 	echo "$(tput cols) x $(tput lines)"
 
+_help:
+	@just --list --no-aliases --unsorted \
+		--list-heading=$'\e[34m{{justfile()}}\e[m\n' \
+		--list-prefix=' • ' | sed -e 's/ • \[/[/'
+
 # DYNAMIC VARIABLES, SETTINGS AND IMPORTS
 
-import? "justfile-host"
 distro := `grep ^ID= /etc/os-release | cut -d= -f2`
 confirm := "true"
 set shell := ["bash","-uc"]

@@ -11,6 +11,10 @@
 [pull]
 	rebase = false
 
+[diff "sqlite3"]
+	binary = true
+	textconv = "echo .dump | sqlite3"
+
 [alias]
 	a = add
 	b = branch -avv

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 main() {
-	
+
 }
 
 main ${@}

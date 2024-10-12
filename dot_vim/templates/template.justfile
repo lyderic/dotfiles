@@ -7,4 +7,3 @@ test:
 	# something to test
 
 set shell := ["bash","-uc"]
-# vim: ft=make

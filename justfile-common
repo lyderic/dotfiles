@@ -94,4 +94,4 @@ _help:
 distro := `grep ^ID= /etc/os-release | cut -d= -f2`
 confirm := "true"
 set shell := ["bash","-uc"]
-# vim: ft=make
+# vim: ft=just

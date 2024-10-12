@@ -7,8 +7,6 @@ FILE="${HOME}/justfile"
 echo '_default: _help
 
 import? "justfile-host"
-import  "justfile-common"
-
-# vim: ft=make' | tee "${FILE}"
+import  "justfile-common"' | tee "${FILE}"
 
 echo -e "\e[36mjustfile set\e[0m"

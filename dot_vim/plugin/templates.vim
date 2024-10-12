@@ -1,24 +1,24 @@
-function! Template(type)
-	if len(a:type) > 0
-		exec "read ~/.vim/templates/template." . a:type
-	else
-		call s:GetTemplateFromFZF()
-	endif
-	silent! exec "1d"
-	norma G
+if exists("g:loaded_templates")
+	finish
+endif
+let g:loaded_templates = 1
+
+function! Template()
+	call s:InsertTemplateFromFZF()
+endfunction
+
+function! s:InsertTemplateFromFZF()
+	call fzf#run({'source': 'ls ~/.vim/templates', 'sink': function('s:InsertTemplate'), 'options': '--preview "bat --plain --color=always --tabs=2 ~/.vim/templates/{}"'})
 endfunction
 
 function! s:InsertTemplate(file)
-	if empty(a:file)
-		echo "No template file provided"
-	else
-		exec "read ~/.vim/templates/" . a:file
+	let l:curpos = getpos('.')
+	execute "read ~/.vim/templates/" . a:file
+	" we don't want no first line empty
+	if empty(getline(1))
+		silent! execute "1d"
 	endif
+	call setpos('.', l:curpos)
 endfunction
 
-function! s:GetTemplateFromFZF()
-	call fzf#run({'source': 'ls ~/.vim/templates', 'sink': function('s:InsertTemplate')})
-endfunction
-
-"command! -nargs=1 Template call Template("<args>")
-command! -nargs=* Template call Template("<args>")
+command! Template call Template()

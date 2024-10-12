@@ -1,9 +1,9 @@
 #!/usr/bin/env -S just --justfile
 
 _listing:
-	@printf "${BLU}{{justfile()}}${NOC}\n"
-	@{{justfile()}} --unsorted --list --list-heading='' --list-prefix=' • ' \
-		#| grep -v 'alias for'
+	@just --list --no-aliases --unsorted \
+		--list-heading=$'\e[34m{{justfile()}}\e[m\n' \
+		--list-prefix=' • ' | sed -e 's/ • \[/[/'
 
 test:
 	# something to test

@@ -3,17 +3,26 @@ if exists("g:loaded_templates")
 endif
 let g:loaded_templates = 1
 
-function! Template()
+let s:dir = expand('~/.vim/templates')
+
+function! Templates()
 	call s:InsertTemplateFromFZF()
 endfunction
 
 function! s:InsertTemplateFromFZF()
-	call fzf#run({'source': 'ls ~/.vim/templates', 'sink': function('s:InsertTemplate'), 'options': '--preview "bat --plain --color=always --tabs=2 ~/.vim/templates/{}"'})
+	let l:header = '"Please select a template:"'
+	let l:preview = 
+		\ printf('"bat --color=always --tabs=2 %s/{}"', s:dir)
+	call fzf#run({
+		\ 'source': 'ls ' . s:dir, 
+		\ 'sink': function('s:InsertTemplate'), 
+		\ 'options': printf('--reverse --header %s --preview %s', l:header, l:preview)
+		\ })
 endfunction
 
 function! s:InsertTemplate(file)
 	let l:curpos = getpos('.')
-	execute "read ~/.vim/templates/" . a:file
+	execute "read " . s:dir . "/" . a:file
 	" we don't want no first line empty
 	if empty(getline(1))
 		silent! execute "1d"
@@ -21,4 +30,16 @@ function! s:InsertTemplate(file)
 	call setpos('.', l:curpos)
 endfunction
 
-command! Template call Template()
+" Make the current buffer's file executable
+function! MakeExecutable()
+  let l:file = expand('%:p')
+  let l:output = system('chmod -v +x ' . shellescape(l:file))
+	echohl WarningMsg
+  echo trim(l:output)
+	echohl None
+endfunction
+
+command! Templates call Templates()
+command! MakeExecutable call MakeExecutable()
+nnoremap <silent> <leader>m :call Templates()<cr>
+nnoremap <silent> <leader>k :call MakeExecutable()<cr>

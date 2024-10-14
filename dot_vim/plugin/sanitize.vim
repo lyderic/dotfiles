@@ -73,9 +73,6 @@ function s:secondpass(r)
 	"Allow time stamp like '12:34' or '12:34:56' e.g. in journal
 	silent! execute a:r.'s/\v([0-2][0-9]) :\s*([0-5][0-9])/\1:\2/'
 	silent! execute a:r.'s/\v([0-2][0-9]):\s*([0-5][0-9]) :\s*([0-5][0-9])/\1:\2:\3/'
-	"0x2002 after tiret quadratin at beginning of line
-	"this breaks LaTeX (but shines with typst), so unused for the moment
-	"silent! execute a:r.'s/^— /— /'
 	"0x00A0 between » and ?!;:
 	"e.g. foo »bar becomes: foo » bar
 	silent! execute a:r.'s/\v»\s*([?!;:])/» \1/g'

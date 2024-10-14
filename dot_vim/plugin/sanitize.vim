@@ -1,8 +1,7 @@
 "This set of substitution aims at enforcing French language typography rules
-"Ref: https://www.edithetnous.com/blog/les-10-regles-de-typographie-a-connaitre
-"
-"Note: there are non-breaking spaces: 0x00A0 and 0x202F
-"Ref: https://crowdagger.github.io/textes/articles/heuristique.html
+"Refs:
+"https://www.edithetnous.com/blog/les-10-regles-de-typographie-a-connaitre
+"https://crowdagger.github.io/textes/articles/heuristique.html
 
 if exists("g:loaded_sanitizer") || v:version < 703
   finish
@@ -39,12 +38,10 @@ function s:firstpass(r)
 	silent! execute a:r.'s/\.\.\./…/g'
 	"French quotes
 	silent! execute a:r.'s/\v"(.{-})"/« \1 »/g'
-	"0x00A0 before colon (between 'iskeyword' and :)
-	silent! execute a:r.'s/\v(\k)\s*:/\1 :/g'
-	"0x202F before some punctuation (between 'iskeyword' and ?!;%€)
-	silent! execute a:r.'s/\v(\k)\s*([?!;%€])/\1 \2/g'
-	"0x202F before » (between 'iskeyword' or punctuation and »)
-	silent! execute a:r.'s/\v(\k|[.?!])\s*»/\1 »/g'
+	"0x00A0 before double punctuation (between 'iskeyword' and ?!;:%€)
+	silent! execute a:r.'s/\v(\k)\s*([?!;:%€])/\1 \2/g'
+	"0x00A0 before » (between 'iskeyword' or punctuation and »)
+	silent! execute a:r.'s/\v(\k|[.?!])\s*»/\1 »/g'
 	"space after some punctuation (between ?!;:», and a letter)
 	"note: we don't include '.' otherwise URLs e.g. 'a.b.com' would
 	"become 'a. b. com'
@@ -53,8 +50,8 @@ function s:firstpass(r)
 	silent! execute a:r.'s/\v^—\s*(.)/— \1/'
 	"0x00A0 after/before — (ignoring at beginning of line)
 	silent! execute a:r.'s/\v(\k)\s*—\s*(.{-})\s*—\s*(\k)/\1 — \2 — \3/g'
-	"0x202F after « (between « and 'iskeyword')
-	silent! execute a:r.'s/\v«\s*(\k)/« \1/g'
+	"0x00A0 after « (between « and 'iskeyword')
+	silent! execute a:r.'s/\v«\s*(\k)/« \1/g'
 	"space before « (between 'iskeyword' and «)
 	silent! execute a:r.'s/\v(\k)\s*«/\1 «/g'
 	"Allow https URLs, useful for various notes
@@ -97,5 +94,3 @@ command! -range Sanitize call Sanitize(<line1>,<line2>)
 "  — : tiret quadratin (0x2014)
 "  … : 3-dots (0x2026)
 "    : espace insécable (0x00A0)
-"    : espace insécable fine (0x202F)
-"    : espace semi-quadratine non-justifiable (0x2002)

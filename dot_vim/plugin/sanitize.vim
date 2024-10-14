@@ -1,7 +1,8 @@
 "This set of substitution aims at enforcing French language typography rules
-"In the comments, 'nbsp' means non-breaking space (Hex 00A0)
-"
 "Ref: https://www.edithetnous.com/blog/les-10-regles-de-typographie-a-connaitre
+"
+"Note: there are non-breaking spaces: 0x00A0 and 0x202F
+"Ref: https://crowdagger.github.io/textes/articles/heuristique.html
 
 if exists("g:loaded_sanitizer") || v:version < 703
   finish
@@ -20,11 +21,11 @@ function Sanitize(...)
 	"This sets a 'y' mark to go back to when all substitutions have been done
 	"(see below: `y)
 	normal! my
-	let r = a:1.','.a:2
-	call s:firstpass(r)
+	let l:r = a:1.','.a:2
+	call s:firstpass(l:r)
 	"The second pass deals with special cases in order to fix the
 	"changes introduced by the first pass
-	call s:secondpass(r)
+	call s:secondpass(l:r)
 	normal! `y
 endfunction
 
@@ -38,20 +39,22 @@ function s:firstpass(r)
 	silent! execute a:r.'s/\.\.\./…/g'
 	"French quotes
 	silent! execute a:r.'s/\v"(.{-})"/« \1 »/g'
-	"nbsp before double punctuation (between 'iskeyword' and ?!;:%€)
-	silent! execute a:r.'s/\v(\k)\s*([?!;:%€])/\1 \2/g'
-	"nbsp before » (between 'iskeyword' or punctuation and »)
-	silent! execute a:r.'s/\v(\k|[.?!])\s*»/\1 »/g'
+	"0x00A0 before colon (between 'iskeyword' and :)
+	silent! execute a:r.'s/\v(\k)\s*:/\1 :/g'
+	"0x202F before some punctuation (between 'iskeyword' and ?!;%€)
+	silent! execute a:r.'s/\v(\k)\s*([?!;%€])/\1 \2/g'
+	"0x202F before » (between 'iskeyword' or punctuation and »)
+	silent! execute a:r.'s/\v(\k|[.?!])\s*»/\1 »/g'
 	"space after some punctuation (between ?!;:», and a letter)
 	"note: we don't include '.' otherwise URLs e.g. 'a.b.com' would
 	"become 'a. b. com'
 	silent! execute a:r.'s/\v([?!;:»,])(\K)/\1 \2/g'
-	"nbsp after dialog quadratin at beginning of line
+	"0x00A0 after tiret quadratin at beginning of line
 	silent! execute a:r.'s/\v^—\s*(.)/— \1/'
-	"nbsp after/before — (ignoring at beginning of line)
+	"0x00A0 after/before — (ignoring at beginning of line)
 	silent! execute a:r.'s/\v(\k)\s*—\s*(.{-})\s*—\s*(\k)/\1 — \2 — \3/g'
-	"nbsp after « (between « and 'iskeyword')
-	silent! execute a:r.'s/\v«\s*(\k)/« \1/g'
+	"0x202F after « (between « and 'iskeyword')
+	silent! execute a:r.'s/\v«\s*(\k)/« \1/g'
 	"space before « (between 'iskeyword' and «)
 	silent! execute a:r.'s/\v(\k)\s*«/\1 «/g'
 	"Allow https URLs, useful for various notes
@@ -70,13 +73,16 @@ function s:secondpass(r)
 	"Allow time stamp like '12:34' or '12:34:56' e.g. in journal
 	silent! execute a:r.'s/\v([0-2][0-9]) :\s*([0-5][0-9])/\1:\2/'
 	silent! execute a:r.'s/\v([0-2][0-9]):\s*([0-5][0-9]) :\s*([0-5][0-9])/\1:\2:\3/'
-	"space between » and ?!;:
+	"0x2002 after tiret quadratin at beginning of line
+	"this breaks LaTeX (but shines with typst), so unused for the moment
+	"silent! execute a:r.'s/^— /— /'
+	"0x00A0 between » and ?!;:
 	"e.g. foo »bar becomes: foo » bar
 	silent! execute a:r.'s/\v»\s*([?!;:])/» \1/g'
 	"space between ?!;: and « 
 	"e.g. foo ?« becomes: foo ? «
 	silent! execute a:r.'s/\v([?!;:])\s*«/\1 «/g'
-	"there shouldn't be a space nor a nbsp after 'vim' on the last
+	"there shouldn't be a 0x00A0 after 'vim' on the last
 	"line of a document, because we want to allow vim modelines
 	silent! execute '$s/\<vim :/vim:/'
 endfunction
@@ -93,4 +99,6 @@ command! -range Sanitize call Sanitize(<line1>,<line2>)
 " UTF-8 characters used here:
 "  — : tiret quadratin (0x2014)
 "  … : 3-dots (0x2026)
-"    : non-breaking space (0x00A0)
+"    : espace insécable (0x00A0)
+"    : espace insécable fine (0x202F)
+"    : espace semi-quadratine non-justifiable (0x2002)

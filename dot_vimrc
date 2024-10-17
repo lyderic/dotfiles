@@ -19,11 +19,11 @@ inoremap jk <esc>:w<cr>
 nnoremap = :w<cr>
 
 "Show buffers to select
-nnoremap <leader>p :buffer <C-d>
-"nnoremap <leader>p :call fzf#run({'source':GetBuffers(),'sink':'e'})<cr>
+nnoremap <leader>b :buffer <C-d>
 
 "Quicker way to call FZF
 nnoremap <leader>z :FZF<cr>
+nnoremap <leader>p :FZF<cr>
 
 "Quickfix navigation
 nnoremap ]q  :cnext<cr>
@@ -307,16 +307,16 @@ let g:lkhelp = [
 	\'General (leader = ' . g:mapleader . ')',
 	\g:lkhelpseparator,
 	\g:mapleader.'a  toggle accents',
+	\g:mapleader.'b  switch buffer',
 	\g:mapleader.'c  CountInRange <[line1]> <[line2]>',
 	\g:mapleader.'g  show file information',
 	\g:mapleader.'l  toggle show hidden characters',
 	\g:mapleader.'n  toggle number',
 	\g:mapleader.'N  toggle relativenumber',
-	\g:mapleader.'p  switch buffer',
+	\g:mapleader.'p  call FZF',
 	\g:mapleader.'s  search in directory tree',
 	\g:mapleader.'x  switch syntax on/off',
 	\g:mapleader.'xx switch French spell checking on/off',
-	\g:mapleader.'z  call FZF',
 	\'Quickfix Navigation: ]q :cnext, [q :cprevious',
 	\'Folds Navigation: za: toggle, [z: start, ]z: end',
 	\'                  zj: next, zk: prev, zi: ignore all',

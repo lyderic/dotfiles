@@ -10,7 +10,8 @@ notably:
 3. File is sanitized each time it is saved (non breaking spaces added etc.)
 4. Some abbreviations are set (e.g. ete -> été)
 5. The revision system is loaded (see below)
-6. Command JournalTime is added 
+6. The floc system is loaded (see below)6. 
+7. Command JournalTime is added 
 
 ===========================================================================
 
@@ -27,9 +28,43 @@ A "revision" is any bold text between square brackets. That is to say, as we
 use markdown, notes surrounded by '[**' and '**]'.
 
 To search revisions and open them in a Quickfix window, use the :Revision()
-function (shortcut: <leader>re).
+function (shortcut: <leader>r).
 
 To insert a revision while in insert more, hit '[' three time ([[[).
+
+To delete a revision, make sure the cursor in anywhere within the opening and
+closing tags (i.e. between '[**' and '**]' and hit <leader>d.
+
+===========================================================================
+
+THE FLOC SYSTEM
+
+"floc" is short for "flocon the neige", i.e the "snowflake" writing method
+popularized by Randy Ingermanson.
+
+The floc files are located into a subdirectory called "floc". The basic file
+is the synopsis: the initial file where one phrase is to be expanded
+into paragraphs and finally into scenes.
+
+In the "floc" subdirectory, there is a subsubdirectory called "personnages"
+where the characters file are located.
+
+CHARACTERS
+
+To create a new character, use the "floc:personnage.lkl" template and save it
+into ./floc/personnages.
+
+To display the characters, enter: :LL
+
+SCENES
+
+A scene is a special type of comment that looks like this:
+
+[//001](One sentence description of the scene)
+
+To create a new scene, enter :NewScene
+
+To list the scenes, enter :SC
 
 ===========================================================================
 
@@ -44,14 +79,16 @@ FILES
 ├── ftplugin
 │   └── litt
 │       ├── abbreviations.vim [useful iabbr to write French]
+│       ├── floc.vim [the "floc" system]
 │       ├── help.vim [what is displayed with <leader>h]
 │       ├── main.vim [various setups]
-│       ├── revision.vim [the "revision" system]
-│       └── sanitize.vim [sanitize at each buffer write]
+│       └── revision.vim [the "revision" system]
 ├── keymap
 │   └── lkaccents.vim [French accents: [e -> é etc.]
 ├── plugin
-│   └── goyo.vim [distraction-free writing]
+│   ├── goyo.vim [distraction-free writing]
+│   ├── templates.vim [tex and floc templates (personnages etc.)]
+│   └── sanitize.vim [sanitizer e.g. 0x00A0 before ?!;: etc.]
 ├── spell
 │   ├── fr.utf-8.spl
 │   └── fr.utf-8.sug

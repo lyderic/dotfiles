@@ -24,7 +24,6 @@ nnoremap <buffer> <leader>f mm[s1z=`m
 nnoremap <buffer> <leader>a mm[s1zg`m
 
 "Enter date of day in French for diary
-"command! -buffer JournalTime :r !journaltime -t -a 1 -y -s '\# '
 command! -buffer JournalTime call VimJournalTime(1)
 
 "Darkroom effect

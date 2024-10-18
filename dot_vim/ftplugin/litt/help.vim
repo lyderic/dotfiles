@@ -5,11 +5,11 @@ let b:lklitthelp = g:lkhelp + [
 	\g:lkhelpseparator,
 	\'Litt',
 	\g:lkhelpseparator,
-	\g:mapleader.'o  toggle Goyo',
-	\g:mapleader.'f  fix typo',
-	\g:mapleader.'e  add to dictionnary',
-	\g:mapleader.'re launch Quickfix revision',
-	\g:mapleader.'d  delete revision',
+	\g:mapleader.'o toggle Goyo',
+	\g:mapleader.'f fix typo',
+	\g:mapleader.'a add to dictionnary',
+	\g:mapleader.'r launch Quickfix revision',
+	\g:mapleader.'d delete revision',
 	\'(in insert mode) [[[ create a new revision',
 	\g:lkhelpseparator,
 	\'Note: More about litt: :help litt',
@@ -20,4 +20,3 @@ function! LeaderLittHelp()
 endfunction
 command! LeaderLittHelp :call LeaderLittHelp()
 nnoremap <buffer> <leader>h :call LeaderLittHelp()<cr>
-

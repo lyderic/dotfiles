@@ -47,7 +47,7 @@ nnoremap Q :registers<cr>
 autocmd! BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 "Set path conveniently when working on coding or litterary projects
-autocmd! VimEnter *.lkl,*.go :set path=**
+autocmd! VimEnter *.lkl,*.go,*.tex,*.md :set path=**
 
 "Display a statusline even if there is only one widow open
 set laststatus=2
@@ -163,7 +163,7 @@ nnoremap <silent> <leader>x
 	\ endif<CR>
 
 "Toggle spellcheck on/off
-nnoremap <silent> <leader>xx :let &spell=!&spell<CR>
+nnoremap <silent> <leader>e :let &spell=!&spell<CR>
 
 "Ignore case in searches, unless search contains an upper case letter
 set ignorecase
@@ -205,9 +205,9 @@ function! ToggleAccents()
 			setlocal keymap=lkaccents
 	endif
 endfunction
-nnoremap <leader>a :call ToggleAccents()<cr>
 nnoremap <c-j> :call ToggleAccents()<cr>
 inoremap <c-j> <esc>:call ToggleAccents()<cr>a
+nnoremap ;; <esc>:call ToggleAccents()<cr>
 inoremap ;; <esc>:call ToggleAccents()<cr>a
 
 "Deal with background
@@ -239,6 +239,12 @@ function! SmartTabCompletion()
 	endif
 endfunction
 inoremap <tab> <c-r>=SmartTabCompletion()<cr>
+
+"Call git directly from vim
+function! GitExecute(...)
+	echo system("git " . join(a:000))
+endfunction
+command! -nargs=* Git call GitExecute(<f-args>)
 
 "If a session exists, save it before leaving
 "(Only for .lkl, .yaml and .go files)
@@ -306,17 +312,16 @@ let g:lkhelp = [
 	\g:lkhelpseparator,
 	\'General (leader = ' . g:mapleader . ')',
 	\g:lkhelpseparator,
-	\g:mapleader.'a  toggle accents',
-	\g:mapleader.'b  switch buffer',
-	\g:mapleader.'c  CountInRange <[line1]> <[line2]>',
-	\g:mapleader.'g  show file information',
-	\g:mapleader.'l  toggle show hidden characters',
-	\g:mapleader.'n  toggle number',
-	\g:mapleader.'N  toggle relativenumber',
-	\g:mapleader.'p  call FZF',
-	\g:mapleader.'s  search in directory tree',
-	\g:mapleader.'x  switch syntax on/off',
-	\g:mapleader.'xx switch French spell checking on/off',
+	\g:mapleader.'b switch buffer',
+	\g:mapleader.'c CountInRange <[line1]> <[line2]>',
+	\g:mapleader.'g show file information',
+	\g:mapleader.'l toggle show hidden characters',
+	\g:mapleader.'n toggle number',
+	\g:mapleader.'N toggle relativenumber',
+	\g:mapleader.'p call FZF',
+	\g:mapleader.'s search in directory tree',
+	\g:mapleader.'x switch syntax on/off',
+	\g:mapleader.'e switch French spell checking on/off',
 	\'Quickfix Navigation: ]q :cnext, [q :cprevious',
 	\'Folds Navigation: za: toggle, [z: start, ]z: end',
 	\'                  zj: next, zk: prev, zi: ignore all',

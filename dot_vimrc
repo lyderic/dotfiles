@@ -207,7 +207,6 @@ function! ToggleAccents()
 endfunction
 nnoremap <c-j> :call ToggleAccents()<cr>
 inoremap <c-j> <esc>:call ToggleAccents()<cr>a
-nnoremap ;; <esc>:call ToggleAccents()<cr>
 inoremap ;; <esc>:call ToggleAccents()<cr>a
 
 "Deal with background

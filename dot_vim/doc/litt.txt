@@ -1,64 +1,93 @@
-*litt*  Litt User Manual
+*Litt*                    LITT USER MANUAL
 
 A 'litt' file is a file with extension 'lkl'.
 
-It is basically a markdown file with a couple of additions,
-notably:
+====================================================================
 
-1. The keymap is set to 'lkaccents' (allows [e -> é etc.)
-2. Spelling is activated in French
-3. File is sanitized each time it is saved (non breaking spaces added etc.)
-4. Some abbreviations are set (e.g. ete -> été)
-5. The revision system is loaded (see below)
-6. The floc system is loaded (see below)6. 
-7. Command JournalTime is added 
+CONTENTS 
 
-===========================================================================
+  1. Introduction                                 |LittIntroduction|
+  2. Shortcuts                                    |LittShortcuts|
+  3. The Revision System                          |Revision|
+  4. Floc                                         |Floc|
+	   A. Steps                                     |FlocSteps|
+	   B. Personnages                               |FlocPersonnages|
+	   C. Scenes                                    |FlocScenes|
+		 D. Documentation                             |FlocDocumentation|
+  7. Files                                        |LittFiles|
 
-SHORTCUTS
+====================================================================
 
-To list the litt related shorcuts, make sure you are in a .lkl buffer
-and hit: <leader>h
+INTRODUCTION                                       *LittIntroduction*
 
-===========================================================================
+lkl files are basically markdown files with additions, notably:
 
-THE REVISION SYSTEM
+ 1. The keymap is set to 'lkaccents' (allows [e -> é etc.)
+ 2. Spelling is activated in French
+ 3. File is sanitized each time it is saved (non breaking spaces
+    added etc.)
+ 4. Some abbreviations are set (e.g. ete -> été)
+ 5. The |Revision| system is loaded (see below)
+ 6. The |Floc| system is loaded (see below). 
+ 7. Command JournalTime is added 
 
-A "revision" is any bold text between square brackets. That is to say, as we
-use markdown, notes surrounded by '[**' and '**]'.
+====================================================================
 
-To search revisions and open them in a Quickfix window, use the :Revision()
-function (shortcut: <leader>r).
+SHORTCUTS                                             *LittShortcuts*
+
+At any time, you can list the litt related shorcuts : make sure you  
+are in a .lkl buffer and hit: <leader>h
+
+Litt shortcuts:
+
+	<leader>o : toggle Goyo'
+	<leader>f : fix typo
+	<leader>a : add to dictionnary
+	<leader>r : launch Quickfix revision
+	<leader>d : delete revision
+
+Note: in insert mode : [[[ create a new revision',
+
+====================================================================
+
+THE REVISION SYSTEM                                        *Revision*
+
+A 'revision' is any bold text between square brackets. That is to 
+say, as we use markdown, notes surrounded by '[**' and '**]'.
+
+To search revisions and open them in a Quickfix window, use the :
+Revision() function (shortcut: <leader>r).
 
 To insert a revision while in insert more, hit '[' three time ([[[).
 
-To delete a revision, make sure the cursor in anywhere within the opening and
-closing tags (i.e. between '[**' and '**]' and hit <leader>d.
+To delete a revision, make sure the cursor in anywhere within the 
+opening and closing tags (i.e. between '[**' and '**]' and hit 
+<leader>d.
 
-===========================================================================
+====================================================================
 
-THE FLOC SYSTEM
+FLOC                                                           *Floc*
 
-"floc" is short for "flocon the neige", i.e the "snowflake" writing method
-popularized by Randy Ingermanson.
+'floc' is short for "flocon the neige", i.e the "snowflake" writing 
+method popularized by Randy Ingermanson.
 
-The floc files are located into a subdirectory called "floc". The basic file
-is the synopsis: the initial file where one phrase is to be expanded
-into paragraphs and finally into scenes.
+The floc files are located into a subdirectory called "floc". The 
+basic file is the synopsis: the initial file where one phrase is to 
+be expanded into paragraphs and finally into scenes.
 
-In the "floc" subdirectory, there is a subsubdirectory called "personnages"
-where the characters file are located.
+In the "floc" subdirectory, there is a subsubdirectory called
+"personnages" where the characters file are located.
 
-CHARACTERS
+PERSONNAGES                                         *FlocPersonnages*
 
-To create a new character, use the "floc:personnage.lkl" template and save it
-into ./floc/personnages.
+A 'personnage' is created by using the "floc:personnage.lkl" template
+and save it into ./floc/personnages.
 
 To display the characters, enter: :LL
 
-SCENES
+SCENES                                                   *FlocScenes*
 
-A scene is a special type of comment that looks like this:
+A 'scene' is a special type of comment that looks like this:
 
 [//001](One sentence description of the scene)
 
@@ -66,9 +95,17 @@ To create a new scene, enter :NewScene
 
 To list the scenes, enter :SC
 
-===========================================================================
+DOCUMENTATION                                     *FlocDocumentation*
 
-FILES
+A new documentation file is created by using the
+floc:documentation.lkl template.
+
+Use this to document descriptions of places
+
+
+====================================================================
+
+FILES                                                     *LittFiles*
 
 .vim
 ├── doc
@@ -95,4 +132,4 @@ FILES
 └── syntax
     └── litt.vim [basically a copy of markdown syntax]
 
-vim: ft=help
+ vim:ft=help:tw=68:ts=2:noet:norl

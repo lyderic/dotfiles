@@ -1,0 +1,21 @@
+# Documentation
+
+## Item n°1
+
+Description
+
+=====
+
+## Item n°2
+
+Description
+
+=====
+
+## Lexique
+
+mot : explication
+
+=====
+
+vim: nospell foldmethod=marker foldmarker=##,===== foldcolumn=2

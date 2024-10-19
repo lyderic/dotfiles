@@ -1,0 +1,148 @@
+*FlocSteps*              LES ETAPES DE LA METHODE FLOC
+
+Ceci est la méthode « Flocon de neige » adaptée par/pour Lydéric.
+
+Elle comprend 9 étapes.
+
+Source : https://www.advancedfictionwriting.com/articles/snowflake-method/
+
+====================================================================
+
+CONTENTS 
+
+01. L'histoire en une phrase                                 |Floc01|
+02. L'histoire en un paragraphe                              |Floc02|
+03. Création des fiches de conception                        |Floc03|
+04. L'histoire en plusieurs paragraphes                      |Floc04|
+05. Chaque paragraphe devient une page                       |Floc05|
+06. Création des scènes                                      |Floc06|
+07. Ébauche                                                  |Floc08|
+08. Rédaction du premier jet                                 |Floc09|
+09. Création des révisions                                   |Floc10|
+
+====================================================================
+
+ETAPE 1                                                      *Floc01*
+L'histoire en une phrase~
+
+Résumé du roman en une seule phrase. Cette phrase doit servir à
+présenter le livre en dix secondes. C'est le pitch.
+
+Le plus court le mieux. Visez moins de 15 mots. Pas de noms de
+personnages.
+
+====================================================================
+
+ETAPE 2                                                      *Floc02*
+L'histoire en un paragraphe~
+
+Reprendre la phrase composée à l'étape |Floc01| et la développer en 4 à 6 phrases :
+
+  * Chaque phrase correspond aux parties principales du roman.
+  * Écrire la fin de l'histoire.
+  * Chaque moment doit avoir la même consistance (voire la même 
+    longueur.
+
+Idéalement, ce paragraphe aura environ cinq phrases :
+
+  * Une phrase pour situer l'histoire (contexte, notamment)
+  * Une phrase par acte (3 ou 4)
+  * Une phrase pour la fin
+
+Attention : il ne s'agit pas de la quatrième de couverture du livre.
+En effet, ce paragraphe résume toute l'histoire. La quatrième de
+couverture doit seulement résumer le premier quart de l'histoire.
+
+====================================================================
+
+ETAPE 3                                                      *Floc03*
+Création des fiches conception~
+
+Établir les documents de conception, c'est-à-dire les fiches de
+personnages, de lieu, la chronologie, etc. Ne pas trop entrer dans
+le détail.
+
+Ces fiches seront enrichies au long de la rédaction du roman.
+
+Pour générer un personnage : |FlocPersonnages|
+
+====================================================================
+
+ETAPE 4                                                      *Floc04*
+L'histoire en plusieurs paragraphes~
+
+Chaque phrase du résumé de l'étape |Floc02| est développée en un
+paragraphe complet. Tous les paragraphes, sauf le dernier, doivent
+se terminer par un rebondissement. Le dernier paragraphe doit
+raconter comment le livre finit.
+
+À ce stade, la structure globale du roman doit être établie et l'on
+doit savoir si l'édifice tient la route. 
+
+On obtient un squelette d'une page environ.
+
+====================================================================
+
+ETAPE 5                                                      *Floc05*
+Chaque paragraphe devient une page~
+
+Reprendre l'étape |Floc04| : développer chaque paragraphe en
+plusieurs paragraphes afin de réaliser un synopsis de plusieurs
+pages.
+
+Désormais, on a une histoire solide et plusieurs trames,
+éventuellement une pour chaque personnage.
+
+Parallèlement, enrichir les fiches personnages pour être sûr
+qu'elles restent en conformité avec l'histoire.
+
+====================================================================
+
+ETAPE 6                                                      *Floc06*
+Création des scènes~
+
+Reprendre l'étape |Floc05| : en tirer une liste de scènes. Comment
+créer les scènes : |FlocScenes|.
+
+Dérouler l'histoire sous forme de scènes, c'est-à-dire des résumés
+d'une phrase.
+
+Les scènes ne correspondent pas forcément aux chapitres. À ce stade,
+tout peut figurer dans un seul gros document qui constitura le
+premier jet.
+
+Si nécessaire et adapté, le document premier jet peut être divisé en
+parties, auquel cas, la numérotation des scènes se fera sous la
+forme YXX où Y = partie et XX = scène.
+
+====================================================================
+
+ETAPE 7                                                      *Floc07*
+Ébauche~
+
+Ébauche : on écrit chaque scène « au kilomètre » dans un style quasi télégraphique. On va vite, on peut mettre des bout de dialogues, des descriptions sommaires, des images ou des tournures frappantes etc.
+
+Ne pas (trop) se soucier du style, de la syntaxe etc.
+
+Ce document peut être éventuellement divisé en plusieurs parties. Idéalement, il ne faudrait pas avoir à corriger les documents de conception au cours de cette étape, mais si c'est nécessaire, il faut le faire : adapter le synopsis, les fiches personnages etc.
+
+====================================================================
+
+ETAPE 8                                                      *Floc08*
+Rédaction du premier jet~
+
+On reprend chaque scène, pas forcèment dans l'ordre et on rédige
+proprement dit.
+
+====================================================================
+
+ETAPE 9                                                      *Floc09*
+Création des révisions~
+
+Relecture du premier jet : on y souligne tout ce qui ne va pas, sans
+forcément corriger les erreurs, mais en mettant en évidence ce qu'il
+y aura à changer, à préciser, à améliorer etc. 
+
+Pour cela, on utilise le mécanisme de |Revision|.
+
+ vim:ft=help:tw=68:ts=2:noet:norl

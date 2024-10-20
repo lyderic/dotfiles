@@ -18,11 +18,12 @@ command! -buffer FlocListPersonnages call s:showcharacters()
 command! -buffer LL call s:showcharacters()
 
 "Scenes commands
-command! -buffer SC call ShowScenes()
-command! -buffer -nargs=? NewScene call NewScene(<f-args>)
-command! -buffer SceneFold call SceneFold()
-command! -buffer EnableSceneFold call EnableSceneFold()
-"autocmd! BufNewFile,BufRead *.lkl call EnableSceneFold()
+command! -buffer FlocScenes call s:showscenes()
+command! -buffer SC call s:showscenes()
+command! -buffer -nargs=? NewScene call s:newscene(<f-args>)
+command! -buffer -nargs=? FlocNewScene call s:newscene(<f-args>)
+command! -buffer EnableSceneFold call s:enablescenefold()
+"autocmd! BufNewFile,BufRead *.lkl call s:enablescenefold()
 
 "######################################################
 " GLOBAL FUNCTIONS
@@ -87,58 +88,49 @@ endfunction
 " SCENE FUNCTIONS
 "######################################################
 
-if !exists("*ShowScenes")
-	function! ShowScenes()
-		"looking in all .lkl files in dir + subdirs
-		try
-			execute 'vimgrep #\[//# **/*.lkl'
-		catch
-			echo "Aucune scène trouvée"
-			return
-		endtry
-		copen
-		cfirst
-	endfunction
-endif
+function! s:showscenes()
+	"looking in all .lkl files in dir + subdirs
+	try
+		execute 'vimgrep #\[//# **/*.lkl'
+	catch
+		echo "Aucune scène trouvée"
+		return
+	endtry
+	copen
+	cfirst
+endfunction
 
-"Enable folding in main text
-if !exists("*EnableSceneFold")
-	function! EnableSceneFold()
-		setlocal foldcolumn=2
-		setlocal foldmethod=expr
-		setlocal foldexpr=SceneFold()
-	endfunction
-endif
+function! s:enablescenefold()
+setlocal foldcolumn=2
+	setlocal foldmethod=expr
+	setlocal foldexpr=s:scenefold()
+endfunction
 
-if !exists("*SceneFold")
-	function! SceneFold()
-		let b:currentline = getline(v:lnum)
-		let b:nextline = getline(v:lnum+1)
-		if b:currentline =~# '^#'
-			return 0
-		endif
-		if b:nextline =~# '^#'
-			return 0
-		endif
-		if b:nextline =~# '^[//'
-			return '<1'
-		endif
-		if b:currentline =~# '^[//'
-			return '>1'
-		endif
-		return '='
-	endfunction
-endif
+function! s:scenefold()
+	let b:currentline = getline(v:lnum)
+	let b:nextline = getline(v:lnum+1)
+	if b:currentline =~# '^#'
+		return 0
+	endif
+	if b:nextline =~# '^#'
+		return 0
+	endif
+	if b:nextline =~# '^[//'
+		return '<1'
+	endif
+	if b:currentline =~# '^[//'
+		return '>1'
+	endif
+	return '='
+endfunction
 
-if !exists("*NewScene")
-	function! NewScene(...)
-		if a:0 > 0
-			let l:numero = join(a:000)
-		else
-			let l:numero = input("Numero ? ")
-		endif
-		let l:formatted = printf("%03d", l:numero)
-		execute "normal! i[//" . l:formatted . "]: # ("
-		startinsert!
-	endfunction
-endif
+function! s:newscene(...)
+	if a:0 > 0
+		let l:numero = join(a:000)
+	else
+		let l:numero = input("Numero ? ")
+	endif
+	let l:formatted = printf("%03d", l:numero)
+	execute "normal! i[//" . l:formatted . "]: # ("
+	startinsert!
+endfunction

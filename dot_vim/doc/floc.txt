@@ -8,7 +8,7 @@ basic file is the synopsis: the initial file where one phrase is to
 be expanded into paragraphs and finally into scenes.
 
 In the "floc" subdirectory, there is a subsubdirectory called
-"personnages" where the characters file are located.
+"personnages" where the characters files are located.
 
 ====================================================================
 
@@ -25,11 +25,14 @@ CONTENT
 
 COMMANDS                                            *FlocCommands*
 
-	:FlocInit        Initialise a `floc` directory
-	:LL              List personnages
-	:SC              List scenes
-	:NewPersonnage   Create new personnage
-	:NewScene        Create new scene
+  ------------------------------------------------------------
+	Command            | Shortcut       |  Action
+  ------------------------------------------------------------
+	:FlocInit          |                |  Initialise a `floc` dir
+	:FlocPersonnages   | :LL            |  List personnages
+	:FlocScenes        | :SC            |  List scenes
+	:FlocNewPersonnage | :NewPersonnage |  Create new personnage
+	:FlocNewScene      | :NewScene      |  Create new scene
 
 ====================================================================
 
@@ -87,28 +90,22 @@ LES ETAPES DE LA METHODE FLOC                             *FlocSteps*
 
 Ceci est la méthode « Flocon de neige » adaptée par/pour Lydéric.
 
-Elle comprend 9 étapes.
-
 Source : https://www.advancedfictionwriting.com/articles/snowflake-method/
 
-====================================================================
+Elle comprend 9 étapes :
 
-CONTENTS 
-
-01. L'histoire en une phrase                                 |Floc01|
-02. L'histoire en un paragraphe                              |Floc02|
-03. Création des fiches de conception                        |Floc03|
-04. L'histoire en plusieurs paragraphes                      |Floc04|
-05. Chaque paragraphe devient une page                       |Floc05|
-06. Création des scènes                                      |Floc06|
-07. Ébauche                                                  |Floc08|
-08. Rédaction du premier jet                                 |Floc09|
-09. Création des révisions                                   |Floc10|
+ 1. L'histoire en une phrase
+ 2. L'histoire en un paragraphe
+ 3. Création des fiches de conception
+ 4. L'histoire en plusieurs paragraphes
+ 5. Chaque paragraphe devient une page
+ 6. Création des scènes
+ 7. Ébauche
+ 8. Rédaction du premier jet
+ 9. Création des révisions
 
 ====================================================================
-
-ETAPE 1                                                      *Floc01*
-L'histoire en une phrase~
+ETAPE 1     L'histoire en une phrase~
 
 Résumé du roman en une seule phrase. Cette phrase doit servir à
 présenter le livre en dix secondes. C'est le pitch.
@@ -117,11 +114,9 @@ Le plus court le mieux. Visez moins de 15 mots. Pas de noms de
 personnages.
 
 ====================================================================
+ETAPE 2     L'histoire en un paragraphe~
 
-ETAPE 2                                                      *Floc02*
-L'histoire en un paragraphe~
-
-Reprendre la phrase composée à l'étape |Floc01| et la développer en 4 à 6 phrases :
+Reprendre la phrase composée à l'étape 1 et la développer en 4 à 6 phrases :
 
   * Chaque phrase correspond aux parties principales du roman.
   * Écrire la fin de l'histoire.
@@ -140,8 +135,7 @@ couverture doit seulement résumer le premier quart de l'histoire.
 
 ====================================================================
 
-ETAPE 3                                                      *Floc03*
-Création des fiches conception~
+ETAPE 3     Création des fiches conception~
 
 Établir les documents de conception, c'est-à-dire les fiches de
 personnages, de lieu, la chronologie, etc. Ne pas trop entrer dans
@@ -153,10 +147,9 @@ Pour générer un personnage : |FlocPersonnages|
 
 ====================================================================
 
-ETAPE 4                                                      *Floc04*
-L'histoire en plusieurs paragraphes~
+ETAPE 4     L'histoire en plusieurs paragraphes~
 
-Chaque phrase du résumé de l'étape |Floc02| est développée en un
+Chaque phrase du résumé de l'étape 2 est développée en un
 paragraphe complet. Tous les paragraphes, sauf le dernier, doivent
 se terminer par un rebondissement. Le dernier paragraphe doit
 raconter comment le livre finit.
@@ -168,10 +161,9 @@ On obtient un squelette d'une page environ.
 
 ====================================================================
 
-ETAPE 5                                                      *Floc05*
-Chaque paragraphe devient une page~
+ETAPE 5     Chaque paragraphe devient une page~
 
-Reprendre l'étape |Floc04| : développer chaque paragraphe en
+Reprendre l'étape 4 : développer chaque paragraphe en
 plusieurs paragraphes afin de réaliser un synopsis de plusieurs
 pages.
 
@@ -183,10 +175,9 @@ qu'elles restent en conformité avec l'histoire.
 
 ====================================================================
 
-ETAPE 6                                                      *Floc06*
-Création des scènes~
+ETAPE 6     Création des scènes~
 
-Reprendre l'étape |Floc05| : en tirer une liste de scènes. Comment
+Reprendre l'étape 5 : en tirer une liste de scènes. Comment
 créer les scènes : |FlocScenes|.
 
 Dérouler l'histoire sous forme de scènes, c'est-à-dire des résumés
@@ -202,8 +193,7 @@ forme YXX où Y = partie et XX = scène.
 
 ====================================================================
 
-ETAPE 7                                                      *Floc07*
-Ébauche~
+ETAPE 7     Ébauche~
 
 Ébauche : on écrit chaque scène « au kilomètre » dans un style quasi télégraphique. On va vite, on peut mettre des bout de dialogues, des descriptions sommaires, des images ou des tournures frappantes etc.
 
@@ -213,16 +203,14 @@ Ce document peut être éventuellement divisé en plusieurs parties. Idéalement
 
 ====================================================================
 
-ETAPE 8                                                      *Floc08*
-Rédaction du premier jet~
+ETAPE 8     Rédaction du premier jet~
 
 On reprend chaque scène, pas forcèment dans l'ordre et on rédige
 proprement dit.
 
 ====================================================================
 
-ETAPE 9                                                      *Floc09*
-Création des révisions~
+ETAPE 9     Création des révisions~
 
 Relecture du premier jet : on y souligne tout ce qui ne va pas, sans
 forcément corriger les erreurs, mais en mettant en évidence ce qu'il

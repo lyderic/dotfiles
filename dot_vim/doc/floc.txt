@@ -1,4 +1,89 @@
-*FlocSteps*              LES ETAPES DE LA METHODE FLOC
+*Floc*                    FLOC USER MANUAL
+
+'floc' is short for "flocon the neige", i.e the "snowflake" writing 
+method popularized by Randy Ingermanson.
+
+The floc files are located into a subdirectory called "floc". The 
+basic file is the synopsis: the initial file where one phrase is to 
+be expanded into paragraphs and finally into scenes.
+
+In the "floc" subdirectory, there is a subsubdirectory called
+"personnages" where the characters file are located.
+
+====================================================================
+
+CONTENT
+
+	1. Commands                                    |FlocCommands|
+	1. Synopsis                                    |FlocSynopsis|
+	1. Personnages                                 |FlocPersonnages|
+	2. Scenes                                      |FlocScenes|
+	3. Conception documents                        |FlocConception|
+	4. Steps                                       |FlocSteps|
+
+====================================================================
+
+COMMANDS                                            *FlocCommands*
+
+	:FlocInit        Initialise a `floc` directory
+	:LL              List personnages
+	:SC              List scenes
+	:NewPersonnage   Create new personnage
+	:NewScene        Create new scene
+
+====================================================================
+
+SYNOPSIS                                            *FlocSynopsis*
+
+The synopsis is the base document of the floc method. It tracks the
+first 5 steps of |FlocSteps|.
+
+It is created by the `:FlocInit` command. 
+
+It uses the `floc:synopsis.lkl` template.
+
+====================================================================
+
+PERSONNAGES                                         *FlocPersonnages*
+
+A personnage is created by using the `floc:personnage.lkl` template
+and save it into ./floc/personnages.
+
+The directory ./floc/personnages has to be created if it doesn't
+exist.
+
+ * To create a new personnages, enter `:NewPersonnage`
+ * To display the personnages, enter `:LL`
+
+====================================================================
+
+SCENES                                                   *FlocScenes*
+
+A scene is a special type of comment that looks like this:
+
+ [//001](One sentence description of the scene)~
+
+ * To create a new scene, enter `:NewScene`
+ * To list the scenes, enter `:SC`
+
+====================================================================
+
+CONCEPTION DOCUMENTS                                 *FlocConception*
+
+Conception documents are the files used to track various
+information, like places, chronology, research...
+
+There are templates for:
+
+ * Generic documentation      `floc:documentation.lkl`
+ * Chronology                 `floc:chronology.md`
+
+Use this to document descriptions of places, write documentation
+
+
+====================================================================
+
+LES ETAPES DE LA METHODE FLOC                             *FlocSteps*
 
 Ceci est la méthode « Flocon de neige » adaptée par/pour Lydéric.
 

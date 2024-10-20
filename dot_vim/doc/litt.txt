@@ -9,12 +9,8 @@ CONTENTS
   1. Introduction                                 |LittIntroduction|
   2. Shortcuts                                    |LittShortcuts|
   3. The Revision System                          |Revision|
-  4. Floc                                         |Floc|
-	   A. Steps                                     |FlocSteps|
-	   B. Personnages                               |FlocPersonnages|
-	   C. Scenes                                    |FlocScenes|
-		 D. Documentation                             |FlocDocumentation|
-  7. Files                                        |LittFiles|
+  4. Files                                        |LittFiles|
+  5. Floc                                         |Floc|
 
 ====================================================================
 
@@ -27,8 +23,8 @@ lkl files are basically markdown files with additions, notably:
  3. File is sanitized each time it is saved (non breaking spaces
     added etc.)
  4. Some abbreviations are set (e.g. ete -> été)
- 5. The |Revision| system is loaded (see below)
- 6. The |Floc| system is loaded (see below). 
+ 5. The |Revision| system is loaded
+ 6. The |Floc| system is loaded
  7. Command JournalTime is added 
 
 ====================================================================
@@ -46,7 +42,10 @@ Litt shortcuts:
 	<leader>r : launch Quickfix revision
 	<leader>d : delete revision
 
-Note: in insert mode : [[[ create a new revision',
+Notes
+
+  * In insert mode : [[[ create a new revision',
+  * Please also see: |FlocCommands|
 
 ====================================================================
 
@@ -63,45 +62,6 @@ To insert a revision while in insert more, hit '[' three time ([[[).
 To delete a revision, make sure the cursor in anywhere within the 
 opening and closing tags (i.e. between '[**' and '**]' and hit 
 <leader>d.
-
-====================================================================
-
-FLOC                                                           *Floc*
-
-'floc' is short for "flocon the neige", i.e the "snowflake" writing 
-method popularized by Randy Ingermanson.
-
-The floc files are located into a subdirectory called "floc". The 
-basic file is the synopsis: the initial file where one phrase is to 
-be expanded into paragraphs and finally into scenes.
-
-In the "floc" subdirectory, there is a subsubdirectory called
-"personnages" where the characters file are located.
-
-PERSONNAGES                                         *FlocPersonnages*
-
-A 'personnage' is created by using the "floc:personnage.lkl" template
-and save it into ./floc/personnages.
-
-To display the characters, enter: :LL
-
-SCENES                                                   *FlocScenes*
-
-A 'scene' is a special type of comment that looks like this:
-
-[//001](One sentence description of the scene)
-
-To create a new scene, enter :NewScene
-
-To list the scenes, enter :SC
-
-DOCUMENTATION                                     *FlocDocumentation*
-
-A new documentation file is created by using the
-floc:documentation.lkl template.
-
-Use this to document descriptions of places
-
 
 ====================================================================
 

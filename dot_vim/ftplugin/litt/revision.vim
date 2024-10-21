@@ -28,5 +28,5 @@ inoremap <buffer> [[[ [**  **]<Left><Left><Left><Left>
 nnoremap <buffer> <leader>d da]
 
 "Highlight revisions
-highlight RevisionHL ctermbg=green guibg=green
-match RevisionHL '\[\*\*.\{-}\*\*\]'
+"highlight RevisionHL ctermbg=green guibg=green
+"match RevisionHL '\[\*\*.\{-}\*\*\]'

@@ -6,6 +6,7 @@ FlocScenes	floc.txt	/*FlocScenes*
 FlocSteps	floc.txt	/*FlocSteps*
 FlocSynopsis	floc.txt	/*FlocSynopsis*
 Litt	litt.txt	/*Litt*
+LittComments	litt.txt	/*LittComments*
 LittFiles	litt.txt	/*LittFiles*
 LittIntroduction	litt.txt	/*LittIntroduction*
 LittShortcuts	litt.txt	/*LittShortcuts*

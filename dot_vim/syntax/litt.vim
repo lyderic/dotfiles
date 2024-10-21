@@ -148,6 +148,16 @@ endif
 syn match markdownEscape "\\[][\\`*_{}()<>#+.!-]"
 syn match markdownError "\w\@<=_\w\@="
 
+"Added by Lydéric to hightlight litt's comments
+"Comments are *lines* starting with //
+"Comment are not allowed inside a line.
+syn match littComment "^//.*"
+hi def link littComment Comment
+
+"Added by Lydéric to hightlight revisions
+syn match littRevision '\[\*\*.\{-}\*\*\]'
+hi def link littRevision Error
+
 hi def link markdownH1                    htmlH1
 hi def link markdownH2                    htmlH2
 hi def link markdownH3                    htmlH3

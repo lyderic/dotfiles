@@ -4,16 +4,23 @@ endif
 let g:loaded_commentator = 1
 
 let s:commenttypes = {
-	\'c':'\/\/', 'cpp':'\/\/', 'go':'\/\/', 'make':'#',
-	\'markdown':'#','php':'#', 'sh':'#', 'vim':'"', 'sql':'--',
-	\'lua':'--'
+\'litt':'\/\/', 'c':'\/\/', 'cpp':'\/\/', 'go':'\/\/', 'make':'#',
+\'markdown':'#', 'php':'#', 'sh':'#', 'vim':'"', 'sql':'--',
+\'just':'#', 'lua':'--'
 \}
 
-function! s:comment(...)
+function! Comment(...)
+	if a:0 == 0
+		let l:l1 = line(".")
+		let l:l2 = l:l1
+	else
+		let l:l1 = a:1
+		let l:l2 = a:2
+	endif
 	let l:comstr = s:commenttypes[&ft]
 	normal! my
-	let l:idx = a:1
-	for l:line in getline(a:1,a:2)
+	let l:idx = l:l1
+	for l:line in getline(l:l1,l:l2)
 		let l:comcom = l:idx.'s/\v^(\s*)/\1'.l:comstr.'/'
 		if l:line =~ '^\s*'.l:comstr
 			let l:comcom = l:idx.'s/\v^(\s*)'.l:comstr.'/\1/'
@@ -24,4 +31,5 @@ function! s:comment(...)
 	normal! `y
 endfunction
 
-command! -range Comment call s:comment(<line1>,<line2>)
+command! -range Comment call Comment(<line1>,<line2>)
+nnoremap <leader>m :call Comment()<cr>

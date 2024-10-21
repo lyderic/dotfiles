@@ -41,5 +41,5 @@ endfunction
 
 command! Templates call Templates()
 command! MakeExecutable call MakeExecutable()
-nnoremap <silent> <leader>m :call Templates()<cr>
+nnoremap <silent> <leader>t :call Templates()<cr>
 nnoremap <silent> <leader>k :call MakeExecutable()<cr>

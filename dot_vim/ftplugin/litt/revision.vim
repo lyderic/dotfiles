@@ -1,5 +1,6 @@
 "Les passages à revoir sont de la forme :
 "	[** texte explicatif : pourquoi faut-il revoir ici ? **]
+"Ils sont highlighté comme des erreurs (voir syntax/litt.vim)
 
 "Recherche les passages à revoir dans les buffers ouverts et
 "ouvre une fenêtre Quickfix les listant

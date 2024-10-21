@@ -252,7 +252,7 @@ function! SaveSessionIfFound()
 		echohl WarningMsg
 		echo "saving session..."
 		mksession!
-		sleep 500m
+		sleep 350m
 		echohl None
 	endif
 endfunction
@@ -314,11 +314,14 @@ let g:lkhelp = [
 	\g:mapleader.'b switch buffer',
 	\g:mapleader.'c CountInRange <[line1]> <[line2]>',
 	\g:mapleader.'g show file information',
+	\g:mapleader.'k make current file executable',
 	\g:mapleader.'l toggle show hidden characters',
 	\g:mapleader.'n toggle number',
 	\g:mapleader.'N toggle relativenumber',
+	\g:mapleader.'m toggle comments',
 	\g:mapleader.'p call FZF',
 	\g:mapleader.'s search in directory tree',
+	\g:mapleader.'t insert a template',
 	\g:mapleader.'x switch syntax on/off',
 	\g:mapleader.'e switch French spell checking on/off',
 	\'Quickfix Navigation: ]q :cnext, [q :cprevious',

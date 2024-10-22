@@ -26,8 +26,28 @@ nnoremap <leader>z :FZF<cr>
 nnoremap <leader>p :FZF<cr>
 
 "Quickfix navigation
-nnoremap ]q  :cnext<cr>
-nnoremap [q  :cprevious<cr>
+nnoremap ]] :call WrapQuickFixCNext()<cr>
+nnoremap [[ :call WrapQuickFixCPrevious()<cr>
+"When reaching the end of Quickfix items, go back to :cfirst
+function! WrapQuickFixCNext()
+  let qf_idx = getqflist({'idx': 0}).idx
+  let qf_size = getqflist({'size': 0}).size
+  if qf_idx == qf_size
+    cfirst
+  else
+    cnext
+  endif
+endfunction
+"When reaching the beginning of Quickfix items, go back to :clast
+function! WrapQuickFixCPrevious()
+  let qf_idx = getqflist({'idx': 0}).idx
+  let qf_size = getqflist({'size': 0}).size
+  if qf_idx == 1
+    clast
+  else
+    cprevious
+  endif
+endfunction
 
 "ftplugin mechanism
 "nice tuto here: https://ejmastnak.github.io/tutorials/vim-latex/ftplugin.html
@@ -156,14 +176,31 @@ syntax on
 
 "Toggle syntax on/off with <leader>x
 nnoremap <silent> <leader>x
-	\ : if exists("syntax_on") <BAR>
-	\    syntax off <BAR>
-	\ else <BAR>
-	\    syntax enable <BAR>
-	\ endif<CR>
+	\ : if exists("syntax_on") <bar>
+	\    syntax off <bar>
+	\ else <bar>
+	\    syntax enable <bar>
+	\ endif<cr>
 
 "Toggle spellcheck on/off
-nnoremap <silent> <leader>e :let &spell=!&spell<CR>
+nnoremap <silent> <leader>e :let &spell=!&spell<cr>
+
+"Toggle Quickfix window open/close
+nnoremap <leader>q :call ToggleQuickfix()<cr>
+function! ToggleQuickfix()
+	let l:isopen = 0
+  for win in range(1, winnr('$'))
+    if win_gettype(win) ==# 'quickfix'
+      let l:isopen = 1 | break
+    endif
+  endfor
+	if l:isopen
+		cclose
+		echo "Quickfix closed"
+	else
+		copen
+	endif
+endfunction
 
 "Ignore case in searches, unless search contains an upper case letter
 set ignorecase
@@ -320,11 +357,12 @@ let g:lkhelp = [
 	\g:mapleader.'N toggle relativenumber',
 	\g:mapleader.'m toggle comments',
 	\g:mapleader.'p call FZF',
+	\g:mapleader.'q toggle Quickfix window open/close',
 	\g:mapleader.'s search in directory tree',
 	\g:mapleader.'t insert a template',
 	\g:mapleader.'x switch syntax on/off',
 	\g:mapleader.'e switch French spell checking on/off',
-	\'Quickfix Navigation: ]q :cnext, [q :cprevious',
+	\'Quickfix Navigation: ]] :cnext, [[ :cprevious',
 	\'Folds Navigation: za: toggle, [z: start, ]z: end',
 	\'                  zj: next, zk: prev, zi: ignore all',
 	\'                  zr: open all, zm: close all',

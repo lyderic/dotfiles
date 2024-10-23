@@ -156,7 +156,12 @@ hi def link littComment Comment
 
 "Added by Lydéric to hightlight revisions
 syn match littRevision '\[\*\*.\{-}\*\*\]'
-hi def link littRevision Error
+hi def link littRevision Conceal
+
+"Added by Lydéric to hightlight revisions
+syn match littLatex "^\ *\\.*"
+hi def link littLatex NonText
+"hi littLatex cterm=Bold
 
 hi def link markdownH1                    htmlH1
 hi def link markdownH2                    htmlH2

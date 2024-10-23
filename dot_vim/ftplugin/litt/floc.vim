@@ -120,18 +120,18 @@ endif
 
 if !exists("*s:scenefold")
 	function! s:scenefold()
-		let b:currentline = getline(v:lnum)
-		let b:nextline = getline(v:lnum+1)
-		if b:currentline =~# '^#'
+		let l:currentline = getline(v:lnum)
+		let l:nextline = getline(v:lnum+1)
+		if l:currentline =~# '^#'
 			return 0
 		endif
-		if b:nextline =~# '^#'
+		if l:nextline =~# '^#'
 			return 0
 		endif
-		if b:nextline =~# '^[//'
+		if l:nextline =~# '^[//'
 			return '<1'
 		endif
-		if b:currentline =~# '^[//'
+		if l:currentline =~# '^[//'
 			return '>1'
 		endif
 		return '='
@@ -141,6 +141,7 @@ endif
 if !exists("*s:newscene")
 	function! s:newscene()
 		let l:id = system("pwgen -A -1 -v 4 | tr -d '\n'")
+		if getline(line('.')) =~ '\S' | execute "normal! o" | endif
 		execute "normal! o[//".l:id."]: # ("
 		startinsert!
 	endfunction

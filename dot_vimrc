@@ -260,6 +260,16 @@ set cryptmethod=blowfish2
 "Open terminal to the right (vim 8.1+ required!)
 command! VTerm :vertical rightbelow terminal
 
+"Format bash files when writing them if the
+"program 'shfmt' is found
+autocmd! BufNewFile,BufRead *
+	\ if &filetype == 'sh' | set autoread | endif
+autocmd! BufWritePost *
+	\ if &filetype == 'sh' && executable('shfmt')
+	\ | silent! execute "!shfmt -w %"
+	\ | redraw!
+	\ | endif
+
 "----------------------------------------------
 "    FUNCTIONS
 "----------------------------------------------
@@ -352,6 +362,7 @@ let g:lkhelp = [
 	\g:mapleader.'c CountInRange <[line1]> <[line2]>',
 	\g:mapleader.'g show file information',
 	\g:mapleader.'k make current file executable',
+	\g:mapleader.'K make current file unexecutable',
 	\g:mapleader.'l toggle show hidden characters',
 	\g:mapleader.'n toggle number',
 	\g:mapleader.'N toggle relativenumber',

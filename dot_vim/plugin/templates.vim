@@ -30,10 +30,19 @@ function! s:InsertTemplate(file)
 	call setpos('.', l:curpos)
 endfunction
 
-" Make the current buffer's file executable
+"Make the current buffer's file executable
 function! MakeExecutable()
   let l:file = expand('%:p')
   let l:output = system('chmod -v +x ' . shellescape(l:file))
+	echohl WarningMsg
+  echo trim(l:output)
+	echohl None
+endfunction
+
+"Make the current buffer's file unexecutable
+function! MakeUnexecutable()
+  let l:file = expand('%:p')
+  let l:output = system('chmod -v -x ' . shellescape(l:file))
 	echohl WarningMsg
   echo trim(l:output)
 	echohl None
@@ -43,3 +52,4 @@ command! Templates call Templates()
 command! MakeExecutable call MakeExecutable()
 nnoremap <silent> <leader>t :call Templates()<cr>
 nnoremap <silent> <leader>k :call MakeExecutable()<cr>
+nnoremap <silent> <leader>K :call MakePlain()<cr>

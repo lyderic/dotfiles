@@ -52,4 +52,4 @@ command! Templates call Templates()
 command! MakeExecutable call MakeExecutable()
 nnoremap <silent> <leader>t :call Templates()<cr>
 nnoremap <silent> <leader>k :call MakeExecutable()<cr>
-nnoremap <silent> <leader>K :call MakePlain()<cr>
+nnoremap <silent> <leader>K :call MakeUnexecutable()<cr>

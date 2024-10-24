@@ -47,7 +47,7 @@ function s:firstpass(r)
 	"become 'a. b. com'
 	silent! execute a:r.'s/\v([?!;:»,])(\K)/\1 \2/g'
 	"0x00A0 after tiret quadratin at beginning of line
-	silent! execute a:r.'s/\v^—\s*(.)/— \1/'
+	"silent! execute a:r.'s/\v^—\s*(.)/— \1/'
 	"0x00A0 after/before — (ignoring at beginning of line)
 	silent! execute a:r.'s/\v(\k)\s*—\s*(.{-})\s*—\s*(\k)/\1 — \2 — \3/g'
 	"0x00A0 after « (between « and 'iskeyword')

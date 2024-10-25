@@ -6,7 +6,7 @@ let g:loaded_commentator = 1
 let s:commenttypes = {
 \'litt':'\/\/', 'c':'\/\/', 'cpp':'\/\/', 'go':'\/\/', 'make':'#',
 \'markdown':'#', 'php':'#', 'sh':'#', 'vim':'"', 'sql':'--',
-\'just':'#', 'lua':'--'
+\'just':'#', 'lua':'--', 'tex':'%'
 \}
 
 function! Comment(...)

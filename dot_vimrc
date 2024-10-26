@@ -26,8 +26,8 @@ nnoremap <leader>z :FZF<cr>
 nnoremap <leader>p :FZF<cr>
 
 "Quickfix navigation
-nnoremap ]] :call WrapQuickFixCNext()<cr>
 nnoremap [[ :call WrapQuickFixCPrevious()<cr>
+nnoremap ]] :call WrapQuickFixCNext()<cr>
 "When reaching the end of Quickfix items, go back to :cfirst
 function! WrapQuickFixCNext()
   let qf_idx = getqflist({'idx': 0}).idx

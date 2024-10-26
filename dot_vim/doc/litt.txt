@@ -75,7 +75,7 @@ in order for these lines to be ignored:
 THE REVISION SYSTEM                                        *Revision*
 
 A revision is any bold text between square brackets. That is to 
-say, as we use markdown, notes surrounded by `[**` and `**]`.
+say, as we use markdown, notes surrounded by `[==` and `==]`.
 
 To search revisions and open them in a Quickfix window, use the :
 Revision() function (shortcut: <leader>r).
@@ -83,7 +83,7 @@ Revision() function (shortcut: <leader>r).
 To insert a revision while in insert more, hit '[' three time ([[[).
 
 To delete a revision, make sure the cursor in anywhere within the 
-opening and closing tags (i.e. between `[**` and `**]` and hit 
+opening and closing tags (i.e. between `[==` and `==]` and hit 
 <leader>d.
 
 Revisions are highlighted as errors to be clearly visible. A final 

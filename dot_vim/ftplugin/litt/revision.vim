@@ -1,5 +1,5 @@
 "Les passages à revoir sont de la forme :
-"	[** texte explicatif : pourquoi faut-il revoir ici ? **]
+"	[== texte explicatif : pourquoi faut-il revoir ici ? ==]
 "Ils sont highlighté comme des erreurs (voir syntax/litt.vim)
 
 "Recherche les passages à revoir dans les buffers ouverts et
@@ -8,7 +8,7 @@ if !exists("*Revision")
 	function! Revision()
 		"looking in all .lkl files in dir + subdirs
 		try
-			execute 'vimgrep /\[\*\*/gj **/*.lkl'
+			execute 'vimgrep /\[==/gj **/*.lkl'
 		catch
 			echo "rien à revoir :-)"
 			return
@@ -21,7 +21,7 @@ command! -buffer Revision call Revision()
 nnoremap <buffer> <leader>r :call Revision()<cr>
 
 "Crée un passage à revoir en entrant '[[[' en mode insertion
-inoremap <buffer> [[[ [**  **]<Left><Left><Left><Left>
+inoremap <buffer> [[[ [==  ==]<Left><Left><Left><Left>
 
 "Supprime un passage à revoir une fois traité
 "idéalement, il faudrait vérifier que nous somme dans

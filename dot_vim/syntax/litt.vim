@@ -155,10 +155,11 @@ syn match littComment "^//.*"
 hi def link littComment Comment
 
 "Added by lyderic to hightlight revisions
-syn match littRevision '\[\*\*.\{-}\*\*\]'
+"syn match littRevision '\[==.\{-}==\]'
+syn region littRevision matchgroup=littRevisionDelimiter start="\[==" end="==\]" concealends
 hi def link littRevision Conceal
 
-"Added by lyderic to hightlight revisions
+"Added by lyderic to spot LaTeX blocks in markdown
 syn match littLatex "^\ *\\.*"
 hi def link littLatex NonText
 "hi littLatex cterm=Bold

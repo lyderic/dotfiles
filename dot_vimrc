@@ -166,7 +166,7 @@ nnoremap <leader>l :set list!<cr>
 set wildmenu
 
 "Ignore these extensions when searching with vimgrep
-set wildignore=*.png,*.jpg,*.pdf,*.xcf
+set wildignore=*.png,*.jpg,*.pdf,*.xcf,*.epub,*.sla
 
 "Completion in a pop-up menu (new in vim 9)
 set wildoptions=pum

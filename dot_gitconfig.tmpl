@@ -23,6 +23,7 @@
 	ci = commit
 	co = checkout
 	d = diff
+	hash = log -1 --pretty=%h
 	l = log --oneline --show-notes --decorate --graph -10
 	ld = log --date=format:\"%d/%m/%y %H:%M\" --pretty=format:\"%cd [%h] %s\"
 	ll = log --date=format:\"%d/%m/%y %H:%M\" --pretty=format:\"* %Creset%cd %C(yellow)%h%Creset%d %s\" -10 -- .

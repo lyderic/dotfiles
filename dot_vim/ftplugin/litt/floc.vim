@@ -139,10 +139,9 @@ if !exists("*s:scenefold")
 endif
 
 if !exists("*s:newscene")
-	function! s:newscene()
-		let l:id = system("pwgen -A -1 -v 4 | tr -d '\n'")
+	function s:newscene()
+		"Inserting empty line only if needed
 		if getline(line('.')) =~ '\S' | execute "normal! o" | endif
-		execute "normal! o[//".l:id."]: # ("
-		startinsert!
+		luafile $HOME/.vim/ftplugin/litt/lua/newscene.lua
 	endfunction
 endif

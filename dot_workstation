@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="2024-04-30"
+export WORKSTATION_VERSION="2024-11-06"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
@@ -32,29 +32,28 @@ alias t=toto
 complete -W "$(~/scripts/toto --summary)" t
 
 # justfile scripts completion
-for script in bax caldb upda bwmgr skel pullall jots toto remo rrestic lc ; do
-	command -v ${script} > /dev/null && {
+for script in bax caldb upda bwmgr skel pullall jots toto remo rrestic lc; do
+	command -v ${script} >/dev/null && {
 		complete -W "$(~/scripts/${script} --summary)" ${script}
 	}
 done
 
-# bash completion 
+# bash completion
 ## cobra programs completion
-for prog in ssk vigilax hoc tum floc litt hugo
-do
-	command -v ${prog} > /dev/null && {
+for prog in ssk vigilax tum floc litt hugo; do
+	command -v ${prog} >/dev/null && {
 		source <(${prog} completion bash)
 	}
 done
 ## pandoc completion
-command -v pandoc > /dev/null && {
+command -v pandoc >/dev/null && {
 	eval "$(pandoc --bash-completion)"
 }
 ## pass extensions completion
 export PASSWORD_STORE_ENABLE_EXTENSIONS=true
 __password_store_extension_complete_keyinfo() {
-  COMPREPLY+=($(compgen -W "-q --quiet" -- ${cur}))
-  _pass_complete_entries 1
+	COMPREPLY+=($(compgen -W "-q --quiet" -- ${cur}))
+	_pass_complete_entries 1
 }
 export PASSWORD_STORE_EXTENSION_COMMANDS="keyinfo sync menu otp select qrcode"
 ## report completion
@@ -102,7 +101,7 @@ fi
 	export SSH_AUTH_SOCK=${HOME}/.cache/ssa/ssa.sock
 	export SSA_PASS_SOURCE=${HOME}/scripts/pass-ssa
 	export SSA_KEY_EXPIRY=1w
-	ssh-add -l > /dev/null || ssa && echo -e "${GRN}[ssa] ssh keys loaded${NOC}"
+	ssh-add -l >/dev/null || ssa && echo -e "${GRN}[ssa] ssh keys loaded${NOC}"
 }
 
 # vim: filetype=sh

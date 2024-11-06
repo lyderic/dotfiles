@@ -26,6 +26,8 @@ iabbr <buffer> etais étais
 iabbr <buffer> etait était
 iabbr <buffer> ete été
 iabbr <buffer> etre être
+iabbr <buffer> eve événement
+iabbr <buffer> eves événements
 iabbr <buffer> evenement événement
 iabbr <buffer> evenements événements
 iabbr <buffer> facon façon

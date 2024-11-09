@@ -1,5 +1,6 @@
 iabbr <buffer> AA À
 iabbr <buffer> Auj Aujourd'hui
+iabbr <buffer> Bcp Beaucoup
 iabbr <buffer> Ca Ça
 iabbr <buffer> Cad C'est-à-dire
 iabbr <buffer> Deja Déjà
@@ -17,6 +18,7 @@ iabbr <buffer> Tj Toujours
 iabbr <buffer> aa à
 iabbr <buffer> aout août
 iabbr <buffer> auj aujourd'hui
+iabbr <buffer> bcp beaucoup
 iabbr <buffer> ca ça
 iabbr <buffer> cad c'est-à-dire
 iabbr <buffer> deja déjà
@@ -27,9 +29,9 @@ iabbr <buffer> etait était
 iabbr <buffer> ete été
 iabbr <buffer> etre être
 iabbr <buffer> eve événement
-iabbr <buffer> eves événements
 iabbr <buffer> evenement événement
 iabbr <buffer> evenements événements
+iabbr <buffer> eves événements
 iabbr <buffer> facon façon
 iabbr <buffer> facons façons
 iabbr <buffer> francais français

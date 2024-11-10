@@ -15,6 +15,7 @@ iabbr <buffer> Qq Quelque
 iabbr <buffer> Qqs Quelques
 iabbr <buffer> Qt Quant
 iabbr <buffer> Tj Toujours
+iabbr <buffer> Tjs Toujours
 iabbr <buffer> aa à
 iabbr <buffer> aout août
 iabbr <buffer> auj aujourd'hui
@@ -50,8 +51,19 @@ iabbr <buffer> roles rôles
 iabbr <buffer> tete tête
 iabbr <buffer> tetes têtes
 iabbr <buffer> tj toujours
+iabbr <buffer> tjs toujours
 iabbr <buffer> tot tôt
 iabbr <buffer> tps temps
 iabbr <buffer> vav vis-à-vis
 iabbr <buffer> voila voilà
 iabbr <buffer> às pas
+iabbr <buffer> tt tout
+iabbr <buffer> tte toute
+iabbr <buffer> ts tous
+iabbr <buffer> ttes toutes
+iabbr <buffer> Tt Tout
+iabbr <buffer> Tte Toute
+iabbr <buffer> Ts Tous
+iabbr <buffer> Ttes Toutes
+iabbr <buffer> pq pourquoi
+iabbr <buffer> Pq Pourquoi

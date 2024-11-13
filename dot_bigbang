@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="2024-11-07"
+export BIGBANG_VERSION="2024-11-13"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -32,6 +32,7 @@ complete -o default -o nospace -F __start_chezmoi cz
 ## just completion and alias
 which just > /dev/null && {
 	alias k=just
+	alias kk='just --justfile ~/justfile'
 	alias km='just --choose'
 	alias kv='just --evaluate'
 	source <(just --completions bash)

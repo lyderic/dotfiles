@@ -4,9 +4,7 @@ FILE="${HOME}/justfile"
 
 [ -e "${FILE}" ] && exit 0
 
-echo '_default: _help
-
-import? "justfile-host"
-import  "justfile-common"' | tee "${FILE}"
+echo 'import "justfile-common"
+_default: _help' | tee "${FILE}"
 
 echo -e "\e[36mjustfile set\e[0m"

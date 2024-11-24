@@ -15,19 +15,32 @@ alias stamp='date +"%Y%m%d%M%H%S"'
 alias croc='croc --relay europe.cybermoped.com'
 alias machinectl='sudo machinectl'
 
-# chezmoi management
-alias cz="chezmoi"
-[ -e /usr/share/bash-completion/completions/chezmoi ] && {
-	. /usr/share/bash-completion/completions/chezmoi 
+# PATH management
+# this function is to avoid duplicates
+topath() {
+	# if no path type specified, then default is 'PATH'
+	local ptype=PATH # path type (PATH, INFOPATH or MANPATH)
+	local var=
+	[ -z $2 ] && var=$1 || { ptype=$1 ; var=$2 ; }
+  case ":${!ptype}:" in
+    *":${var}:"*) :;; # already there
+    #*) export "${ptype}=${var}:${!ptype}";;
+    *) local v=${var}:${!ptype} ; export "${ptype}=${v%:}";;
+  esac
 }
-complete -o default -o nospace -F __start_chezmoi cz
+showpath() {
+	for p in PATH CDPATH MANPATH INFOPATH; do
+		echo "${p}:"
+		echo ${!p} | tr ':' '\n' | sort
+	done
+}
 
 # PATH
-[ -d ${HOME}/bin ] && export PATH=${PATH}:${HOME}/bin
+[ -d ${HOME}/bin ] && topath ${HOME}/bin
 
 # MANPATH
 [ -d "${HOME}/.local/share/man" ] && \
-	export MANPATH=${MANPATH}:${HOME}/.local/share/man
+	topath MANPATH ${HOME}/.local/share/man
 
 ## just completion and aliases
 which just > /dev/null && {
@@ -48,6 +61,13 @@ which just > /dev/null && {
 ## fzf completion (ubuntu)
 [ -e /usr/local/share/bash-completion/completions/fzf-completion.bash ] && \
 	source /usr/local/share/bash-completion/completions/fzf-completion.bash 
+
+# chezmoi management
+alias cz="chezmoi"
+[ -e /usr/share/bash-completion/completions/chezmoi ] && {
+	. /usr/share/bash-completion/completions/chezmoi 
+}
+complete -o default -o nospace -F __start_chezmoi cz
 
 # sudo aliases and their completions
 sudoc() {

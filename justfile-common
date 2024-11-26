@@ -42,12 +42,20 @@ update:
 	}
 
 # remove archlinux orphans
-[group('common')]
+[group('arch')]
 [no-exit-message]
-orphans:
-	[ -x /usr/bin/pacman ]
+orphans: _check_arch
 	pacman -Qtd
 	sudo pacman -Qtdq | sudo pacman -Rns -
+
+# deep clean archlinux cache
+[group('arch')]
+deep-clean: _check_arch
+	sudo paccache -ruk0
+	sudo pacman -Sc --noconfirm
+
+_check_arch:
+	[ -x /usr/bin/pacman ]
 
 # show ANSI codes
 [group('common')]

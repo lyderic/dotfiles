@@ -42,6 +42,9 @@ showpath() {
 [ -d "${HOME}/.local/share/man" ] && \
 	topath MANPATH ${HOME}/.local/share/man
 
+# GOBIN to $HOME/bin if go is installed
+[ -d ${HOME}/go ] && export GOBIN=${HOME}/bin
+
 ## just completion and aliases
 which just > /dev/null && {
 	alias k=just

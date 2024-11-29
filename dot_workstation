@@ -77,9 +77,6 @@ export TEXLIVE_CURRENT_DIR="/usr/local/texlive/current"
 	topath INFOPATH ${TEXLIVE_CURRENT_DIR}/texmf-dist/doc/info
 }
 
-# GOBIN to $HOME/bin
-[ -d ${HOME}/go ] && export GOBIN=${HOME}/bin
-
 # mandatory exports
 export VISUAL=vim
 

@@ -54,6 +54,7 @@ bash
 bash-completion
 bat
 curl
+direnv
 file
 git
 grep

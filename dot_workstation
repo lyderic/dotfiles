@@ -1,11 +1,7 @@
-export WORKSTATION_VERSION="2024-12-02"
+export WORKSTATION_VERSION="2024-12-21"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
-alias ccrypt='pass ccrypt | ccrypt -k-'
-alias ccencrypt='pass ccrypt | ccencrypt -k-'
-alias ccdecrypt='pass ccrypt | ccdecrypt -k-'
-alias ccat='pass ccrypt | ccat -k-'
 alias gocryptfs='gocryptfs -extpass "pass gocryptfs"'
 
 # 'xdg-open' is a pain to type. di = 'display'

@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="2024-12-18"
+export BIGBANG_VERSION="2024-12-22"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -133,6 +133,9 @@ PS1='[\u@\h \W]\$ '
 PROMPT_DIRTRIM=2
 
 alias bigbang='. ${HOME}/.bigbang ; blue "bigbang v${BIGBANG_VERSION}"'
+
+# Mandatory for gpg-agent
+export GPG_TTY=$(tty)
 
 # Wipe history when we close shell
 finish() {

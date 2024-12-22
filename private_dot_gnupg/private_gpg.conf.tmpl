@@ -1,0 +1,9 @@
+{{ chezmoi:template:missing-key=zero }}
+{{- if .gpg_default_key -}}
+default-key {{.gpg_default_key}}
+default-recipient-self
+{{ end -}}
+keyid-format long
+with-keygrip
+quiet
+# vim: ft=gpg

@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="2024-12-21"
+export WORKSTATION_VERSION="2024-12-22"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
@@ -7,18 +7,8 @@ alias gocryptfs='gocryptfs -extpass "pass gocryptfs"'
 # 'xdg-open' is a pain to type. di = 'display'
 alias di="xdg-open > /dev/null 2>&1"
 
-# encryption with gpg
-alias lkenc="gpg --encrypt --recipient flipouk --local-user flipouk"
-alias lkdec="gpg --decrypt --quiet"
-
-# xclip always to Ctrl-C/Ctrl-V
-alias xclip="xclip -selection c"
-
 # easily reload workstation init and show version
 alias workstation='. ${HOME}/.workstation ; blue "workstation v${WORKSTATION_VERSION}"'
-
-# nice display of .tsv files
-alias colpsv='column -ts "|"'
 
 # duf without fluff
 alias duf='duf --only local,loops'
@@ -80,7 +70,7 @@ export VISUAL=vim
 runenc() {
 	local scriptname=${1}
 	shift
-	gpg --decrypt --quiet ${scriptname} | bash -s $@
+	gpg -d ${scriptname} | bash -s $@
 }
 
 # unlock services

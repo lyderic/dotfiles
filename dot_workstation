@@ -18,7 +18,7 @@ alias t=toto
 complete -W "$(~/scripts/toto --summary)" t
 
 # justfile scripts completion
-for script in bax caldb upda bwmgr skel pullall jots toto remo rrestic lc; do
+for script in bax caldb upda bwmgr skel pullall jots toto remo lkgpg lc; do
 	command -v ${script} >/dev/null && {
 		complete -W "$(~/scripts/${script} --summary)" ${script}
 	}

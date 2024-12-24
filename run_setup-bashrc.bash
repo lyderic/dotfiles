@@ -5,7 +5,7 @@
 	exit 42
 }
 grep -qxF "source \$HOME/.bigbang" "${HOME}/.bashrc" || {
-	warn "bigbang not sourced in ~/.bashrc, fixing..."
+	echo -e "\e[1;33mbigbang not sourced in ~/.bashrc, fixing...\e[m"
 	echo "source \$HOME/.bigbang" | tee -a "${HOME}/.bashrc"
-	ok ".bashrc set"
+	echo -e "\e[1;32m.bashrc set\e[m"
 }

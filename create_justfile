@@ -1,0 +1,2 @@
+import "justfile-common"
+_default: _help

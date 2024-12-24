@@ -4,7 +4,8 @@
 	echo -e "\e[31mno .bigbang found!\e[0m"
 	exit 42
 }
-grep --quiet "bigbang" "${HOME}/.bashrc" || {
+grep -qxF "source \$HOME/.bigbang" "${HOME}/.bashrc" || {
+	warn "bigbang not sourced in ~/.bashrc, fixing..."
 	echo "source \$HOME/.bigbang" | tee -a "${HOME}/.bashrc"
+	ok ".bashrc set"
 }
-echo -e "\e[36m.bashrc set\e[0m"

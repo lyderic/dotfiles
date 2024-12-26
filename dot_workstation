@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="2024-12-22"
+export WORKSTATION_VERSION="2024-12-26"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
@@ -46,8 +46,6 @@ export PASSWORD_STORE_EXTENSION_COMMANDS="keyinfo sync menu otp select qrcode"
 echo -e "${GRN}[completion] scripts loaded${NOC}"
 
 # PATH and CDPATH
-topath /usr/local/go/bin
-topath ${HOME}/scripts
 export CDPATH=.:${HOME}:${HOME}/go/src/github.com/lyderic:$HOME/repositories:$HOME/box:$HOME/box/cyrano
 alias lcd='CDPATH= cd'
 alias goly="cd ${HOME}/go/src/github.com/lyderic/"

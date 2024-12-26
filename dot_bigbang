@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="2024-12-22"
+export BIGBANG_VERSION="2024-12-26"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -36,6 +36,7 @@ showpath() {
 
 # PATH
 [ -d ${HOME}/bin ] && topath ${HOME}/bin
+[ -d ${HOME}/scripts ] && topath ${HOME}/scripts
 
 # MANPATH
 [ -d "${HOME}/.local/share/man" ] && \

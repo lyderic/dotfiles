@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="2024-12-26"
+export WORKSTATION_VERSION="2024-12-28"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
@@ -43,7 +43,7 @@ __password_store_extension_complete_keyinfo() {
 }
 export PASSWORD_STORE_EXTENSION_COMMANDS="keyinfo sync menu otp select qrcode"
 ## report completion
-echo -e "${GRN}[completion] scripts loaded${NOC}"
+echo -e "\e[2;32mcompletion scripts loaded\e[m"
 
 # PATH and CDPATH
 export CDPATH=.:${HOME}:${HOME}/go/src/github.com/lyderic:$HOME/repositories:$HOME/box:$HOME/box/cyrano
@@ -74,16 +74,16 @@ runenc() {
 # unlock services
 ## pass
 if pass keyinfo --quiet; then
-	echo -e "${GRN}[pass] gpg key loaded${NOC}"
+	echo -e "\e[2;32mpass gpg key loaded\e[m"
 else
 	pass bonjour
 fi
 ## ssa
-[ -x ~/bin/ssa ] && {
+[ -x ~/scripts/ssa ] && {
 	export SSH_AUTH_SOCK=${HOME}/.cache/ssa/ssa.sock
-	export SSA_PASS_SOURCE=${HOME}/scripts/pass-ssa
-	export SSA_KEY_EXPIRY=1w
-	ssh-add -l >/dev/null || ssa && echo -e "${GRN}[ssa] ssh keys loaded${NOC}"
+	ssh-add -l >/dev/null || ssa load-keys && {
+		echo -e "\e[2;32mssh keys loaded by ssa\e[m"
+	}
 }
 
 # vim: filetype=sh

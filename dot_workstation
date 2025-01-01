@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="2024-12-28"
+export WORKSTATION_VERSION="2024-01-01"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
@@ -80,7 +80,8 @@ else
 fi
 ## ssa
 [ -x ~/scripts/ssa ] && {
-	export SSH_AUTH_SOCK=${HOME}/.cache/ssa/ssa.sock
+	export SSA_CACHE_DIR="${XDG_RUNTIME_DIR}/ssa"
+	export SSH_AUTH_SOCK="${SSA_CACHE_DIR}/ssa.sock"
 	ssh-add -l >/dev/null || ssa load-keys && {
 		echo -e "\e[2;32mssh keys loaded by ssa\e[m"
 	}

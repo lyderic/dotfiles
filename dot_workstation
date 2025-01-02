@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="2024-01-01"
+export WORKSTATION_VERSION="2024-01-02"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
@@ -18,7 +18,7 @@ alias t=toto
 complete -W "$(~/scripts/toto --summary)" t
 
 # justfile scripts completion
-for script in bax caldb upda bwmgr skel pullall jots toto remo lkgpg lc; do
+for script in bax caldb upda bwmgr pullall jots toto remo lkgpg lc ssk ssa; do
 	command -v ${script} >/dev/null && {
 		complete -W "$(~/scripts/${script} --summary)" ${script}
 	}
@@ -26,7 +26,7 @@ done
 
 # bash completion
 ## cobra programs completion
-for prog in ssk vigilax tum floc litt hugo; do
+for prog in vigilax tum floc litt hugo; do
 	command -v ${prog} >/dev/null && {
 		source <(${prog} completion bash)
 	}
@@ -78,10 +78,9 @@ if pass keyinfo --quiet; then
 else
 	pass bonjour
 fi
-## ssa
+## ssa (ssh-agent wrapper)
 [ -x ~/scripts/ssa ] && {
-	export SSA_CACHE_DIR="${XDG_RUNTIME_DIR}/ssa"
-	export SSH_AUTH_SOCK="${SSA_CACHE_DIR}/ssa.sock"
+	export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssa.sock"
 	ssh-add -l >/dev/null || ssa load-keys && {
 		echo -e "\e[2;32mssh keys loaded by ssa\e[m"
 	}

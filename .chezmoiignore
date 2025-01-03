@@ -1,9 +1,10 @@
 {{/*
 We check the 'workstation' variable in the config file 
 (~/.config/chezmoi/chezmoi.yaml).
-If a this variable is not found, if it is set to false,
-or if the config file doesn't exist, then we write these files:
+If this variable is not found, if it is set to false,
+or if the config file doesn't exist, then we write these files (i.e. they are NOT ignored):
 - ~/.workstation
+- ~/.gnupg/gpg.conf
 - ~/.gnupg/gpg-agent.conf
 Therefore, to have these dotfiles deployed on a workstation,
 create the file '~/.config/chezmoi/chezmoi.yaml' with the following

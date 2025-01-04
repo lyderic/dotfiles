@@ -48,13 +48,9 @@ showpath() {
 ## just completion and aliases
 which just > /dev/null && {
 	alias k=just
-	alias km='k --choose'
-	alias kv='k --evaluate'
 	source <(just --completions bash)
 	complete -F _just -o bashdefault -o default k
 	alias kk='just --justfile ~/justfile'
-	alias kkv='kk --evaluate'
-	alias kkm='kk --choose'
 	complete -W "$(just --global-justfile --summary)" kk
 }
 

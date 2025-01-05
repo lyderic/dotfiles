@@ -1,13 +1,11 @@
 #!/bin/bash
 
-[ -e "${HOME}/.bigbang" ] || exit
+pattern="^source.*\.bigbang$"
+sourceline="source \${HOME}/.bigbang"
 
-tempfile="$(mktemp)"
-cat > "${tempfile}"
+while IFS= read -r line; do
+	[[ ${line} =~ $pattern ]] && continue
+	echo "${line}"
+done < /dev/stdin
 
-grep -qxF "source \$HOME/.bigbang" "${tempfile}" || {
-	echo "source \$HOME/.bigbang" >> "${tempfile}"
-}
-
-cat "${tempfile}"
-rm "${tempfile}"
+echo "${sourceline}"

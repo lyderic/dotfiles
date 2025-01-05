@@ -1,0 +1,13 @@
+#!/bin/bash
+
+[ -e "${HOME}/.bigbang" ] || exit
+
+tempfile="$(mktemp)"
+cat > "${tempfile}"
+
+grep -qxF "source \$HOME/.bigbang" "${tempfile}" || {
+	echo "source \$HOME/.bigbang" >> "${tempfile}"
+}
+
+cat "${tempfile}"
+rm "${tempfile}"

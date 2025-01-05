@@ -26,7 +26,7 @@ done
 
 # bash completion
 ## cobra programs completion
-for prog in vigilax tum floc litt hugo; do
+for prog in vigilax floc litt hugo; do
 	command -v ${prog} >/dev/null && {
 		source <(${prog} completion bash)
 	}

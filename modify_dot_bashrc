@@ -1,6 +1,12 @@
 #!/bin/bash
 
-pattern="^source.*\.bigbang$"
+# The pattern does this:
+# - Matches lines that start with 0 or more of whitespace.
+# - Must be followed by either a dot (`.`) or the word "source".
+# - Allows for any characters after the dot or "source".
+# - Must include the string ".bigbang" somewhere in the line.
+# - Can have any characters following ".bigbang" until end of line.
+pattern="^[[:space:]]*(\.|source).*\.bigbang.*$"
 sourceline="source \${HOME}/.bigbang"
 
 while IFS= read -r line; do

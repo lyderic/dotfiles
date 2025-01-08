@@ -77,6 +77,12 @@ ansi:
 		echo -ne "\e[${i}m${i} "
 	done ; echo -e "\e[m"
 
+_wait:
+	#!/bin/bash
+	echo -ne "\e[2;3;34mPlease any key to continue...\e[m"
+	read -sn 1
+	echo
+
 # [geo] where am I?
 [group('common')]
 geolocate:
@@ -96,6 +102,10 @@ _help:
 	@just --list --no-aliases --unsorted \
 		--list-heading=$'\e[34m{{justfile()}}\e[m\n' \
 		--list-prefix=' • ' | sed -e 's/ • \[/[/'
+
+[private]
+v:
+	@just --evaluate
 
 # DYNAMIC VARIABLES, SETTINGS AND IMPORTS
 

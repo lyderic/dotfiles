@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="2024-01-04"
+export WORKSTATION_VERSION="2025-01-04"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
@@ -70,6 +70,9 @@ runenc() {
 	shift
 	gpg -d ${scriptname} | bash -s $@
 }
+
+# clé
+[ -f ~/.cle ] && source ~/.cle
 
 # unlock services
 ## pass

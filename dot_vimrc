@@ -277,7 +277,9 @@ autocmd! BufWritePost *
 "    ABBREVIATIONS
 "----------------------------------------------
 
-iabbr bibash #!/bin/bash
+iabbrev bibash #!/bin/bash
+cabbrev comm s/^/#/
+cabbrev nocomm s/^#//
 
 "----------------------------------------------
 "    FUNCTIONS

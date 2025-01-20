@@ -65,34 +65,37 @@ curl
 direnv
 file
 git
-grep
 htop
-less
 sudo
 tmux
-tree
 vim
 "
 
-# Packages present only on archlinux
+# Additional packages for archlinux
 ARCH_PACKAGES="
 croc
 diffutils
 duf
 fzf
 gdu
+grep
 just
+less
 pacman-contrib
 the_silver_searcher
+tree
 which
 "
 
-# Packages present only on ubuntu
+# Additional packages for ubuntu/debian
 UBUNTU_PACKAGES="
+grep
+less
 silversearcher-ag
+tree
 "
 
-# Packages present only on alpine
+# Additional packages for alpine
 ALPINE_PACKAGES="
 croc
 diffutils

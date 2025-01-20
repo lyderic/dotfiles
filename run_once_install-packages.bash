@@ -8,7 +8,8 @@ main() {
 	case "${DISTRO}" in
 	"ubuntu" | "debian") ubuntu ;;
 	"arch" | "archarm") arch ;;
-	*) die "${DISTRO}: only archlinux and ubuntu are supported" ;;
+	"alpine") alpine ;;
+	*) die "${DISTRO}: only archlinux, ubuntu and alpine are supported" ;;
 	esac
 	echo -e "\e[36mbase packages installed\e[m"
 }
@@ -39,6 +40,13 @@ ubuntu() {
 	[ -x /usr/bin/bat ] || sudo ln -s /usr/bin/batcat /usr/bin/bat
 }
 
+alpine() {
+	local packages="${COMMON_PACKAGES} ${ALPINE_PACKAGES}"
+	header "alpine packages"
+	sudo apk -U upgrade
+	sudo apk add ${packages}
+}
+
 # DISPLAY
 header() { echo -e "\e[34m${@}\e[m"; }
 ok() { echo -e "\[32m${@}\e[m"; }
@@ -48,7 +56,7 @@ die() {
 	exit 42
 }
 
-# Packages that are common to arch and ubuntu
+# Packages that are common to arch, ubuntu and alpine
 COMMON_PACKAGES="
 bash
 bash-completion
@@ -82,6 +90,17 @@ which
 # Packages present only on ubuntu
 UBUNTU_PACKAGES="
 silversearcher-ag
+"
+
+# Packages present only on alpine
+ALPINE_PACKAGES="
+croc
+diffutils
+fzf
+gdu
+just
+the_silver_searcher
+which
 "
 
 main ${@}

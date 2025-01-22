@@ -32,11 +32,7 @@ ubuntu() {
 	local packages="${COMMON_PACKAGES} ${UBUNTU_PACKAGES}"
 	header "ubuntu packages"
 	$sudo apt-get update && $sudo apt-get -y install ${packages}
-	# As of 22.04, just is not in ubuntu's repos :(
-	[ -x /usr/local/bin/just ] || {
-		curl -sL --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh |
-			$sudo bash -s -- --to /usr/local/bin && ok "just successfully installed"
-	}
+	$sudo snap install just --classic
 	# bat is in ubuntu's repo but gets installed as 'batcat'
 	[ -x /usr/bin/bat ] || $sudo ln -s /usr/bin/batcat /usr/bin/bat
 }
@@ -65,7 +61,8 @@ tmux vim
 
 # Additional packages for archlinux
 ARCH_PACKAGES="
-croc diffutils duf fzf gdu grep just less pacman-contrib the_silver_searcher tree which
+croc diffutils duf fzf gdu grep just less pacman-contrib \
+the_silver_searcher tree which
 "
 
 # Additional packages for ubuntu/debian

@@ -1,10 +1,13 @@
 {{/*
-We check the 'workstation' variable in the config file 
-(~/.config/chezmoi/chezmoi.yaml).
-If this variable is not found, if it is set to false,
-or if the config file doesn't exist, then we write these files
-(i.e. they are NOT ignored):
-- ~/.workstation
+Some files are only to be deployed on workstations.
+To achieve this, we define the host machine as 'workstation: true'.
+Moreover, on workstations, we need a master gpg key in order to
+decrypt the encrypted_* files.
+If the 'data' > 'workstation' variable is not found, if it is set to
+'false', or if the config file doesn't exist, then we write the
+following files (i.e. they are NOT ignored):
+- ~/.workstation (encrypted)
+- ~/.ssh/config (encrypted)
 - ~/.gnupg/gpg.conf
 - ~/.gnupg/gpg-agent.conf
 Therefore, to have these dotfiles deployed on a workstation,
@@ -13,6 +16,9 @@ following content:
 -----8<-----
 data:
   workstation: true
+encryption: gpg
+gpg:
+  recipient: "XXXXXXXX"
 ----->8-----
 */}}
 
@@ -20,6 +26,7 @@ data:
 {{- with .workstation -}}
 {{- else -}}
 {{- print ".workstation\n" -}}
+{{- print ".ssh/config\n" -}}
 {{- print ".gnupg/gpg-agent.conf\n" -}}
 {{- print ".gnupg/gpg.conf\n" -}}
 {{- end -}}

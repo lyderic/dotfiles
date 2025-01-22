@@ -1,6 +1,6 @@
 {{ chezmoi:template:missing-key=zero }}
-{{- if .gpg_default_key -}}
-default-key {{.gpg_default_key}}
+{{- if eq .chezmoi.config.encryption "gpg" -}}
+default-key {{.chezmoi.config.gpg.recipient}}
 default-recipient-self
 {{ end -}}
 keyid-format long

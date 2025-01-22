@@ -22,8 +22,8 @@ gpg:
 {{ chezmoi:template:missing-key=zero }}
 {{- if eq .chezmoi.config.encryption "gpg" -}}
 {{- else -}}
-{{- print ".workstation\n" -}}
-{{- print ".ssh/config\n" -}}
+{{- print ".workstation.asc\n" -}}
+{{- print ".ssh/config.asc\n" -}}
 {{- print ".gnupg/gpg-agent.conf\n" -}}
 {{- print ".gnupg/gpg.conf\n" -}}
 {{- end -}}

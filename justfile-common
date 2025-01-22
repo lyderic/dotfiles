@@ -29,6 +29,9 @@ update:
 		sudo apt-get ${yes} autoclean
 		sudo apt-get ${yes} clean
 	}
+	[ -x /usr/bin/snap ] && {
+		sudo snap refresh
+	}
 	[ -x /usr/bin/pacman ] && {
 		[ "{{confirm}}" == "true" ] || noconfirm="--noconfirm"
 			sudo pacman -Syu ${noconfirm}

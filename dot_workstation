@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="2025-01-24"
+export WORKSTATION_VERSION="2025-01-24-1"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
@@ -8,7 +8,8 @@ alias gocryptfs='gocryptfs -extpass "pass gocryptfs"'
 alias di="xdg-open > /dev/null 2>&1"
 
 # easily reload workstation init and show version
-alias workstation='. ${HOME}/.workstation ; blue "workstation v${WORKSTATION_VERSION}"'
+alias workstation='. ${HOME}/.workstation
+blue "workstation v${WORKSTATION_VERSION}"'
 
 # duf without fluff
 alias duf='duf --only local,loops'
@@ -18,10 +19,12 @@ alias t=toto
 complete -W "$(~/scripts/toto --summary)" t
 
 # justfile scripts completion
-for script in bax caldb upda bwmgr pullall jots toto remo; do
-	command -v ${script} >/dev/null && {
-		complete -W "$(~/scripts/${script} --summary)" ${script}
-	}
+for script in \
+	~/scripts/{bax,caldb,upda,bwmgr,pullall,jots,toto,remo} \
+	~/bin/lc
+do
+	[ -x "${script}" ] || continue
+	complete -W "$(${script} --summary)" $(basename ${script})
 done
 
 # bash completion

@@ -1,0 +1,89 @@
+export WORKSTATION_VERSION="2025-01-24"
+
+# aliases that are using pass
+alias rclone='rclone --password-command="pass rclone"'
+alias gocryptfs='gocryptfs -extpass "pass gocryptfs"'
+
+# 'xdg-open' is a pain to type. di = 'display'
+alias di="xdg-open > /dev/null 2>&1"
+
+# easily reload workstation init and show version
+alias workstation='. ${HOME}/.workstation ; blue "workstation v${WORKSTATION_VERSION}"'
+
+# duf without fluff
+alias duf='duf --only local,loops'
+
+# toto is a justfile that manages todo.txt
+alias t=toto
+complete -W "$(~/scripts/toto --summary)" t
+
+# justfile scripts completion
+for script in bax caldb upda bwmgr pullall jots toto remo; do
+	command -v ${script} >/dev/null && {
+		complete -W "$(~/scripts/${script} --summary)" ${script}
+	}
+done
+
+# bash completion
+## cobra programs completion
+for prog in vigilax floc litt hugo; do
+	command -v ${prog} >/dev/null && {
+		source <(${prog} completion bash)
+	}
+done
+## pandoc completion
+command -v pandoc >/dev/null && {
+	eval "$(pandoc --bash-completion)"
+}
+## pass extensions completion
+export PASSWORD_STORE_ENABLE_EXTENSIONS=true
+__password_store_extension_complete_keyinfo() {
+	COMPREPLY+=($(compgen -W "-q --quiet" -- ${cur}))
+	_pass_complete_entries 1
+}
+export PASSWORD_STORE_EXTENSION_COMMANDS="keyinfo sync menu otp select qrcode"
+## report completion
+echo -e "\e[2;32mcompletion scripts loaded\e[m"
+
+# PATH and CDPATH
+export CDPATH=.:${HOME}:${HOME}/go/src/github.com/lyderic:$HOME/repositories:$HOME/box:$HOME/box/cyrano
+alias lcd='CDPATH= cd'
+alias goly="cd ${HOME}/go/src/github.com/lyderic/"
+alias repo="cd ${HOME}/repositories"
+alias mem="cd ${HOME}/mem"
+
+# Texlive
+# Documentation: https://tug.org/texlive/quickinstall.html
+export TEXLIVE_CURRENT_DIR="/usr/local/texlive/current"
+[ -d "${TEXLIVE_CURRENT_DIR}" ] && {
+	topath ${TEXLIVE_CURRENT_DIR}/bin/x86_64-linux
+	topath MANPATH ${TEXLIVE_CURRENT_DIR}/texmf-dist/doc/man
+	topath INFOPATH ${TEXLIVE_CURRENT_DIR}/texmf-dist/doc/info
+}
+
+# mandatory exports
+export VISUAL=vim
+
+# run encrypted bash scripts
+runenc() {
+	local scriptname=${1}
+	shift
+	gpg -d ${scriptname} | bash -s $@
+}
+
+# unlock services
+## pass
+if pass keyinfo --quiet; then
+	echo -e "\e[2;32mpass gpg key loaded\e[m"
+else
+	pass bonjour
+fi
+## ssa (ssh-agent wrapper)
+export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssa.sock"
+[ -x ~/scripts/ssa ] && {
+	ssh-add -l >/dev/null || ssa load-keys && {
+		echo -e "\e[2;32mssh keys loaded by ssa\e[m"
+	}
+}
+
+# vim: filetype=sh

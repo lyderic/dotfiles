@@ -41,7 +41,7 @@ update:
 			printf "\e[m"
 	}
 
-{{- if eq .chezmoi.osRelease.id "arch" -}}
+{{ if eq .chezmoi.osRelease.id "arch" -}}
 # remove archlinux orphans
 [group('archlinux')]
 [no-exit-message]
@@ -57,7 +57,7 @@ deep-clean: _check_arch
 
 _check_arch:
 	[ -x /usr/bin/pacman ]
-{{- end -}}
+{{- end }}
 
 # show ANSI codes
 [group('common')]

@@ -32,9 +32,7 @@ ubuntu() {
 	local packages="${COMMON_PACKAGES} ${UBUNTU_PACKAGES}"
 	header "ubuntu packages"
 	$sudo apt-get update && $sudo apt-get -y install ${packages}
-	curl --proto '=https' --tlsv1.2 -sSf \
-		https://just.systems/install.sh \
-		| $sudo bash -s -- --to /usr/local/bin
+	$sudo snap install --edge --classic just
 	# bat is in ubuntu's repo but gets installed as 'batcat'
 	[ -x /usr/bin/bat ] || $sudo ln -s /usr/bin/batcat /usr/bin/bat
 }

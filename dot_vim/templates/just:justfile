@@ -1,9 +1,15 @@
-_listing:
-	@just --list --no-aliases --unsorted \
-		--list-heading=$'\e[34m{{justfile()}}\e[m\n' \
-		--list-prefix=' • ' | sed -e 's/ • \[/[/'
+alias h := _help
+
+_help:
+	@just --list --unsorted --alias-style left --color always \
+		--list-heading='' --list-prefix=' ' \
+		| sed -e 's/alias: //'
 
 test:
 	# something to test
+
+[private]
+v:
+	{{justfile()}} --evaluate
 
 set shell := ["bash","-uc"]

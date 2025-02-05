@@ -75,7 +75,7 @@ the_silver_searcher tree which
 "
 
 # Additional packages for ubuntu/debian
-UBUNTU_PACKAGES="grep less silversearcher-ag tree"
+UBUNTU_PACKAGES="dialog grep less silversearcher-ag tree"
 
 # Additional packages for alpine
 ALPINE_PACKAGES="

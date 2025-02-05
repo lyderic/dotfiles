@@ -37,11 +37,11 @@ ubuntu() {
 		curl --proto '=https' --tlsv1.2 -sSf \
 		https://just.systems/install.sh \
 		| $sudo bash -s -- --to /usr/local/bin
-	} && ok just already installed
+	} && echo -e "\e[96mjust already installed\e[m"
 	header "croc for ubuntu"
 	[ -x /usr/local/bin/croc ] || {
 		curl https://getcroc.schollz.com | $sudo bash
-	} && ok croc already installed
+	} && echo -e "\e[96mcroc already installed\e[m"
 	# bat is in ubuntu's repo but gets installed as 'batcat'
 	[ -x /usr/bin/bat ] || $sudo ln -s /usr/bin/batcat /usr/bin/bat
 }

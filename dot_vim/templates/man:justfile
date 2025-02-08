@@ -1,0 +1,33 @@
+man:
+	#!/bin/bash
+	man <(echo ".TH \"FOO\" 1 \"January 1970\" \"foo server\" Manual
+	.SH NAME
+	foo - a server to do something
+	.SH SYNOPSIS
+	brief overview of what this server does
+	.SH DESCRIPTION
+	Explain in more details what this does, you can use \f[B]bold\f[R].
+	.P
+	This is a new paragraph. This is \f[I]emphasized\f[R].
+	.SS Subsection 1
+	This is a subsection
+	.SS Subsection 2
+	This is an email addess: foo@bar.com.
+	This is a list:
+	.P
+	.EX
+	 • item 1
+	 • item 2
+	 • ...
+	.EE
+	.SH COMMANDS
+	.EX
+	$(just --list --color=never --list-prefix='' --list-heading='' --alias-style=left | sed -e 's/alias: //')
+	.EE
+	.SH VARIABLES
+	.EX
+	$(just --evaluate)
+	.EE
+	.SH AUTHOR
+	Lydéric Landry
+	")

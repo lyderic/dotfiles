@@ -1,2 +1,2 @@
-import "justfile-common"
+import ".justfile.d/common.just"
 _default: _help

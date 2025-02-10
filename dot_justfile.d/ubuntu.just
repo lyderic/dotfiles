@@ -11,3 +11,21 @@ update $confirm="true":
 	[ -x /usr/bin/snap ] && {
 		sudo snap refresh
 	}
+
+# install/update croc
+croc:
+	curl https://getcroc.schollz.com | bash
+
+# install/update fzf
+fzf:
+	#!/bin/bash
+	cd /dev/shm
+	[ -d fzf ] && rm -rf fzf
+	git clone --depth 1 https://github.com/junegunn/fzf.git
+	cd /dev/shm/fzf ; ./install --bin
+	sudo cp -uv /dev/shm/fzf/bin/fzf {{lbin}}
+	sudo cp -uv /dev/shm/fzf/plugin/fzf.vim {{vimdir}}/plugin
+	sudo cp -uv /dev/shm/fzf/doc/fzf.txt {{vimdir}}/doc
+
+lbin := "/usr/local/bin"
+vimdir := "/usr/share/vim/vim91"

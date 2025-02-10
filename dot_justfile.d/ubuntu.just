@@ -27,5 +27,12 @@ fzf:
 	sudo cp -uv /dev/shm/fzf/plugin/fzf.vim {{vimdir}}/plugin
 	sudo cp -uv /dev/shm/fzf/doc/fzf.txt {{vimdir}}/doc
 
+# install tailscale
+tailscale:
+	#!/bin/bash
+	set -e
+	[ -x /usr/bin/tailscale ] && exit 0
+	curl -fsSL https://tailscale.com/install.sh | sh
+
 lbin := "/usr/local/bin"
 vimdir := "/usr/share/vim/vim91"

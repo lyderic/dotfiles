@@ -14,7 +14,7 @@ update $confirm="true":
 
 # install/update croc
 croc:
-	curl https://getcroc.schollz.com | bash
+	curl https://getcroc.schollz.com | sudo bash
 
 # install/update fzf
 fzf:

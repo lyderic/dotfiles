@@ -2,7 +2,7 @@
 update $confirm="true":
 	#!/bin/bash
 	[ "${confirm}" == "true" ] && yes="-y"
-	sudo apt-get ${yes} update
+	sudo apt-get update
 	sudo apt-get ${yes} upgrade
 	sudo apt-get ${yes} dist-upgrade
 	sudo apt-get ${yes} autoremove

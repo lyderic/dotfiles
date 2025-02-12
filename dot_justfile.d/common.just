@@ -15,10 +15,10 @@ update:
 	#!/bin/bash
 	echo -e "\e[34m[chezmoi]\e[0m"
 	chezmoi update
-	echo -e "\e[34m[chezmoi (root)]\e[0m"
-	sudo chezmoi update
+	#echo -e "\e[34m[chezmoi (root)]\e[0m"
+	#sudo chezmoi update
 	echo -e "\e[34m[distro:${distro}]\e[0m"
-	just {{distro}}::update
+	just {{distro}}::update false
 
 # show ANSI codes
 [group('common')]
@@ -74,7 +74,6 @@ mod? alpine
 v:
 	@just --evaluate
 
-confirm := "true"
 export distro := `awk -F= '/^ID=/ {print $2}' /etc/os-release`
 set shell := ["bash","-uc"]
 # vim: ft=just

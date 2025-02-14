@@ -1,6 +1,7 @@
 # update ubuntu
 update $confirm="true":
 	#!/bin/bash
+	set -e
 	[ "${confirm}" == "true" ] && yes="-y"
 	sudo apt-get update
 	sudo apt-get ${yes} upgrade
@@ -11,6 +12,7 @@ update $confirm="true":
 	[ -x /usr/bin/snap ] && {
 		sudo snap refresh
 	}
+	exit 0
 
 # install/update croc
 croc:

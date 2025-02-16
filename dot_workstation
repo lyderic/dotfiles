@@ -74,6 +74,9 @@ runenc() {
 	gpg -d ${scriptname} | bash -s $@
 }
 
+# Default libvirt URI 
+export LIBVIRT_DEFAULT_URI="qemu:///system"
+
 # unlock services
 ## pass
 if pass keyinfo --quiet; then

@@ -45,7 +45,8 @@ function s:firstpass(r)
 	"space after some punctuation (between ?!;:», and a letter)
 	"note: we don't include '.' otherwise URLs e.g. 'a.b.com' would
 	"become 'a. b. com'
-	silent! execute a:r.'s/\v([?!;:»,])(\K)/\1 \2/g'
+	"silent! execute a:r.'s/\v([?!;:»,])(\K)/\1 \2/g'
+	silent! execute a:r.'s/\v([?!;:»,])([0-9A-Za-z])/\1 \2/g'
 	"0x00A0 after tiret quadratin at beginning of line
 	"silent! execute a:r.'s/\v^—\s*(.)/— \1/'
 	"0x00A0 after/before — (ignoring at beginning of line)

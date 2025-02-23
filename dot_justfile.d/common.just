@@ -1,4 +1,4 @@
-common-version := "202502090952"
+common-version := "202502230655"
 
 alias up  := update
 
@@ -18,7 +18,7 @@ update:
 	#echo -e "\e[34m[chezmoi (root)]\e[0m"
 	#sudo chezmoi update
 	echo -e "\e[34m[distro:${distro}]\e[0m"
-	just {{distro}}::update false
+	just {{distro}}::update {{confirm}}
 
 # show ANSI codes
 [group('common')]
@@ -74,6 +74,7 @@ mod? alpine
 v:
 	@just --evaluate
 
+confirm := "true"
 export distro := `awk -F= '/^ID=/ {print $2}' /etc/os-release`
 set shell := ["bash","-uc"]
 # vim: ft=just

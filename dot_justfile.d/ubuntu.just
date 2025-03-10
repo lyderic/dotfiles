@@ -29,5 +29,10 @@ fzf:
 	sudo cp -uv /dev/shm/fzf/plugin/fzf.vim {{vimdir}}/plugin
 	sudo cp -uv /dev/shm/fzf/doc/fzf.txt {{vimdir}}/doc
 
+# update just
+just:
+	sudo mv -v {{lbin}}/just {{lbin}}/just.old
+	curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
+
 lbin := "/usr/local/bin"
 vimdir := "/usr/share/vim/vim91"

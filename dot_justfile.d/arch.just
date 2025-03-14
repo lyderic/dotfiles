@@ -23,14 +23,21 @@ deep-clean:
 	sudo pacman -Sc --noconfirm
 
 # install xfce4 accessible by vnc
-gui:
+gui: _check_gui_allowed
 	#!/bin/bash
 	set -e
-	[ $(id -u) == "0" ] && die no vnc for root
-	[ -d ~/.vnc ] && die vnc already installed for ${USER}
 	sudo pacman -S --needed xorg-server noto-fonts xfce4 tigervnc
 	echo ":0=${USER}" | sudo tee /etc/tigervnc/vncserver.users
 	mkdir -v ~/.vnc && cd ~/.vnc
 	echo -e "session=openbox\ngeometry=1920x1000\nlocalhost" > config
 	[ -f passwd ] || vncpasswd
 	echo -e "\e[33mnow start and possibly enable vncserver@:0\e[m"
+_check_gui_allowed:
+	# no vnc for root
+	[ $(id -u) != "0" ]
+	# no vnc on wayland
+	[ $XDG_SESSION_TYPE != "wayland" ]
+	# no vnc on workstations
+	[ ! ~/.workstation ]
+	# don't reinstall if already there
+	[ ! -d ~/.vnc ]

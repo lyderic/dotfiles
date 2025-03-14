@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="2025-01-08"
+export BIGBANG_VERSION="2025-03-14"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -72,7 +72,7 @@ complete -o default -o nospace -F __start_chezmoi cz
 sudoc() {
 	prog=${1:-cryptsetup}
 	which ${prog} > /dev/null 2>&1 || return
-	alias ${prog:0:3}="sudo ${prog}"
+	alias ${prog:0:3}="sudo -E ${prog}"
 	. "/usr/share/bash-completion/completions/${prog}"
 	complete -F _${prog} ${prog:0:3}
 }

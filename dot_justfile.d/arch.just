@@ -22,6 +22,15 @@ deep-clean:
 	sudo paccache -ruk0
 	sudo pacman -Sc --noconfirm
 
+# refresh or install lyderic's aur
+aur:
+	#!/bin/bash
+	set -e
+	[ -d ~/repositories/aur ] && git -C ~/repositories/aur pull && exit 0
+	mkdir -pv ~/repositories
+	git -C ~/repositories clone https://github.com/lyderic/aur
+	sudo pacman -S --needed --noconfirm fakeroot
+
 # install xfce4 accessible by vnc
 gui: _check_gui_allowed
 	#!/bin/bash

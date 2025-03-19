@@ -47,6 +47,6 @@ _check_gui_allowed:
 	# no vnc on wayland
 	[ ${XDG_SESSION_TYPE-x} != "wayland" ]
 	# no vnc on workstations
-	[ ! ~/.workstation ]
+	[ ! -f ~/.workstation ]
 	# don't reinstall if already there
 	[ ! -d ~/.vnc ]

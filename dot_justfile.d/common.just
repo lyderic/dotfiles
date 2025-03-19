@@ -57,6 +57,21 @@ geolocate:
 @dimensions:
 	echo "$(tput cols) x $(tput lines)"
 
+# Nice show of services for status
+_services:
+	#!/bin/bash
+	[ -z "${services}" ] && exit 0
+	sc="\e[1m"; up="\e[32m"; down="\e[2m"; nc="\e[m"
+	for service in ${services} ; do
+		e=$({{sys}} is-enabled "${service}")
+		a=$({{sys}} is-active "${service}")
+		[ "${e}" == "enabled" ] && ec="${up}" || ec="${down}"
+		[ "${a}" == "active" ] && ac="${up}" || ac="${down}"
+		printf "${sc}%-24.24s${nc} ${ec}%-10.10s${nc} ${ac}%s${nc}\n" \
+		"${service}" "${e}" "${a}"
+	done
+
+
 # MODULES
 # arch commands
 [group('common')]

@@ -94,6 +94,7 @@ v:
 	@just --evaluate
 
 confirm := "true"
+sys := "sudo -E systemctl"
 export distro := `awk -F= '/^ID=/ {print $2}' /etc/os-release`
 set shell := ["bash","-uc"]
 # vim: ft=just

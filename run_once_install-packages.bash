@@ -48,7 +48,10 @@ ubuntu-binaries() {
 	header "ubuntu binaries"
 	local pbin="$(command -v bin)"
 	[ -x "${pbin}" ] || {
-		pbin=/dev/shm/bin; curl -L -o $pbin "${binurl}"; chmod +v -x $pbin
+		pbin=/dev/shm/bin;
+		curl -L -o $pbin "${binurl}";
+		chmod -v +x $pbin
+		sudo chmod -v 777 /usr/local/bin
 	}
 	declare -A binaries
 	binaries[bin]="https://github.com/marcosnils/bin"

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# CONFIGURATION
+binurl="https://github.com/marcosnils/bin/releases/download/v0.20.0/bin_0.20.0_linux_amd64"
+vimdir="/usr/share/vim/vim91"
+
 main() {
 	[ $(id -u) -eq 0 ] || sudo="sudo"
 	[ -e /etc/os-release ] && {
@@ -29,17 +33,48 @@ arch() {
 }
 
 ubuntu() {
+	ubuntu-packages
+	ubuntu-binaries
+	ubuntu-configure
+}
+
+ubuntu-packages() {
 	local packages="${COMMON_PACKAGES} ${UBUNTU_PACKAGES}"
 	header "ubuntu packages"
 	$sudo apt-get update && $sudo apt-get -y install ${packages}
-	header "just for ubuntu"
-	[ -x /usr/local/bin/just ] || {
-		curl --proto '=https' --tlsv1.2 -sSf \
-		https://just.systems/install.sh \
-		| $sudo bash -s -- --to /usr/local/bin
-	} && echo -e "\e[96mjust already installed\e[m"
-	# bat is in ubuntu's repo but gets installed as 'batcat'
-	[ -x /usr/bin/bat ] || $sudo ln -s /usr/bin/batcat /usr/bin/bat
+}
+
+ubuntu-binaries() {
+	header "ubuntu binaries"
+	local pbin="$(command -v bin)"
+	[ -x "${pbin}" ] || {
+		pbin=/dev/shm/bin; curl -L -o $pbin "${binurl}"; chmod +v -x $pbin
+	}
+	declare -A binaries
+	binaries[bin]="https://github.com/marcosnils/bin"
+	binaries[just]="https://github.com/casey/just"
+	binaries[fzf]="https://github.com/junegunn/fzf"
+	binaries[croc]="https://github.com/schollz/croc"
+	binaries[bat]="https://github.com/sharkdp/bat"
+	binaries[gdu]="https://github.com/dundee/gdu"
+	for binary in "${!binaries[@]}"; do
+		[ -x "/usr/local/bin/$binary" ] && {
+			warn "$binary found"
+			continue
+		}
+		$pbin install "${binaries[$binary]}"
+	done
+}
+
+ubuntu-configure() {
+	header "ubuntu configure fzf"
+	[ -f "${vimdir}/plugin/fzf.vim" ] && return
+	cd /dev/shm
+	[ -d fzf ] && rm -rf fzf
+	git clone --depth 1 https://github.com/junegunn/fzf.git
+	cd /dev/shm/fzf ; ./install --bin
+	sudo cp -uv /dev/shm/fzf/plugin/fzf.vim ${vimdir}/plugin
+	sudo cp -uv /dev/shm/fzf/doc/fzf.txt ${vimdir}/doc
 }
 
 alpine() {
@@ -60,13 +95,13 @@ die() {
 
 # Packages that are common to arch, ubuntu and alpine
 COMMON_PACKAGES="
-bash bash-completion bat curl direnv file git htop sudo
+bash bash-completion curl direnv file git htop sudo
 tmux vim
 "
 
 # Additional packages for archlinux
 ARCH_PACKAGES="
-croc diffutils duf fzf gdu grep just less pacman-contrib \
+croc diffutils bat duf fzf gdu grep just less pacman-contrib \
 the_silver_searcher tree which
 "
 

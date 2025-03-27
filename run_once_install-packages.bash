@@ -108,7 +108,7 @@ the_silver_searcher tree which
 "
 
 # Additional packages for ubuntu/debian
-UBUNTU_PACKAGES="dialog grep less lua5.4 silversearcher-ag tree"
+UBUNTU_PACKAGES="dialog grep less lua5.4 silversearcher-ag tree bsdextrautils"
 
 # Additional packages for alpine
 ALPINE_PACKAGES="

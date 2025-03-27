@@ -57,6 +57,21 @@ geolocate:
 @dimensions:
 	echo "$(tput cols) x $(tput lines)"
 
+# IPv4 addresses
+[group('common')]
+ip:
+	@just _ip | column -t
+_ip:
+	#!/usr/bin/lua
+	require("lee"); json = require("dkjson")
+	function main()
+		data = json.decode(eo("ip -j -4 address"))
+		for _,i in pairs(data) do
+			n = #i.addr_info
+			print(i.ifname, i.addr_info[1]["local"], n>1 and "*" or "")
+		end
+	end;main()
+
 # Nice show of services for status
 _services:
 	#!/bin/bash

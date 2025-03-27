@@ -59,7 +59,6 @@ ubuntu-binaries() {
 	binaries[fzf]="https://github.com/junegunn/fzf"
 	binaries[croc]="https://github.com/schollz/croc"
 	binaries[bat]="https://github.com/sharkdp/bat"
-	binaries[gdu]="https://github.com/dundee/gdu"
 	for binary in "${!binaries[@]}"; do
 		[ -x "/usr/local/bin/$binary" ] && {
 			warn "$binary found"
@@ -98,18 +97,18 @@ die() {
 
 # Packages that are common to arch, ubuntu and alpine
 COMMON_PACKAGES="
-bash bash-completion curl direnv file git htop sudo
-tmux vim
+bash bash-completion gdu curl direnv file git htop sudo
+tmux vim lua-dkjson
 "
 
 # Additional packages for archlinux
 ARCH_PACKAGES="
-croc diffutils bat duf fzf gdu grep just less pacman-contrib \
+croc diffutils bat duf fzf gdu lua grep just less pacman-contrib \
 the_silver_searcher tree which
 "
 
 # Additional packages for ubuntu/debian
-UBUNTU_PACKAGES="dialog grep less silversearcher-ag tree"
+UBUNTU_PACKAGES="dialog grep less lua5.4 silversearcher-ag tree"
 
 # Additional packages for alpine
 ALPINE_PACKAGES="

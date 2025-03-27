@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="2025-03-14"
+export BIGBANG_VERSION="2025-03-27"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -133,6 +133,9 @@ alias bigbang='. ${HOME}/.bigbang ; blue "bigbang v${BIGBANG_VERSION}"'
 
 # Mandatory for gpg-agent
 export GPG_TTY=$(tty)
+
+# lua stuff
+export LUA_PATH="$(lua -e 'print(package.path)');${HOME}/.local/share/lua/?.lua"
 
 # Wipe history when we close shell
 finish() {

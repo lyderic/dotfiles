@@ -63,7 +63,7 @@ ip:
 	@just _ip | column -t
 _ip:
 	#!/usr/bin/lua
-	require("lee"); json = require("dkjson")
+	dofile(".local/share/lua/lee.lua"); json = require("dkjson")
 	function main()
 		data = json.decode(eo("ip -j -4 address"))
 		for _,i in pairs(data) do

@@ -134,9 +134,6 @@ alias bigbang='. ${HOME}/.bigbang ; blue "bigbang v${BIGBANG_VERSION}"'
 # Mandatory for gpg-agent
 export GPG_TTY=$(tty)
 
-# lua stuff
-export LUA_PATH="$(lua -e 'print(package.path)');${HOME}/.local/share/lua/?.lua"
-
 # Wipe history when we close shell
 finish() {
   history -c

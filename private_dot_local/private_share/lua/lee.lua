@@ -1,3 +1,4 @@
+json = require("dkjson")
 f = string.format
 xeq = os.execute
 

@@ -1,18 +1,12 @@
 json = require("dkjson")
 f = string.format
-xeq = os.execute
+x = os.execute
+e = io.popen
 
 -- execute <cmd>, one line
 -- returns first line of output as a string
 function eo(cmd)
-	return io.popen(cmd):read()
-end
-
--- execute <cmd>, multiline
--- returns a function to iterate on e.g.:
--- for line in em("ls") do print(line) end
-function em(cmd)
-	return io.popen(cmd):lines()
+	return e(cmd):read()
 end
 
 -- traditional (C, go) printf
@@ -33,7 +27,7 @@ end
 
 -- read <file> to a string
 function readfile(file)
-	local fh = assert(io.open(file, "r"))
+	local fh = assert(io.open(file))
 	output = fh:read("*all")
 	fh:close()
 	return output

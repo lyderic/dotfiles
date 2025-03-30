@@ -65,10 +65,14 @@ _ip:
 	#!/usr/bin/lua
 	dofile(".local/share/lua/lee.lua")
 	function main()
-		data = json.decode(eo("ip -j -4 address"))
-		for _,i in pairs(data) do
-			n = #i.addr_info
-			print(i.ifname, i.addr_info[1]["local"], n>1 and "*" or "")
+		data = json.decode(eo("ip -j address"))
+		for i = 1, #data do
+			addresses = data[i]["addr_info"]
+			for _, address in pairs(addresses) do
+				if address["family"] ~= "inet" then goto next end
+				if address["label"] == "lo" then goto next end
+				print(address["label"], address["local"])
+			::next::;end
 		end
 	end;main()
 

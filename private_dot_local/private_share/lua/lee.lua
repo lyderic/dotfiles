@@ -2,6 +2,7 @@ json = require("dkjson")
 f = string.format
 x = os.execute
 e = io.popen
+env = os.getenv
 
 -- execute <cmd>, one line
 -- returns first line of output as a string
@@ -9,9 +10,27 @@ function eo(cmd)
 	return e(cmd):read()
 end
 
+-- execute <cmd>, all lines
+-- returns all output lines as a string
+-- includes final "\n"
+function ea(cmd)
+	return e(cmd):read("*a")
+end
+
 -- traditional (C, go) printf
 function printf(format, ...)
 	io.write(f(format, ...))
+end
+
+-- if <path> exists, return absolute path
+-- otherwise, return false
+function path(path)
+	local abs = eo("readlink -e " .. path)
+	if abs == nil then
+		return false
+	else
+		return abs
+	end
 end
 
 -- write <content> to <file>

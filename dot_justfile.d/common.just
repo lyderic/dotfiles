@@ -60,21 +60,17 @@ geolocate:
 # IPv4 addresses
 [group('common')]
 ip:
-	@just _ip | column -t
-_ip:
 	#!/usr/bin/lua
-	dofile(".local/share/lua/lee.lua")
-	function main()
-		data = json.decode(eo("ip -j address"))
-		for i = 1, #data do
-			addresses = data[i]["addr_info"]
-			for _, address in pairs(addresses) do
-				if address["family"] ~= "inet" then goto next end
-				if address["label"] == "lo" then goto next end
-				print(address["label"], address["local"])
-			::next::;end
-		end
-	end;main()
+	dofile("{{lee}}")
+	data = json.decode(ea("ip -j -4 address")); buf = {}
+	for i = 1, #data do
+		addresses = data[i]["addr_info"]
+		for _, a in pairs(addresses) do
+			if a["label"] == "lo" then goto next end
+			table.insert(buf, f("%s %s\n", a["label"], a["local"]))
+		::next::;end
+	end
+	x(f('echo "%s" | column -t', table.concat(buf)))
 
 # Nice show of services for status
 _services:
@@ -114,6 +110,7 @@ v:
 
 confirm := "true"
 sys := "sudo -E systemctl"
+lee := home_dir() / ".local/share/lua/lee.lua"
 export distro := `awk -F= '/^ID=/ {print $2}' /etc/os-release`
 set shell := ["bash","-uc"]
 # vim: ft=just

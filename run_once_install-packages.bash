@@ -17,7 +17,6 @@ main() {
 		*) die "${DISTRO}: only archlinux and ubuntu are supported" ;;
 	esac
 	echo -e "\e[36mbase packages installed\e[m"
-	install-eget
 }
 
 arch() {
@@ -53,21 +52,6 @@ ubuntu-fzf-vim-plugin() {
 	sudo cp -uv fzf/plugin/fzf.vim ${vimdir}/plugin
 	sudo cp -uv fzf/doc/fzf.txt ${vimdir}/doc
 	rm -rf fzf
-}
-
-install-eget() {
-	header "github binaries (eget)"
-	[ -x "/usr/local/bin/eget" ] && return
-	sudo mkdir -pv "/usr/local/bin"
-	sudo chown -v root:$(id -un 1000) "/usr/local/bin"
-	sudo chmod -v 0775 "/usr/local/bin"
-	curl -L -o eget.sh https://zyedidia.github.io/eget.sh
-	[ "$(cksum eget.sh)" == "2757831594 2610 eget.sh" ]
-	bash eget.sh
-	sudo mv -v eget "/usr/local/bin/eget"
-	sudo chown -v 0:0 "/usr/local/bin/eget"
-	rm -v eget.sh
-	ok "eget successfully installed"
 }
 
 # DISPLAY

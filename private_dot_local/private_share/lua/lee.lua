@@ -24,12 +24,12 @@ end
 
 -- if <path> exists, return absolute path
 -- otherwise, return false
-function path(path)
-	local abs = eo("readlink -e " .. path)
-	if abs == nil then
+function abs(path)
+	local output = eo("readlink -e " .. path)
+	if output == nil then
 		return false
 	else
-		return abs
+		return output
 	end
 end
 

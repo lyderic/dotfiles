@@ -1,7 +1,8 @@
 #!/bin/bash
 
+set -e
+
 # CONFIGURATION
-binurl="https://github.com/marcosnils/bin/releases/download/v0.20.0/bin_0.20.0_linux_amd64"
 vimdir="/usr/share/vim/vim91"
 
 main() {
@@ -13,10 +14,10 @@ main() {
 	case "${DISTRO}" in
 		"ubuntu" | "debian") ubuntu ;;
 		"arch" | "archarm") arch ;;
-		"alpine") alpine ;;
-		*) die "${DISTRO}: only archlinux, ubuntu and alpine are supported" ;;
+		*) die "${DISTRO}: only archlinux and ubuntu are supported" ;;
 	esac
 	echo -e "\e[36mbase packages installed\e[m"
+	install-eget
 }
 
 arch() {
@@ -34,8 +35,7 @@ arch() {
 
 ubuntu() {
 	ubuntu-packages
-	ubuntu-binaries
-	ubuntu-configure
+	ubuntu-fzf-vim-plugin
 }
 
 ubuntu-packages() {
@@ -44,58 +44,40 @@ ubuntu-packages() {
 	$sudo apt-get update && $sudo apt-get -y install ${packages}
 }
 
-ubuntu-binaries() {
-	header "ubuntu binaries"
-	local pbin="$(command -v bin)"
-	[ -x "${pbin}" ] || {
-		pbin=/dev/shm/bin;
-		curl -L -o $pbin "${binurl}";
-		chmod -v +x $pbin
-		sudo chmod -v 777 /usr/local/bin
-	}
-	declare -A binaries
-	binaries[bin]="https://github.com/marcosnils/bin"
-	binaries[just]="https://github.com/casey/just"
-	binaries[fzf]="https://github.com/junegunn/fzf"
-	binaries[croc]="https://github.com/schollz/croc"
-	binaries[bat]="https://github.com/sharkdp/bat"
-	for binary in "${!binaries[@]}"; do
-		[ -x "/usr/local/bin/$binary" ] && {
-			warn "$binary found"
-			continue
-		}
-		$pbin install "${binaries[$binary]}"
-	done
-}
-
-ubuntu-configure() {
+ubuntu-fzf-vim-plugin() {
 	header "ubuntu configure fzf"
+	[ -d "${vimdir}" ] || { warn "${vimdir} not found"; return; }
 	[ -f "${vimdir}/plugin/fzf.vim" ] && return
 	cd /dev/shm
-	[ -d fzf ] && rm -rf fzf
 	git clone --depth 1 https://github.com/junegunn/fzf.git
-	cd /dev/shm/fzf ; ./install --bin
-	sudo cp -uv /dev/shm/fzf/plugin/fzf.vim ${vimdir}/plugin
-	sudo cp -uv /dev/shm/fzf/doc/fzf.txt ${vimdir}/doc
+	sudo cp -uv fzf/plugin/fzf.vim ${vimdir}/plugin
+	sudo cp -uv fzf/doc/fzf.txt ${vimdir}/doc
+	rm -rf fzf
 }
 
-alpine() {
-	local packages="${COMMON_PACKAGES} ${ALPINE_PACKAGES}"
-	header "alpine packages"
-	$sudo apk -U upgrade
-	$sudo apk add ${packages}
+install-eget() {
+	header "github binaries (eget)"
+	[ -x "/usr/local/bin/eget" ] && return
+	sudo mkdir -pv "/usr/local/bin"
+	sudo chown -v root:$(id -un 1000) "/usr/local/bin"
+	sudo chmod -v 0775 "/usr/local/bin"
+	curl -L -o eget.sh https://zyedidia.github.io/eget.sh
+	[ "$(cksum eget.sh)" == "2757831594 2610 eget.sh" ]
+	bash eget.sh
+	sudo mv -v eget "/usr/local/bin/eget"
+	sudo chown -v 0:0 "/usr/local/bin/eget"
+	rm -v eget.sh
+	ok "eget successfully installed"
 }
 
 # DISPLAY
 header() { echo -e "\e[34m${@}\e[m"; }
-ok() { echo -e "\[32m${@}\e[m"; }
-warn() { echo -e "\e[33m${@}\e[m"; }
-die() {
-	echo -e "\e[31m${@}\e[m"
-	exit 42
-}
+fail()   { echo -e "\e[31m${@}\e[m"; }
+ok()     { echo -e "\e[32m${@}\e[m"; }
+warn()   { echo -e "\e[33m${@}\e[m"; }
+die()    { fail "${@}"; exit 42; }
 
-# Packages that are common to arch, ubuntu and alpine
+# Packages that are common to arch and ubuntu
 COMMON_PACKAGES="
 bash bash-completion gdu curl direnv file git htop sudo
 tmux vim lua-dkjson
@@ -109,10 +91,5 @@ the_silver_searcher tree which
 
 # Additional packages for ubuntu/debian
 UBUNTU_PACKAGES="dialog grep less lua5.4 silversearcher-ag tree bsdextrautils"
-
-# Additional packages for alpine
-ALPINE_PACKAGES="
-croc diffutils fzf gdu just the_silver_searcher which
-"
 
 main ${@}

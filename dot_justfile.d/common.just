@@ -61,7 +61,7 @@ geolocate:
 [group('common')]
 ip:
 	#!/usr/bin/lua
-	dofile("{{lee}}")
+	require("lee")
 	data = json.decode(ea("ip -j -4 address")); buf = {}
 	for i = 1, #data do
 		addresses = data[i]["addr_info"]
@@ -98,9 +98,6 @@ mod? arch
 # ubuntu commands
 [group('common')]
 mod? ubuntu
-# alpine commands
-[group('common')]
-mod? alpine
 
 # DYNAMIC VARIABLES, SETTINGS AND IMPORTS
 
@@ -108,9 +105,9 @@ mod? alpine
 v:
 	@just --evaluate
 
+export LUA_PATH := home_dir()/".local/share/lua/?.lua;/usr/share/lua/5.4/?.lua"
 confirm := "true"
 sys := "sudo -E systemctl"
-lee := home_dir() / ".local/share/lua/lee.lua"
 export distro := `awk -F= '/^ID=/ {print $2}' /etc/os-release`
 set shell := ["bash","-uc"]
 # vim: ft=just

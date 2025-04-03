@@ -50,3 +50,10 @@ _check_gui_allowed:
 	[ ! -f ~/.workstation ]
 	# don't reinstall if already there
 	[ ! -d ~/.vnc ]
+
+# ghbinaries
+@ghbin:
+	just _install_ghbin {{ghbinaries}}
+	just _ghbin
+
+ghbinaries := "emd wait4x"

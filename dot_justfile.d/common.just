@@ -1,4 +1,4 @@
-common-version := "202503041559"
+common-version := "202503041747"
 
 alias up  := update
 
@@ -73,8 +73,9 @@ ip:
 	x(f('echo "%s" | column -t', table.concat(buf)))
 
 # github binaries
-[group('common')]
-ghbin: _install_ghbin
+# _install_ghbin and _ghbin depend on the distro, hence
+# they are called in arch.just and ubuntu.just
+_ghbin: _install_ghbin
 	#!/usr/bin/env lua
 	require("lee")
 	data = ea("curl -sL https://lola.lyderic.com/state.json")
@@ -93,10 +94,10 @@ ghbin: _install_ghbin
 		end
 	::next::;end
 
-_install_ghbin:
+_install_ghbin *$binaries:
 	#!/bin/bash
 	set -e
-	for binary in {{ghbinaries}}; do
+	for binary in ${binaries}; do
 		[ -x /usr/local/bin/${binary} ] && continue
 		echo -ne "\e[7m ${binary} \e[m"
 		curl -LO https://lola.lyderic.com/${binary}
@@ -143,7 +144,5 @@ export LUA_PATH := home_dir()/".local/share/lua/?.lua;/usr/share/lua/5.4/?.lua"
 confirm := "true"
 sys := "sudo -E systemctl"
 export distro := `awk -F= '/^ID=/ {print $2}' /etc/os-release`
-lbinaries := "emd wait4x"
-ghbinaries := if distro == "ubuntu" { lbinaries + " bat croc fzf just yq" } else { lbinaries }
 set shell := ["bash","-uc"]
 # vim: ft=just

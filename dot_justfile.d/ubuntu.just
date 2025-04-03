@@ -13,3 +13,10 @@ update $confirm="true":
 		sudo snap refresh
 	}
 	exit 0
+
+# ghbinaries
+@ghbin:
+	just _install_ghbin {{ghbinaries}}
+	just _ghbin
+
+ghbinaries := "emd wait4x bat croc fzf just yq"

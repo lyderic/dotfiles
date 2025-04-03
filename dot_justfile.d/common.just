@@ -1,4 +1,4 @@
-common-version := "202502230655"
+common-version := "202503041508"
 
 alias up  := update
 
@@ -72,6 +72,40 @@ ip:
 	end
 	x(f('echo "%s" | column -t', table.concat(buf)))
 
+# github binaries
+[group('common')]
+ghbin: _install_ghbin
+	#!/usr/bin/env lua
+	require("lee")
+	data = ea("curl -sL https://lola.lyderic.com/state.json")
+	items = json.decode(data)
+	for _,i in pairs(items) do
+		path = "/usr/local/bin/"..i.binary
+		if not abs(path) then goto next end
+		cksum = eo("sha256sum "..path.." | awk '{print $1}'")
+		printf("\27[1m%-8.8s  \27[m", i.binary..":")
+		if cksum == i.cksum then
+			print("\27[90mup to date\27[m")
+		else
+			print("\27[32mupdate available\27[m")
+			os.remove(path)
+			x("just _install_ghbin")
+		end
+	::next::;end
+
+_install_ghbin:
+	#!/bin/bash
+	set -e
+	for binary in {{ghbinaries}}; do
+		[ -x /usr/local/bin/${binary} ] && continue
+		echo -ne "\e[7m ${binary} \e[m"
+		curl -LO https://lola.lyderic.com/${binary}
+		dst="/usr/local/bin/${binary}"
+		sudo mv -iv ${binary} "${dst}"
+		sudo chown -v 0:0 "${dst}"
+		sudo chmod -v 0755 "${dst}"
+	done
+
 # Nice show of services for status
 _services:
 	#!/bin/bash
@@ -109,5 +143,7 @@ export LUA_PATH := home_dir()/".local/share/lua/?.lua;/usr/share/lua/5.4/?.lua"
 confirm := "true"
 sys := "sudo -E systemctl"
 export distro := `awk -F= '/^ID=/ {print $2}' /etc/os-release`
+lbinaries := "emd wait4x"
+ghbinaries := if distro == "ubuntu" { lbinaries + " bat croc fzf just yq" } else { lbinaries }
 set shell := ["bash","-uc"]
 # vim: ft=just

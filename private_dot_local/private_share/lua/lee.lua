@@ -38,7 +38,7 @@ end
 -- optional:
 --   append   default false, i.e. overwrite
 --   newline  default false, i.e. don't add '\n' at the end of file
-function writefile(content, file, append, newline)
+function writefile(file, content, append, newline)
 	local fh = assert(io.open(file, append and "a" or "w"))
 	fh:write(content, newline and "\n" or "")
 	fh:close()

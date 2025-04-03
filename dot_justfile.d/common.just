@@ -1,4 +1,4 @@
-common-version := "202503041508"
+common-version := "202503041559"
 
 alias up  := update
 
@@ -88,7 +88,7 @@ ghbin: _install_ghbin
 			print("\27[90mup to date\27[m")
 		else
 			print("\27[32mupdate available\27[m")
-			os.remove(path)
+			x("sudo rm -v "..path)
 			x("just _install_ghbin")
 		end
 	::next::;end

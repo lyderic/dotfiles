@@ -1,4 +1,4 @@
-common-version := "202504041149"
+common-version := "202504041256"
 
 alias up  := update
 
@@ -19,6 +19,11 @@ update:
 	#sudo chezmoi update
 	echo -e "\e[34m[distro:${distro}]\e[0m"
 	just {{distro}}::update {{confirm}}
+
+# deploy/update github binaries
+[group('common')]
+ghbin:
+	just {{distro}}::ghbin
 
 # show ANSI codes
 [group('common')]

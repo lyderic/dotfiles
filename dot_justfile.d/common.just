@@ -1,4 +1,4 @@
-common-version := "202503041747"
+common-version := "202504041149"
 
 alias up  := update
 
@@ -78,7 +78,7 @@ ip:
 _ghbin: _install_ghbin
 	#!/usr/bin/env lua
 	require("lee")
-	data = ea("curl -sL https://lola.lyderic.com/state.json")
+	data = ea("curl -sL https://lola.lyderic.com/cgi-bin/state")
 	items = json.decode(data)
 	for _,i in pairs(items) do
 		path = "/usr/local/bin/"..i.binary

@@ -34,7 +34,7 @@ arch() {
 
 ubuntu() {
 	ubuntu-packages
-	ubuntu-fzf-vim-plugin
+	ubuntu-base
 }
 
 ubuntu-packages() {
@@ -43,8 +43,8 @@ ubuntu-packages() {
 	$sudo apt-get update && $sudo apt-get -y install ${packages}
 }
 
-ubuntu-fzf-vim-plugin() {
-	header "ubuntu configure fzf"
+ubuntu-base() {
+	header "configure fzf"
 	[ -d "${vimdir}" ] || { warn "${vimdir} not found"; return; }
 	[ -f "${vimdir}/plugin/fzf.vim" ] && return
 	cd /dev/shm

@@ -1,4 +1,4 @@
-common-version := "202504041256"
+common-version := "202504051239"
 
 alias up  := update
 
@@ -88,10 +88,15 @@ _ghbin: _install_ghbin
 	for _,i in pairs(items) do
 		path = "/usr/local/bin/"..i.binary
 		if not abs(path) then goto next end
-		cksum = eo("sha256sum "..path.." | awk '{print $1}'")
+		--cksum = eo("sha256sum "..path.." | awk '{print $1}'")
+		bits = {}
+		for bit in eo("cksum "..path):gmatch("%S+") do
+			table.insert(bits, bit)
+		end
+		cksum = bits[1] ; size = bits[2]
 		printf("\27[1m%-8.8s  \27[m", i.binary..":")
-		if cksum == i.cksum then
-			print("\27[90mup to date\27[m")
+		if cksum == i.cksum and size == i.size then
+			printf("\27[90mup to date (sum=%s, size=%s)\27[m\n", cksum, size)
 		else
 			print("\27[32mupdate available\27[m")
 			x("sudo rm -v "..path)

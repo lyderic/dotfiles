@@ -1,4 +1,4 @@
-common-version := "202504051239"
+common-version := "202504051241"
 
 alias up  := update
 
@@ -88,7 +88,6 @@ _ghbin: _install_ghbin
 	for _,i in pairs(items) do
 		path = "/usr/local/bin/"..i.binary
 		if not abs(path) then goto next end
-		--cksum = eo("sha256sum "..path.." | awk '{print $1}'")
 		bits = {}
 		for bit in eo("cksum "..path):gmatch("%S+") do
 			table.insert(bits, bit)

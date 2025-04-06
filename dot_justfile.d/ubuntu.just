@@ -14,9 +14,8 @@ update $confirm="true":
 	}
 	exit 0
 
+ghbinaries := "emd wait4x bat croc fzf just yq"
 # ghbinaries
 @ghbin:
 	just _install_ghbin {{ghbinaries}}
 	just _ghbin
-
-ghbinaries := "emd wait4x bat croc fzf just yq"

@@ -1,4 +1,4 @@
-common-version := "202504051241"
+common-version := "202504060919"
 
 alias up  := update
 
@@ -76,6 +76,65 @@ ip:
 		::next::;end
 	end
 	x(f('echo "%s" | column -t', table.concat(buf)))
+
+# check machine uptime, disk space, updates needed, etc.
+[group('common')]
+@vigilax:
+	echo -ne "\e[1m$(hostname)\e[m"
+	just _vglx_uptime
+	just _vglx_updates
+	just _vglx_diskusage
+	echo
+
+_vglx_uptime:
+	#!/usr/bin/env lua
+	require("lee")
+	fh = io.open("/proc/uptime", "r"); s = fh:read("*n"); fh:close()
+	w = math.floor(s/(7*24*60*60)); s = s%(7*24*60*60)
+	d = math.floor(s/(24*60* 60)); s = s%(24*60*60)
+	h = math.floor(s/(60 * 60)); s = s%(60*60); m = math.floor(s/60)
+	color = "\27[90m"
+	if w > 0 then color = "\27[m"
+	elseif w > 2 then color = "\27[93m"
+	elseif w > 4 then color = "\27[91m" end
+	printf("[%s%s%s%s%s]", color,
+		w > 0 and w.."w" or "", d > 0 and d.."d" or "",
+		h > 0 and h.."h" or "", m > 0 and m.."m" or "")
+
+_vglx_updates:
+	#!/usr/bin/env lua
+	require("lee")
+	-- we track this metric only for arch, as this is the only
+	-- rolling distribution we use
+	if "{{distro}}" ~= "arch" then os.exit(0) end
+	n = 0
+	for line in e("checkupdates"):lines() do n = n + 1 end
+	color = "\27[90m"
+	if n > 5 then color = "\27[m"
+	elseif n > 20 then color = "\27[93m"
+	elseif n > 50 then color = "\27[91m"
+	end
+	printf("[%s%s\27[m]", color, n)
+
+_vglx_diskusage:
+	#!/usr/bin/env lua
+	require("lee")
+	targets = env("targets")
+	if not targets then targets = "/" end
+	cmd = f("df --output=target,size,used %s | sed 1d", targets)
+	for line in e(cmd):lines() do
+		t = {}
+		for b in line:gmatch("%S+") do
+			table.insert(t,b)
+		end; target = t[1]; size = t[2]; used = t[3]
+		pcent = (used / size) * 100
+		color = "\27[90m"
+		if pcent > 50 then color = "\27[m"
+		elseif pcent > 75 then color = "\27[93m"
+		elseif pcent > 90 then color = "\27[91m"
+		end
+		printf("[%s%s:%.f%%\27[m]", color, target, pcent+1)
+	end
 
 # github binaries
 # _install_ghbin and _ghbin depend on the distro, hence

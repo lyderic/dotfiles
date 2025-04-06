@@ -1,4 +1,4 @@
-common-version := "202504060923"
+common-version := "202504060925"
 
 alias up  := update
 
@@ -97,7 +97,7 @@ _vglx_uptime:
 	if w > 0 then color = "\27[m"
 	elseif w > 2 then color = "\27[93m"
 	elseif w > 4 then color = "\27[91m" end
-	printf("[%s%s%s%s%s]", color,
+	printf("[%s%s%s%s%s\27[m]", color,
 		w > 0 and w.."w" or "", d > 0 and d.."d" or "",
 		h > 0 and h.."h" or "", m > 0 and m.."m" or "")
 

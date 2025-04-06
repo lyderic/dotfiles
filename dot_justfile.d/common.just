@@ -1,4 +1,4 @@
-common-version := "202504060919"
+common-version := "202504060923"
 
 alias up  := update
 
@@ -80,7 +80,7 @@ ip:
 # check machine uptime, disk space, updates needed, etc.
 [group('common')]
 @vigilax:
-	echo -ne "\e[1m$(hostname)\e[m"
+	echo -ne "\e[1m$(hostname -s)\e[m"
 	just _vglx_uptime
 	just _vglx_updates
 	just _vglx_diskusage

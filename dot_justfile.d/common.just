@@ -1,4 +1,4 @@
-common-version := "202504070859"
+common-version := "202504070957"
 
 alias up  := update
 
@@ -146,7 +146,7 @@ _vglx_diskusage:
 		elseif pcent > 75 then color = "\27[93m"
 		elseif pcent > 90 then color = "\27[91m"
 		end
-		printf("[%s%s:%.f%%\27[m]", color, target, pcent+1)
+		printf("[%s%s:%2.f%%\27[m]", color, target, pcent+1)
 	end
 
 # github binaries

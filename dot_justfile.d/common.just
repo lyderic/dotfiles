@@ -116,7 +116,10 @@ _vglx_updates *t:
 	require("lee")
 	-- we track this metric only for arch, as this is the only
 	-- rolling distribution we use
-	if "{{distro}}" ~= "arch" then printf("---") end
+	if "{{distro}}" ~= "arch" then
+		printf("\27[2;36m---\27[m ")
+		os.exit(0)
+	end
 	n = 0
 	for line in e("checkupdates"):lines() do n = n + 1 end
 	color = "\27[90m"

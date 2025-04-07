@@ -1,4 +1,4 @@
-common-version := "202504071404"
+common-version := "202504071428"
 
 alias up  := update
 
@@ -180,10 +180,10 @@ _install_ghbin *$binaries:
 	set -e
 	for binary in ${binaries}; do
 		[ -x /usr/local/bin/${binary} ] && continue
-		echo -ne "\e[7m ${binary} \e[m"
+		echo -e "\e[7m ${binary} \e[m"
 		curl -LO https://lola.lyderic.com/gz/${binary}.gz
 		dst="/usr/local/bin/${binary}"
-		sudo gzip -dc "${binary}.gz" > "${dst}"
+		sudo sh -c "gzip -dc ${binary}.gz > ${dst}"
 		sudo chown -v 0:0 "${dst}"
 		sudo chmod -v 0755 "${dst}"
 		sudo rm -v "${binary}.gz"

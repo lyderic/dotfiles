@@ -79,34 +79,44 @@ ip:
 
 # check machine uptime, disk space, updates needed, etc.
 [group('common')]
-@vigilax:
-	echo -ne "\e[1m$(hostname -s)\e[m"
-	just _vglx_uptime
+vigilax *t:
+	#!/bin/bash
+	hostname=$(hostname -s)
+	[ "{{t}}" == "t" ] && {
+		printf "\e[1m%-10.10s\e[m " "${hostname}"
+	} || echo -ne "\e[1m${hostname}\e[m "
+	just _vglx_uptime {{t}}
 	just _vglx_updates
 	just _vglx_diskusage
 	echo
 
-_vglx_uptime:
+_vglx_uptime *t:
 	#!/usr/bin/env lua
 	require("lee")
 	fh = io.open("/proc/uptime", "r"); s = fh:read("*n"); fh:close()
-	w = math.floor(s/(7*24*60*60)); s = s%(7*24*60*60)
+	--w = math.floor(s/(7*24*60*60)); s = s%(7*24*60*60)
 	d = math.floor(s/(24*60* 60)); s = s%(24*60*60)
 	h = math.floor(s/(60 * 60)); s = s%(60*60); m = math.floor(s/60)
 	color = "\27[90m"
-	if w > 0 then color = "\27[m"
-	elseif w > 2 then color = "\27[93m"
-	elseif w > 4 then color = "\27[91m" end
-	printf("[%s%s%s%s%s\27[m]", color,
-		w > 0 and w.."w" or "", d > 0 and d.."d" or "",
-		h > 0 and h.."h" or "", m > 0 and m.."m" or "")
+	if d > 7 then color = "\27[m"
+	elseif d > 15 then color = "\27[93m"
+	elseif d > 30 then color = "\27[91m" end
+	if "{{t}}" == "t" then
+		--format = "%s%03dd%02dh%02dm\27[m "
+		format = "%s% 4dd% 3dh% 3dm\27[m "
+		printf(format, color, d, h, m)
+	else
+		format = "%s%s%s%s\27[m "
+		printf(format, color, d > 0 and d.."d" or "",
+			h > 0 and h.."h" or "", m > 0 and m.."m" or "")
+	end
 
-_vglx_updates:
+_vglx_updates *t:
 	#!/usr/bin/env lua
 	require("lee")
 	-- we track this metric only for arch, as this is the only
 	-- rolling distribution we use
-	if "{{distro}}" ~= "arch" then os.exit(0) end
+	if "{{distro}}" ~= "arch" then printf("---") end
 	n = 0
 	for line in e("checkupdates"):lines() do n = n + 1 end
 	color = "\27[90m"
@@ -114,7 +124,7 @@ _vglx_updates:
 	elseif n > 20 then color = "\27[93m"
 	elseif n > 50 then color = "\27[91m"
 	end
-	printf("[%s%s\27[m]", color, n)
+	printf("%s%03d\27[m ", color, n)
 
 _vglx_diskusage:
 	#!/usr/bin/env lua

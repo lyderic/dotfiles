@@ -1,4 +1,4 @@
-common-version := "202504071428"
+common-version := "202504081150"
 
 alias up  := update
 
@@ -81,14 +81,35 @@ ip:
 [group('common')]
 vigilax *t:
 	#!/bin/bash
-	hostname=$(hostname -s)
+	hcolor="\e[1m"
+	[ "$(just _vglx_reboot)" == "needed" ] && hcolor="\e[1;7;33m"
+	hostname="${hcolor}$(hostname -s)\e[m"
 	[ "{{t}}" == "t" ] && {
-		printf "\e[1m%-10.10s\e[m " "${hostname}"
+		echo -ne "${hostname} "
 	} || echo -ne "\e[1m${hostname}\e[m "
 	just _vglx_uptime {{t}}
 	just _vglx_updates
 	just _vglx_diskusage
+	just _vglx_coc
 	echo
+
+_vglx_reboot:
+	#!/usr/bin/env lua
+	require "lee"
+	function main()
+		print(tellme())
+	end
+	function tellme()
+		if "{{distro}}" == "arch" then
+			r = eo("uname -r | tr '-' '.'")
+			i = eo("pacman -Q linux | awk '{print $2}' | tr '-' '.'")
+			if not r == i then return "needed" end
+		elseif "{{distro}}" == "ubuntu" then
+			if abs("/var/run/reboot-required") then return "needed" end
+		end
+		return "notneeded"
+	end
+	main()
 
 _vglx_uptime *t:
 	#!/usr/bin/env lua
@@ -148,6 +169,11 @@ _vglx_diskusage:
 		end
 		printf("[%s%s:%2.f%%\27[m]", color, target, pcent+1)
 	end
+
+_vglx_coc:
+	#!/bin/bash
+	[ -x /usr/local/bin/coc ] && echo "\e[1;34mcoc machine\e[m"
+	exit 0
 
 # github binaries
 # _install_ghbin and _ghbin depend on the distro, hence

@@ -98,7 +98,7 @@ _vglx_reboot:
 	require "lee"
 	function main()
 		-- no need to run this if the machine is a container
-		if eo("tail -4 /proc/self/cgroup") == "lxc" then
+		if eo("tail -c 4 /proc/self/cgroup") == "lxc" then
 			print("notneeded")
 		else
 			print(tellme())

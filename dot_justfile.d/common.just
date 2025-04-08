@@ -1,4 +1,4 @@
-common-version := "202504081321"
+common-version := "202504081330"
 
 alias up  := update
 
@@ -83,10 +83,10 @@ vigilax *t:
 	#!/bin/bash
 	hcolor="\e[1m"
 	[ "$(just _vglx_reboot)" == "needed" ] && hcolor="\e[1;7;33m"
-	hostname="${hcolor}$(hostname -s)\e[m"
+	hostname=$(hostname -s)
 	[ "{{t}}" == "t" ] && {
-		echo -ne "${hostname} "
-	} || echo -ne "\e[1m${hostname}\e[m "
+		printf "${hcolor}%-10.10s\e[m" "${hostname}"
+	} || echo -ne "${hcolor}${hostname}\e[m "
 	just _vglx_uptime {{t}}
 	just _vglx_updates
 	just _vglx_diskusage

@@ -1,4 +1,4 @@
-common-version := "202504081150"
+common-version := "202504081154"
 
 alias up  := update
 
@@ -172,7 +172,7 @@ _vglx_diskusage:
 
 _vglx_coc:
 	#!/bin/bash
-	[ -x /usr/local/bin/coc ] && echo "\e[1;34mcoc machine\e[m"
+	[ -x /usr/local/bin/coc ] && echo -ne " \e[1;34mcoc\e[m"
 	exit 0
 
 # github binaries

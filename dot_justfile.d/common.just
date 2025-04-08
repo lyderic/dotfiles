@@ -1,4 +1,4 @@
-common-version := "202504081154"
+common-version := "202504081211"
 
 alias up  := update
 
@@ -101,8 +101,10 @@ _vglx_reboot:
 	end
 	function tellme()
 		if "{{distro}}" == "arch" then
+			k = "linux"
 			r = eo("uname -r | tr '-' '.'")
-			i = eo("pacman -Q linux | awk '{print $2}' | tr '-' '.'")
+			if string.sub(r, -3) == "lts" then k = k.."-lts" end
+			i = eo(f("pacman -Q %s | awk '{print $2}' | tr '-' '.'", k))
 			if not r == i then return "needed" end
 		elseif "{{distro}}" == "ubuntu" then
 			if abs("/var/run/reboot-required") then return "needed" end

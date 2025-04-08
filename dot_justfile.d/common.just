@@ -1,4 +1,4 @@
-common-version := "202504081211"
+common-version := "202504081321"
 
 alias up  := update
 
@@ -97,7 +97,12 @@ _vglx_reboot:
 	#!/usr/bin/env lua
 	require "lee"
 	function main()
-		print(tellme())
+		-- no need to run this if the machine is a container
+		if eo("tail -4 /proc/self/cgroup") == "lxc" then
+			print("notneeded")
+		else
+			print(tellme())
+		end
 	end
 	function tellme()
 		if "{{distro}}" == "arch" then

@@ -1,4 +1,4 @@
-vigilax-version := "202504090741"
+vigilax-version := "202504090745"
 
 [private]
 vigilax-reboot *t:
@@ -18,7 +18,6 @@ vigilax-reboot *t:
 			r = r:gsub(".lts","")
 		end
 		i = eo(f("pacman -Q %s | awk '{print $2}' | tr '-' '.'", k))
-		print(">>>>>>>>>",r,i,k)
 		if r ~= i then color = high end
 	elseif "{{distro}}" == "ubuntu" then
 		if abs("/var/run/reboot-required") then color = high end

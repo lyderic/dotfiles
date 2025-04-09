@@ -1,4 +1,4 @@
-vigilax-version := "202504081338"
+vigilax-version := "202504090527"
 
 [private]
 vigilax-reboot:
@@ -43,17 +43,17 @@ vigilax-uptime *t:
 	end
 
 [private]
-vigilax-updates *t:
+vigilax-updates:
 	#!/usr/bin/env lua
 	require("lee")
-	-- we track this metric only for arch, as this is the only
-	-- rolling distribution we use
-	if "{{distro}}" ~= "arch" then
-		printf("\27[2;36m---\27[m ")
-		os.exit(0)
+	if "{{distro}}" == "arch" then
+		cmd = "checkupdates | wc -l"
+	elseif "{{distro}}" == "ubuntu" then
+		cmd = "apt list --upgradeable 2>/dev/null | sed 1d | wc -l"
+	else
+		printf("---"); os.exit(0)
 	end
-	n = 0
-	for line in e("checkupdates"):lines() do n = n + 1 end
+	n = tonumber(eo(cmd))
 	color = "\27[90m"; noc = "\27[m"
 	if n > 5 then color = noc
 	elseif n > 20 then color = "\27[93m"

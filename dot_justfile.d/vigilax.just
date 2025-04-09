@@ -1,4 +1,4 @@
-vigilax-version := "202504090745"
+vigilax-version := "202504091544"
 
 [private]
 vigilax-reboot *t:
@@ -6,10 +6,6 @@ vigilax-reboot *t:
 	require "lee"
 	color = "\27[1m"; high = "\27[1;33m"; noc = "\27[m"
 	hostname = eo("hostname -s")
-	-- no need to run this if the machine is a container
-	if eo("tail -c 4 /proc/self/cgroup") == "lxc" then
-		goto display
-	end
 	if "{{distro}}" == "arch" then
 		k = "linux"
 		r = eo("uname -r | tr '-' '.'")
@@ -17,7 +13,9 @@ vigilax-reboot *t:
 			k = k.."-lts"
 			r = r:gsub(".lts","")
 		end
-		i = eo(f("pacman -Q %s | awk '{print $2}' | tr '-' '.'", k))
+		i = eo(f("pacman -Q %s 2>/dev/null | awk '{print $2}' | tr '-' '.'", k))
+		-- no need to run this if the machine is a container
+		if i == nil then goto display end
 		if r ~= i then color = high end
 	elseif "{{distro}}" == "ubuntu" then
 		if abs("/var/run/reboot-required") then color = high end

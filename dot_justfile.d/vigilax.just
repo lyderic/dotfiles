@@ -4,7 +4,7 @@ vigilax-version := "202504090614"
 vigilax-reboot *t:
 	#!/usr/bin/env lua
 	require "lee"
-	color = "\27[1m"; high = "\27[1;7;33m"; noc = "\27[m"
+	color = "\27[1m"; high = "\27[1;33m"; noc = "\27[m"
 	hostname = eo("hostname -s")
 	-- no need to run this if the machine is a container
 	if eo("tail -c 4 /proc/self/cgroup") == "lxc" then
@@ -15,13 +15,11 @@ vigilax-reboot *t:
 		r = eo("uname -r | tr '-' '.'")
 		if string.sub(r, -3) == "lts" then k = k.."-lts" end
 		i = eo(f("pacman -Q %s | awk '{print $2}' | tr '-' '.'", k))
-		if not r == i then color = high end
+		if r ~= i then color = high end
 	elseif "{{distro}}" == "ubuntu" then
 		if abs("/var/run/reboot-required") then color = high end
 	end
 	::display::
-	--printf(color..hostname..noc)
-	--printf(" ")
 	if "{{t}}" == "t" then
 		printf("%s%-10.10s%s", color, hostname, noc)
 	else

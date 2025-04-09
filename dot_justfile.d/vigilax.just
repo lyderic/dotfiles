@@ -1,10 +1,10 @@
-vigilax-version := "202504090612"
+vigilax-version := "202504090614"
 
 [private]
 vigilax-reboot *t:
 	#!/usr/bin/env lua
 	require "lee"
-	color = "\27[1;34m"; high = "\27[1;7;33m"; noc = "\27[m"
+	color = "\27[1m"; high = "\27[1;7;33m"; noc = "\27[m"
 	hostname = eo("hostname -s")
 	-- no need to run this if the machine is a container
 	if eo("tail -c 4 /proc/self/cgroup") == "lxc" then

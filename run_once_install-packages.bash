@@ -70,7 +70,7 @@ tmux vim lua-dkjson
 # Additional packages for archlinux
 ARCH_PACKAGES="
 croc diffutils bat duf fzf gdu lua grep just less pacman-contrib \
-the_silver_searcher tree which
+the_silver_searcher tree which fakeroot
 "
 
 # Additional packages for ubuntu/debian

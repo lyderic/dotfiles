@@ -1,10 +1,10 @@
-vigilax-version := "202504090527"
+vigilax-version := "202504090612"
 
 [private]
-vigilax-reboot:
+vigilax-reboot *t:
 	#!/usr/bin/env lua
 	require "lee"
-	hcolor = "\27[1m"; high = "\27[1;7;33m"; noc = "\27[m"
+	color = "\27[1;34m"; high = "\27[1;7;33m"; noc = "\27[m"
 	hostname = eo("hostname -s")
 	-- no need to run this if the machine is a container
 	if eo("tail -c 4 /proc/self/cgroup") == "lxc" then
@@ -15,12 +15,18 @@ vigilax-reboot:
 		r = eo("uname -r | tr '-' '.'")
 		if string.sub(r, -3) == "lts" then k = k.."-lts" end
 		i = eo(f("pacman -Q %s | awk '{print $2}' | tr '-' '.'", k))
-		if not r == i then hcolor = high end
+		if not r == i then color = high end
 	elseif "{{distro}}" == "ubuntu" then
-		if abs("/var/run/reboot-required") then hcolor = high end
+		if abs("/var/run/reboot-required") then color = high end
 	end
 	::display::
-	printf(hcolor..hostname..noc)
+	--printf(color..hostname..noc)
+	--printf(" ")
+	if "{{t}}" == "t" then
+		printf("%s%-10.10s%s", color, hostname, noc)
+	else
+		printf("%s%s%s ", color, hostname, noc)
+	end
 
 [private]
 vigilax-uptime *t:
@@ -29,18 +35,19 @@ vigilax-uptime *t:
 	s = io.open("/proc/uptime"):read("*n")
 	d = math.floor(s/(24*60* 60)); s = s%(24*60*60)
 	h = math.floor(s/(60 * 60)); s = s%(60*60); m = math.floor(s/60)
-	color = "\27[90m"
-	if d > 7 then color = "\27[m"
+	color = "\27[90m"; noc = "\27[m"
+	if d > 7 then color = noc
 	elseif d > 15 then color = "\27[93m"
 	elseif d > 30 then color = "\27[91m" end
 	if "{{t}}" == "t" then
-		format = "%s% 4dd% 3dh% 3dm\27[m "
-		printf(format, color, d, h, m)
+		format = "% 4dd% 3dh% 3dm "
+		display = f(format, d, h, m)
 	else
-		format = "%s%s%s%s\27[m "
-		printf(format, color, d > 0 and d.."d" or "",
+		format = "%s%s%s "
+		display = f(format, d > 0 and d.."d" or "",
 			h > 0 and h.."h" or "", m > 0 and m.."m" or "")
 	end
+	printf(color..display..noc)
 
 [private]
 vigilax-updates:
@@ -87,6 +94,6 @@ vigilax-coc:
 	#!/usr/bin/env lua
 	require "lee"
 	if not abs("/usr/local/bin/coc") then os.exit(0) end
-	hcolor = "\27[1;32m"; noc = "\27[m"
-	if not x("mountpoint -q /pool") then hcolor = "\27[1;33m" end
-	printf(" %sCOC%s ", hcolor, noc)
+	color = "\27[1;32m"; noc = "\27[m"
+	if not x("mountpoint -q /pool") then color = "\27[1;33m" end
+	printf(" %sCOC%s ", color, noc)

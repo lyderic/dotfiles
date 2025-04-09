@@ -1,4 +1,4 @@
-common-version := "202504081338"
+ommon-version := "202504090611"
 
 alias up  := update
 
@@ -80,10 +80,8 @@ ip:
 import "vigilax.just"
 # check machine uptime, disk space, updates needed, etc.
 [group('common')]
-vigilax *t:
-	#!/bin/bash
-	fmt="%s"; [ "{{t}}" == "t" ] && fmt="%-10.10s"
-	printf "${fmt} " "$(just vigilax-reboot)"
+@vigilax *t:
+	just vigilax-reboot {{t}}
 	just vigilax-uptime {{t}}
 	just vigilax-updates
 	just vigilax-diskusage

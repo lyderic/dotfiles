@@ -1,4 +1,4 @@
-common-version := "202504081330"
+common-version := "202504081338"
 
 alias up  := update
 
@@ -77,110 +77,18 @@ ip:
 	end
 	x(f('echo "%s" | column -t', table.concat(buf)))
 
+import "vigilax.just"
 # check machine uptime, disk space, updates needed, etc.
 [group('common')]
 vigilax *t:
 	#!/bin/bash
-	hcolor="\e[1m"
-	[ "$(just _vglx_reboot)" == "needed" ] && hcolor="\e[1;7;33m"
-	hostname=$(hostname -s)
-	[ "{{t}}" == "t" ] && {
-		printf "${hcolor}%-10.10s\e[m" "${hostname}"
-	} || echo -ne "${hcolor}${hostname}\e[m "
-	just _vglx_uptime {{t}}
-	just _vglx_updates
-	just _vglx_diskusage
-	just _vglx_coc
+	fmt="%s"; [ "{{t}}" == "t" ] && fmt="%-10.10s"
+	printf "${fmt} " "$(just vigilax-reboot)"
+	just vigilax-uptime {{t}}
+	just vigilax-updates
+	just vigilax-diskusage
+	just vigilax-coc
 	echo
-
-_vglx_reboot:
-	#!/usr/bin/env lua
-	require "lee"
-	function main()
-		-- no need to run this if the machine is a container
-		if eo("tail -c 4 /proc/self/cgroup") == "lxc" then
-			print("notneeded")
-		else
-			print(tellme())
-		end
-	end
-	function tellme()
-		if "{{distro}}" == "arch" then
-			k = "linux"
-			r = eo("uname -r | tr '-' '.'")
-			if string.sub(r, -3) == "lts" then k = k.."-lts" end
-			i = eo(f("pacman -Q %s | awk '{print $2}' | tr '-' '.'", k))
-			if not r == i then return "needed" end
-		elseif "{{distro}}" == "ubuntu" then
-			if abs("/var/run/reboot-required") then return "needed" end
-		end
-		return "notneeded"
-	end
-	main()
-
-_vglx_uptime *t:
-	#!/usr/bin/env lua
-	require("lee")
-	fh = io.open("/proc/uptime", "r"); s = fh:read("*n"); fh:close()
-	--w = math.floor(s/(7*24*60*60)); s = s%(7*24*60*60)
-	d = math.floor(s/(24*60* 60)); s = s%(24*60*60)
-	h = math.floor(s/(60 * 60)); s = s%(60*60); m = math.floor(s/60)
-	color = "\27[90m"
-	if d > 7 then color = "\27[m"
-	elseif d > 15 then color = "\27[93m"
-	elseif d > 30 then color = "\27[91m" end
-	if "{{t}}" == "t" then
-		--format = "%s%03dd%02dh%02dm\27[m "
-		format = "%s% 4dd% 3dh% 3dm\27[m "
-		printf(format, color, d, h, m)
-	else
-		format = "%s%s%s%s\27[m "
-		printf(format, color, d > 0 and d.."d" or "",
-			h > 0 and h.."h" or "", m > 0 and m.."m" or "")
-	end
-
-_vglx_updates *t:
-	#!/usr/bin/env lua
-	require("lee")
-	-- we track this metric only for arch, as this is the only
-	-- rolling distribution we use
-	if "{{distro}}" ~= "arch" then
-		printf("\27[2;36m---\27[m ")
-		os.exit(0)
-	end
-	n = 0
-	for line in e("checkupdates"):lines() do n = n + 1 end
-	color = "\27[90m"
-	if n > 5 then color = "\27[m"
-	elseif n > 20 then color = "\27[93m"
-	elseif n > 50 then color = "\27[91m"
-	end
-	printf("%s%03d\27[m ", color, n)
-
-_vglx_diskusage:
-	#!/usr/bin/env lua
-	require("lee")
-	targets = env("targets")
-	if not targets then targets = "/" end
-	cmd = f("df --output=target,size,used %s | sed 1d", targets)
-	for line in e(cmd):lines() do
-		t = {}
-		for b in line:gmatch("%S+") do
-			table.insert(t,b)
-		end; target = t[1]; size = t[2]; used = t[3]
-		pcent = (used / size) * 100
-		color = "\27[90m"
-		if pcent > 50 then color = "\27[m"
-		elseif pcent > 75 then color = "\27[93m"
-		elseif pcent > 90 then color = "\27[91m"
-		end
-		printf("[%s%s:%2.f%%\27[m]", color, target, pcent+1)
-	end
-
-_vglx_coc:
-	#!/bin/bash
-	[ -x /usr/local/bin/coc ] && echo -ne " \e[1;34mcoc\e[m"
-	exit 0
 
 # github binaries
 # _install_ghbin and _ghbin depend on the distro, hence

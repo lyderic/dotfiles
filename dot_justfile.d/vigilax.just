@@ -1,4 +1,4 @@
-vigilax-version := "202504090614"
+vigilax-version := "202504090741"
 
 [private]
 vigilax-reboot *t:
@@ -13,8 +13,12 @@ vigilax-reboot *t:
 	if "{{distro}}" == "arch" then
 		k = "linux"
 		r = eo("uname -r | tr '-' '.'")
-		if string.sub(r, -3) == "lts" then k = k.."-lts" end
+		if string.sub(r, -3) == "lts" then
+			k = k.."-lts"
+			r = r:gsub(".lts","")
+		end
 		i = eo(f("pacman -Q %s | awk '{print $2}' | tr '-' '.'", k))
+		print(">>>>>>>>>",r,i,k)
 		if r ~= i then color = high end
 	elseif "{{distro}}" == "ubuntu" then
 		if abs("/var/run/reboot-required") then color = high end

@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="2025-03-27"
+export BIGBANG_VERSION="202504100824"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -145,10 +145,20 @@ trap finish EXIT
 # Always get correct title in Gnome Terminal's tabs
 PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME%%.*}\007"'
 
+# Lua libs
+command -v lua >/dev/null && {
+	export LUA_PATH="$(lua -e 'print(package.path)');\
+	${HOME}/.local/share/lua/?.lua"
+}
+
+# Special for workstations
 [ -e ~/.workstation ] && {
 	PS1='\h:\w\$ '
 	source ~/.workstation
 }
+
+# If additional setup is required
+[ -e ~/.aqui ] && source ~/.aqui
 
 # show when in chezmoi subshell
 [ -z ${CHEZMOI_SUBSHELL} ] || {

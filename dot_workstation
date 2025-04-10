@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="2025-02-16"
+export WORKSTATION_VERSION="202504100825"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'

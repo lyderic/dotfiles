@@ -1,4 +1,4 @@
-vigilax-version := "202504161356"
+vigilax-version := "202504161852"
 
 [private]
 vigilax-reboot *t:
@@ -35,9 +35,9 @@ vigilax-uptime *t:
 	d = math.floor(s/(24*60* 60)); s = s%(24*60*60)
 	h = math.floor(s/(60 * 60)); s = s%(60*60); m = math.floor(s/60)
 	color = "\27[90m"; noc = "\27[m"
-	if d > 7 then color = noc
-	elseif d > 15 then color = "\27[93m"
-	elseif d > 30 then color = "\27[91m" end
+	if d > 7 then color = noc end
+	if d > 15 then color = "\27[93m" end
+	if d > 30 then color = "\27[91m" end
 	if "{{t}}" == "t" then
 		format = "% 4dd% 3dh% 3dm "
 		display = f(format, d, h, m)

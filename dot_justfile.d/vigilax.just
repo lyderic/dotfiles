@@ -1,4 +1,4 @@
-vigilax-version := "202504091544"
+vigilax-version := "202504161356"
 
 [private]
 vigilax-reboot *t:
@@ -61,10 +61,9 @@ vigilax-updates:
 	end
 	n = tonumber(eo(cmd))
 	color = "\27[90m"; noc = "\27[m"
-	if n > 5 then color = noc
-	elseif n > 20 then color = "\27[93m"
-	elseif n > 50 then color = "\27[91m"
-	end
+	if n > 5 then color = noc end
+	if n > 20 then color = "\27[33m" end
+	if n > 50 then color = "\27[91m" end
 	printf("%s%03d%s ", color, n, noc)
 
 [private]

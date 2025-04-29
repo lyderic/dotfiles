@@ -51,8 +51,9 @@ xrdp-xfce4: _check_gui_allowed
 	pacman -Q xrdp && exit 0
 	sudo pacman -Syu --needed base-devel xorg-server noto-fonts xfce4
 	# https://aur.archlinux.org/packages/xorgxrdp#comment-889055
-	gpg -k 61ECEABBF2BB40E3A35DF30A9F72CDBC01BF10EB && exit 0
-	gpg --receive-keys 61ECEABBF2BB40E3A35DF30A9F72CDBC01BF10EB 
+	gpg -k 61ECEABBF2BB40E3A35DF30A9F72CDBC01BF10EB || {
+		gpg --receive-keys 61ECEABBF2BB40E3A35DF30A9F72CDBC01BF10EB 
+	}
 	mkdir -pv repositories
 	for p in xrdp xorgxrdp; do
 		pacman -Q $p && continue

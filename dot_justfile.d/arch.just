@@ -32,6 +32,7 @@ aur:
 	sudo pacman -S --needed --noconfirm fakeroot
 
 # install xfce4 accessible by vnc
+[confirm("ARE YOU SURE YOU WANT TO INSTALL A GUI?")]
 vnc-xfce4: _check_gui_allowed
 	#!/bin/bash
 	set -e
@@ -45,6 +46,7 @@ vnc-xfce4: _check_gui_allowed
 	echo -e "\e[33mnow start and possibly enable vncserver@:0\e[m"
 
 # install xfce4 accessible by RDP
+[confirm("ARE YOU SURE YOU WANT TO INSTALL A GUI?")]
 xrdp-xfce4: _check_gui_allowed
 	#!/bin/bash
 	# don't reinstall if already there

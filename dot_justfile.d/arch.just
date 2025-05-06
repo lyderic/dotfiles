@@ -73,6 +73,9 @@ _check_gui_allowed:
 	[ ${XDG_SESSION_TYPE-x} != "wayland" ]
 	# no remote access on workstations
 	[ ! -f ~/.workstation ]
+	# don't proceed if already gui
+	! pacman -Q xorg-server
+	! pacman -Q wayland
 
 # ghbinaries
 @ghbin:

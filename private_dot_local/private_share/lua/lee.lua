@@ -33,6 +33,19 @@ function abs(path)
 	end
 end
 
+-- format <bytes> to human readable e.g. 11825 -> 11.5K
+function bfmt(bytes)
+	local units = {"B", "K", "M", "G", "T"}
+	local uidx = 1
+	-- Convert bytes to the appropriate unit
+	while bytes >= 1024 and uidx < #units do
+		bytes = bytes / 1024
+		uidx = uidx + 1
+	end
+	-- Format the result to one decimal place
+	return f("%.1f%s", bytes, units[uidx])
+end
+
 -- write <content> to <file>
 -- by default, overwrite file, don't append newline
 -- optional:

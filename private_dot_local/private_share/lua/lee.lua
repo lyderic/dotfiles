@@ -4,12 +4,6 @@ x = os.execute
 e = io.popen
 env = os.getenv
 
--- table aliases
-ins = table.insert
-cat = table.concat
-rem = table.remove
-sort = table.sort
-
 -- execute <cmd>, one line
 -- returns first line of output as a string
 function eo(cmd)
@@ -70,4 +64,11 @@ end
 function dump(var)
 	printf("=== %s ===\n%s\n", type(var),
 		json.encode(var, { indent = true }))
+end
+
+-- show lee's reserved words
+function leedoc()
+	this = debug.getinfo(1, "S").short_src
+	x("grep -E '^[a-z]* = ' " .. this)
+	x("grep ^function " .. this)
 end

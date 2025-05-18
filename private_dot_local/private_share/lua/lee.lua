@@ -4,6 +4,12 @@ x = os.execute
 e = io.popen
 env = os.getenv
 
+-- table aliases
+ins = table.insert
+cat = table.concat
+rem = table.remove
+sort = table.sort
+
 -- execute <cmd>, one line
 -- returns first line of output as a string
 function eo(cmd)
@@ -23,14 +29,9 @@ function printf(format, ...)
 end
 
 -- if <path> exists, return absolute path
--- otherwise, return false
+-- otherwise, return nil
 function abs(path)
-	local output = eo("readlink -e " .. path)
-	if output == nil then
-		return false
-	else
-		return output
-	end
+	return eo("readlink -e " .. path)
 end
 
 -- format <bytes> to human readable e.g. 11825 -> 11.5K

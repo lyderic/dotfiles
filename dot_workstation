@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="202504100825"
+export WORKSTATION_VERSION="202506160908"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
@@ -21,7 +21,7 @@ complete -W "$(~/scripts/toto --summary)" t
 # justfile scripts completion
 for script in \
 	~/scripts/{bax,caldb,upda,bwmgr,pullall,jots,toto,remo} \
-	~/bin/lc
+	~/scripts/lc
 do
 	[ -x "${script}" ] || continue
 	complete -W "$(${script} --summary)" $(basename ${script})
@@ -66,6 +66,10 @@ export TEXLIVE_CURRENT_DIR="/usr/local/texlive/current"
 
 # mandatory exports
 export VISUAL=vim
+
+# ansible stuff
+export ANSIBLE_DIR="${HOME}/repositories/ansible"
+export ANSIBLE_CONFIG="${ANSIBLE_DIR}/ansible.cfg"
 
 # run encrypted bash scripts
 runenc() {

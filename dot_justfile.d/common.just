@@ -1,4 +1,4 @@
-common-version := "202506181319"
+common-version := "202506181323"
 
 alias up  := update
 
@@ -7,7 +7,6 @@ _help:
 		--list-heading= --list-prefix='  ' \
 		| sed -e "s/\[alias: /\[/"
 
-# if 'false' updates are unattended
 # update distro and config
 [group('common')]
 [no-exit-message]
@@ -15,8 +14,8 @@ update:
 	#!/bin/bash
 	echo -e "\e[34m[chezmoi]\e[0m"
 	chezmoi update
-	#echo -e "\e[34m[chezmoi (root)]\e[0m"
-	#sudo chezmoi update
+	echo -e "\e[34m[chezmoi (root)]\e[0m"
+	sudo chezmoi update
 	echo -e "\e[34m[distro:${distro}]\e[0m"
 	just {{distro}}::update
 

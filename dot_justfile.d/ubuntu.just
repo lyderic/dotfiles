@@ -1,14 +1,13 @@
 # update ubuntu
-update $confirm="true":
+update:
 	#!/bin/bash
 	set -e
-	[ "${confirm}" == "true" ] && yes="-y"
 	sudo apt-get update
-	sudo apt-get ${yes} upgrade
-	sudo apt-get ${yes} dist-upgrade
-	sudo apt-get ${yes} autoremove
-	sudo apt-get ${yes} autoclean
-	sudo apt-get ${yes} clean
+	sudo apt-get upgrade
+	sudo apt-get dist-upgrade
+	sudo apt-get autoremove
+	sudo apt-get autoclean
+	sudo apt-get clean
 	[ -x /usr/bin/snap ] && {
 		sudo snap refresh
 	}

@@ -1,8 +1,7 @@
 # update archlinux
-update $confirm="true":
+update:
 	#!/bin/bash
-	[ "${confirm}" == "true" ] || noconfirm="--noconfirm"
-	sudo pacman -Syu ${noconfirm}
+	sudo pacman -Syu
 	sudo paccache -rk 1
 	printf "\e[7;93m"
 	reviews=$(sudo pacdiff -o)

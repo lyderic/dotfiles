@@ -1,4 +1,4 @@
-common-version := "202504091707"
+common-version := "202506181319"
 
 alias up  := update
 
@@ -18,7 +18,7 @@ update:
 	#echo -e "\e[34m[chezmoi (root)]\e[0m"
 	#sudo chezmoi update
 	echo -e "\e[34m[distro:${distro}]\e[0m"
-	just {{distro}}::update {{confirm}}
+	just {{distro}}::update
 
 # deploy/update github binaries
 [group('common')]
@@ -161,9 +161,9 @@ mod? ubuntu
 v:
 	@just --evaluate
 
-export LUA_PATH := home_dir()/".local/share/lua/?.lua;/usr/share/lua/5.4/?.lua"
-confirm := "true"
+LUA_PATH := home_dir()/".local/share/lua/?.lua;/usr/share/lua/5.4/?.lua"
 sys := "sudo -E systemctl"
-export distro := `awk -F= '/^ID=/ {print $2}' /etc/os-release`
+distro := `awk -F= '/^ID=/ {print $2}' /etc/os-release`
 set shell := ["bash","-uc"]
+set export
 # vim: ft=just

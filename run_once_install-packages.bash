@@ -64,7 +64,7 @@ die()    { fail "${@}"; exit 42; }
 # Packages that are common to arch and ubuntu
 COMMON_PACKAGES="
 bash bash-completion gdu curl direnv file git htop sudo
-tmux vim lua-dkjson
+tmux vim lua-dkjson lua-posix
 "
 
 # Additional packages for archlinux

@@ -1,8 +1,15 @@
-json = require("dkjson")
+leeversion = "202507021057"
+
+json = require 'dkjson'
+S = require 'posix.stdlib'
+U = require 'posix.unistd'
+
 f = string.format
 x = os.execute
 e = io.popen
 env = os.getenv
+setenv = S.setenv
+abs = S.realpath
 
 -- execute <cmd>, one line
 -- returns first line of output as a string
@@ -18,14 +25,8 @@ function ea(cmd)
 end
 
 -- traditional (C, go) printf
-function printf(format, ...)
-	io.write(f(format, ...))
-end
-
--- if <path> exists, return absolute path
--- otherwise, return nil
-function abs(path)
-	return eo("readlink -e " .. path)
+function printf(...)
+	io.write(f(...))
 end
 
 -- format <bytes> to human readable e.g. 11825 -> 11.5K
@@ -69,6 +70,6 @@ end
 -- show lee's reserved words
 function leedoc()
 	this = debug.getinfo(1, "S").short_src
-	x("grep -E '^[a-z]* = ' " .. this)
+	x("grep -E '^[a-zA-Z]* = ' " .. this)
 	x("grep ^function " .. this)
 end

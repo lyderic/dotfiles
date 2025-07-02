@@ -1,4 +1,4 @@
-common-version := "202506181323"
+common-version := "202507020956"
 
 alias up  := update
 
@@ -75,6 +75,11 @@ ip:
 		::next::;end
 	end
 	x(f('echo "%s" | column -t', table.concat(buf)))
+
+# lee lua module doc
+[group('common')]
+leedoc:
+	@lua -l lee -e "leedoc()"
 
 import "vigilax.just"
 # check machine uptime, disk space, updates needed, etc.

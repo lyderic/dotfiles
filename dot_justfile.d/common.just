@@ -81,10 +81,15 @@ ip:
 leedoc:
 	@lua -l lee -e "leedoc()"
 
+# check machine uptime, disk space, updates needed, etc.
+[group('common')]
+vigilax:
+	@~/.justfile.d/vigilax.lua | yq -P | sort | yq
+
 import "vigilax.just"
 # check machine uptime, disk space, updates needed, etc.
 [group('common')]
-@vigilax *t:
+_oldvigilax *t:
 	just vigilax-reboot {{t}}
 	just vigilax-uptime {{t}}
 	just vigilax-updates

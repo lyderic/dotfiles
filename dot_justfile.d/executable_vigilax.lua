@@ -26,6 +26,7 @@ function init()
 	running_kernel = running_kernel:gsub(".lts","")
 	m.rkernel = running_kernel:gsub("-",".")
 	m.distro = distro()
+	m.mtype = eo("systemd-detect-virt")
 end
 
 function distro()
@@ -40,6 +41,7 @@ end
 
 function reboot()
 	m.reboot = false
+	if m.mtype == "lxc" then return end
 	if m.distro == "arch" then
 		local cmd = "pacman -Q linux linux-lts"
 		cmd = cmd .. " 2>/dev/null | awk '{print $2}'"
@@ -69,7 +71,7 @@ function updates()
 	if m.distro == "ubuntu" then
 		cmd = "apt list --upgradeable 2>/dev/null | sed 1d | wc -l"
 	end
-	m.updates = eo(cmd)
+	m.updates = tonumber(eo(cmd))
 end
 
 function diskusage()

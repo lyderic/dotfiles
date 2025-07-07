@@ -1,6 +1,7 @@
-leeversion = "202507021057"
+leeversion = "202507070652"
 
 json = require 'dkjson'
+P = require 'posix.compat'
 S = require 'posix.stdlib'
 U = require 'posix.unistd'
 
@@ -10,6 +11,8 @@ e = io.popen
 env = os.getenv
 setenv = S.setenv
 abs = S.realpath
+mkdir = P.mkdir
+chdir = P.chdir
 
 -- execute <cmd>, one line
 -- returns first line of output as a string
@@ -42,29 +45,24 @@ function bfmt(bytes)
 	return f("%.1f%s", bytes, units[uidx])
 end
 
--- write <content> to <file>
--- by default, overwrite file, don't append newline
--- optional:
---   append   default false, i.e. overwrite
---   newline  default false, i.e. don't add '\n' at the end of file
-function writefile(file, content, append, newline)
-	local fh = assert(io.open(file, append and "a" or "w"))
-	fh:write(content, newline and "\n" or "")
-	fh:close()
-end
-
--- read <file> to a string
-function readfile(file)
-	local fh = assert(io.open(file))
-	output = fh:read("*all")
-	fh:close()
-	return output
+-- Thousands separator
+function ths(n) -- credit http://richard.warburton.it
+	local a,b,c = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
+	return a..(b:reverse():gsub('(%d%d%d)','%1,'):reverse())..c
 end
 
 -- dump <var> for debugging: show type and json representation
 function dump(var)
 	printf("=== %s ===\n%s\n", type(var),
 		json.encode(var, { indent = true }))
+end
+
+-- show key/values of any table, mainly for debugging
+function kv(t)
+	if not type(t) == "table" then return end
+	for k,v in pairs(t) do
+		print(k,v)
+	end
 end
 
 -- show lee's reserved words

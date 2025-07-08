@@ -46,7 +46,8 @@ function bfmt(bytes)
 end
 
 -- Thousands separator
-function ths(n) -- credit http://richard.warburton.it
+-- credit: http://richard.warburton.it
+function ths(n)
 	local a,b,c = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
 	return a..(b:reverse():gsub('(%d%d%d)','%1,'):reverse())..c
 end
@@ -63,6 +64,30 @@ function kv(t)
 	for k,v in pairs(t) do
 		print(k,v)
 	end
+end
+
+-- a nice hacky getopt
+-- example usage of this:
+-- function main()
+--   local opts = getopt("f")
+--   if opts.h then usage() return end
+--   local user = opts.u and opts.u or "default"
+--   local debug = opts.d and true or false
+--   print(user, debug)
+-- end
+function getopt(o)
+  local p = {}
+  for k,v in ipairs(arg) do
+    if v:byte(1) == 45 then
+      local l = v:sub(2,2)
+      if o:match(l) then
+        p[l] = arg[k+1]
+      else
+        p[l] = true
+      end
+    end
+  end
+  return p
 end
 
 -- show lee's reserved words

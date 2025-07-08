@@ -1,4 +1,4 @@
-common-version := "202507020956"
+common-version := "202507081041"
 
 alias up  := update
 
@@ -85,17 +85,6 @@ leedoc:
 [group('common')]
 vigilax:
 	@~/.justfile.d/vigilax.lua | yq -P 
-
-import "vigilax.just"
-# check machine uptime, disk space, updates needed, etc.
-[group('common')]
-_oldvigilax *t:
-	just vigilax-reboot {{t}}
-	just vigilax-uptime {{t}}
-	just vigilax-updates
-	just vigilax-diskusage
-	just vigilax-coc
-	echo
 
 # github binaries
 # _install_ghbin and _ghbin depend on the distro, hence

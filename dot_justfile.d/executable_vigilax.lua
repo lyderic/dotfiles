@@ -75,20 +75,17 @@ function updates()
 end
 
 function diskusage()
-	local global_justfile = env("HOME").."/justfile"
-	local targets = eo("just --justfile "..global_justfile.." --evaluate targets 2>/dev/null")
+	m.diskusage = {}
+	local just = "just --justfile "..env("HOME").."/justfile"
+	local targets = eo(just.." --evaluate targets 2>/dev/null")
 	if not targets then targets = "/" end
-	cmd = f("df --output=target,size,used %s | sed 1d", targets)
+	cmd = "df --output=target,pcent "..targets
 	for line in e(cmd):lines() do
-		t = {}
-		for b in line:gmatch("%S+") do
-			table.insert(t,b)
-		end; target = t[1]; size = t[2]; used = t[3]
-		pcent = (used / size) * 100
-		m.diskusage = m.diskusage or ""
-		usage = f("[%s:%2.f%%]", target, pcent+1)
-		m.diskusage = m.diskusage..usage
-	end
+		if line:sub(1,1) ~= '/' then goto next end
+		local entry = {}
+		entry.mountpoint, entry.pcent = line:match('(%S+)%s+(%S+)')
+		table.insert(m.diskusage, entry)
+	::next:: end
 end
 
 function coc()

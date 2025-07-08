@@ -84,7 +84,7 @@ leedoc:
 # check machine uptime, disk space, updates needed, etc.
 [group('common')]
 vigilax:
-	@~/.justfile.d/vigilax.lua | yq -P | sort | yq
+	@~/.justfile.d/vigilax.lua | yq -P 
 
 import "vigilax.just"
 # check machine uptime, disk space, updates needed, etc.

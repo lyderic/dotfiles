@@ -19,7 +19,9 @@ end
 
 function init()
 	m.hostname = hinfo.Hostname
-	m.hardware = hinfo.HardwareVendor.." "..hinfo.HardwareModel
+	if hinfo.HardwareVendor then
+		m.hardware = hinfo.HardwareVendor.." "..hinfo.HardwareModel
+	end
 	m.chassis = hinfo.Chassis
 	m.rkernel = knorm(hinfo.KernelRelease)
 	m.distro = hinfo.OperatingSystemPrettyName

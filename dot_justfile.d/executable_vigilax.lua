@@ -18,6 +18,7 @@ function main()
 end
 
 function init()
+	m.timestamp = os.time()
 	m.hostname = hinfo.Hostname
 	if hinfo.HardwareVendor then
 		m.hardware = hinfo.HardwareVendor.." "..hinfo.HardwareModel

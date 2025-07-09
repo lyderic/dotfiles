@@ -42,7 +42,7 @@ end
 
 function updates()
 	local cmd = "checkupdates | wc -l"
-	if m.distro == "ubuntu" then
+	if m.distro:lower():sub(1,6) == "ubuntu" then
 		cmd = "apt list --upgradeable 2>/dev/null | sed 1d | wc -l"
 	end
 	m.updates = tonumber(eo(cmd))

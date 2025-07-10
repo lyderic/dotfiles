@@ -31,14 +31,7 @@ end
 
 function uptime()
 	secs = io.open("/proc/uptime"):read("*n")
-	m.secondsup = secs
-	days = math.floor(secs/(24*60* 60)); secs = secs%(24*60*60)
-	hours = math.floor(secs/(60 * 60)); secs = secs%(60*60); mins = math.floor(secs/60)
-	format = "%s%s%s"
-	m.uptime = f(format,
-		days > 0 and days.."d" or "",
-		hours > 0 and hours.."h" or "",
-		mins > 0 and mins.."m" or "")
+	m.uptime = dhms(secs)
 end
 
 function updates()

@@ -1,18 +1,11 @@
-leeversion = "202507070652"
+leeversion = "202507101657"
 
 json = require 'dkjson'
-P = require 'posix.compat'
-S = require 'posix.stdlib'
-U = require 'posix.unistd'
 
 f = string.format
 x = os.execute
 e = io.popen
 env = os.getenv
-setenv = S.setenv
-abs = S.realpath
-mkdir = P.mkdir
-chdir = P.chdir
 
 -- execute <cmd>, one line
 -- returns first line of output as a string
@@ -25,6 +18,11 @@ end
 -- includes final "\n"
 function ea(cmd)
 	return e(cmd):read("*a")
+end
+
+-- return absolute path or nil
+function abs(path)
+	return eo("realpath -q "..path)
 end
 
 -- traditional (C, go) printf
@@ -50,6 +48,33 @@ end
 function ths(n)
 	local a,b,c = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
 	return a..(b:reverse():gsub('(%d%d%d)','%1,'):reverse())..c
+end
+
+-- convert unix epoch seconds to human representation
+function dhms(seconds,ignoreseconds)
+	local days = math.floor(seconds / 86400)
+	seconds = seconds % 86400
+	local hours = math.floor(seconds / 3600)
+	seconds = seconds % 3600
+	local minutes = math.floor(seconds / 60)
+	seconds = seconds % 60
+	local result = ""
+	if days > 0 then
+		result = result .. days .. "d"
+	end
+	if hours > 0 then
+		result = result .. hours .. "h"
+	end
+	if minutes > 0 then
+		result = result .. minutes .. "m"
+	end
+	if not ignoreseconds then
+		if seconds > 0 or result == "" then
+			result = result .. f("%.0f", seconds) .. "s"
+		end
+	end
+	if result:len() == 0 then result = "<1m" end
+	return result
 end
 
 -- dump <var> for debugging: show type and json representation

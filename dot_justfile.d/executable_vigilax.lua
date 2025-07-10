@@ -30,8 +30,8 @@ function init()
 end
 
 function uptime()
-	secs = io.open("/proc/uptime"):read("*n")
-	m.uptime = dhms(secs)
+	m.secondsup = io.open("/proc/uptime"):read("*n")
+	m.uptime = dhms(m.secondsup, true)
 end
 
 function updates()

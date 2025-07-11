@@ -10,7 +10,6 @@ local hinfo = json.decode(ea("hostnamectl --json=short status"))
 function main()
 	init()
 	reboot()
-	uptime()
 	updates()
 	diskusage()
 	coc()
@@ -27,9 +26,8 @@ function init()
 	m.rkernel = knorm(hinfo.KernelRelease)
 	m.distro = hinfo.OperatingSystemPrettyName
 	m.virt = eo("systemd-detect-virt")
-end
-
-function uptime()
+	m.loadavg = io.open("/proc/loadavg"):read("*n")
+	m.nproc = tonumber(eo("nproc"))
 	m.secondsup = io.open("/proc/uptime"):read("*n")
 	m.uptime = dhms(m.secondsup, true)
 end

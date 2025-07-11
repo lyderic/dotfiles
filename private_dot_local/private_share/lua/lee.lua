@@ -1,4 +1,4 @@
-leeversion = "202507101657"
+leeversion = "202507110857"
 
 json = require 'dkjson'
 
@@ -22,7 +22,7 @@ end
 
 -- return absolute path or nil
 function abs(path)
-	return eo("realpath -q "..path)
+	return eo("realpath -qe "..path)
 end
 
 -- traditional (C, go) printf

@@ -278,6 +278,7 @@ autocmd! BufWritePost *
 "----------------------------------------------
 
 iabbrev bibash #!/bin/bash
+iabbrev bilua #!/usr/bin/env -S lua -llee
 cabbrev comm s/^/#/
 cabbrev nocomm s/^#//
 

@@ -14,5 +14,6 @@ test:
 v:
 	{{justfile()}} --evaluate
 
+set export
 set shell := ["bash","-uc"]
 # vim: ft=just

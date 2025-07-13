@@ -94,7 +94,7 @@ end
 -- a nice hacky getopt
 -- example usage of this:
 -- function main()
---   local opts = getopt("f")
+--   local opts = getopt("u")
 --   if opts.h then usage() return end
 --   local user = opts.u and opts.u or "default"
 --   local debug = opts.d and true or false

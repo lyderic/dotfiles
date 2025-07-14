@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="202506160908"
+export WORKSTATION_VERSION="202507140741"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
@@ -88,12 +88,17 @@ if pass keyinfo --quiet; then
 else
 	pass bonjour
 fi
-## ssa (ssh-agent wrapper)
-export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssa.sock"
-[ -x ~/scripts/ssa ] && {
-	ssh-add -l >/dev/null || ssa load-keys && {
-		echo -e "\e[2;32mssh keys loaded by ssa\e[m"
-	}
+
+# load ssh keys to ssh-agent
+# 'ssa' function is defined in bigbang
+ssh-add -l >/dev/null 2>&1 || {
+	ssa
+	# - The SSH_ASKPASS envvar must be a program spitting out the 
+	#   password to stdout
+	# - The SSH_ASKPASS_REQUIRE envvar must be set to 'force'
+	export SSH_ASKPASS_REQUIRE="force"
+	export SSH_ASKPASS=${HOME}/scripts/pass-ssa
+	ssh-add $(find ~/.ssh -type f -name "*key")
 }
 
 # vim: filetype=sh

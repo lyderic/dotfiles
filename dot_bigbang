@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="202504100905"
+export BIGBANG_VERSION="202507140735"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -150,6 +150,25 @@ command -v lua >/dev/null && {
 	LUA_PATH="$(lua -E -e 'print(package.path)')"
 	LUA_PATH="${LUA_PATH};${HOME}/.local/share/lua/?.lua"
 	export LUA_PATH
+}
+
+# if called, load ssh-agent setting ssa.sock and writing
+# environment to ssa.env in tmpfs
+ssa() {
+	for binary in ssh-agent ssh-add ; do
+		command -v $binary >/dev/null || return
+	done
+	SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssa.sock"
+	SSA_ENV="${XDG_RUNTIME_DIR}/ssa.env"
+	[ -S "${SSH_AUTH_SOCK}" ] || {
+		ssh-agent -a "${SSH_AUTH_SOCK}" -t 1w > "${SSA_ENV}"
+	}
+	source "${SSA_ENV}" >/dev/null
+	echo -e "\e[2;32mssh-agent pid: ${SSH_AGENT_PID}\e[m"
+	# check if pid exists and if it is actually ssh-agent command:
+	[[ $(ps q $SSH_AGENT_PID o comm=) == "ssh-agent" ]] || {
+		echo -e "\e[2;32mssh-agent pid error!\e[m"
+	}
 }
 
 # Special for workstations

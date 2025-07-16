@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="202507140735"
+export BIGBANG_VERSION="202507161021"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -109,11 +109,11 @@ export TERM=xterm-256color
 
 # Control functions
 header() { echo -e "\e[93;1;44m\e[K${@}\e[m" ; }
-ok()     { echo -e "\e[92m${@}\e[m" ; }
+ok()     { echo -e "\e[32m${@}\e[m" ; }
 blue()   { echo -e "\e[34m${@}\e[m"  ; }
 cyan()   { echo -e "\e[36m${@}\e[m"  ; }
-warn()   { echo -e "\e[93m${@}\e[m" ; }
-fail()   { echo -e "\e[91m${@}\e[m" ; }
+warn()   { echo -e "\e[33m${@}\e[m" ; }
+fail()   { echo -e "\e[31m${@}\e[m" ; }
 bold()   { echo -e "\e[1m${@}\e[m"  ; }
 die()    { fail ${@} ; exit 42 ; }
 export -f header ok blue cyan warn fail bold die

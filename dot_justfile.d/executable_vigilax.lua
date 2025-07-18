@@ -13,7 +13,17 @@ function main()
 	updates()
 	diskusage()
 	coc()
-	print(json.encode(m, { indent = true }))
+	display()
+end
+
+function display()
+	local keys = {}
+	for key in pairs(m) do table.insert(keys, key) end
+	table.sort(keys)
+	print(json.encode(m, {
+		indent = true,
+		keyorder = keys
+	}))
 end
 
 function init()

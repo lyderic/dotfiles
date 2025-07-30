@@ -62,6 +62,8 @@ function diskusage()
 	::next:: end
 end
 
+-- on arch: if running kernel or glibc is different than the
+-- installed kernel or glibc, then we want to reboot
 function reboot()
 	if m.mtype == "lxc" then return end
 	if m.distro:lower():sub(1,4) == "arch" then
@@ -71,6 +73,9 @@ function reboot()
 		if not ikernel then return end
 		m.ikernel = knorm(ikernel)
 		if m.rkernel ~= m.ikernel then m.reboot = true end
+		m.rglibc = eo("ldd --version"):match("(%d+.%d+)")
+		m.iglibc = eo("pacman -Q glibc"):match("(%d+.%d+)")
+		if m.rglibc ~= m.iglibc then m.reboot = true end
 	elseif m.distro == "ubuntu" then
 		if abs("/var/run/reboot-required") then m.reboot = true end
 	end

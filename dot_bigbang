@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="202507161021"
+export BIGBANG_VERSION="20250731-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -158,8 +158,8 @@ ssa() {
 	for binary in ssh-agent ssh-add ; do
 		command -v $binary >/dev/null || return
 	done
-	SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssa.sock"
-	SSA_ENV="${XDG_RUNTIME_DIR}/ssa.env"
+	SSH_AUTH_SOCK="/tmp/ssa.sock"
+	SSA_ENV="/tmp/ssa.env"
 	[ -S "${SSH_AUTH_SOCK}" ] || {
 		ssh-agent -a "${SSH_AUTH_SOCK}" -t 1w > "${SSA_ENV}"
 	}

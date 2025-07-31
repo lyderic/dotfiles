@@ -1,4 +1,4 @@
-export WORKSTATION_VERSION="202507210818"
+export WORKSTATION_VERSION="20250731-0"
 
 # aliases that are using pass
 alias rclone='rclone --password-command="pass rclone"'
@@ -92,8 +92,9 @@ else
 fi
 
 # load ssh keys to ssh-agent
+[ -z ${SSH_AUTH_SOCK} ] && ssa
 [ -x ~/scripts/lkssa ] && {
-	ssh-add -l >/dev/null || ssa load-keys && {
+	ssh-add -l >/dev/null || lkssa load-keys && {
 		echo -e "\e[2;32mssh keys loaded\e[m"
 	}
 }

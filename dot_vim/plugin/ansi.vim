@@ -9,8 +9,8 @@ let g:ansi_stuff = 1
 " COMMANDS
 "######################################################
 
-command! -buffer Ansi call s:ansi()
-command! -buffer PopupTerminal call s:popupterminal()
+command! Ansi call s:ansi()
+command! PopupTerminal call s:popupterminal()
 
 "######################################################
 "    ABBREVIATIONS

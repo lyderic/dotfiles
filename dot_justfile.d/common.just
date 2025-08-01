@@ -5,7 +5,7 @@ alias up  := update
 _help:
 	@just --list --unsorted --alias-style left --color always \
 		--list-heading= --list-prefix='  ' \
-		| sed -e "s/\[alias: /\[/"
+		| sed -e "s/\[alias: /\[/" | awk 'NF'
 
 # update distro and config
 [group('common')]

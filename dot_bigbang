@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20250731-0"
+export BIGBANG_VERSION="20250801-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -188,5 +188,9 @@ ssa() {
 # direnv integration
 [ -x /usr/bin/direnv ] && eval "$(direnv hook bash)"
 export DIRENV_LOG_FORMAT=$'\033[2;36m: %s\033[0m'
+
+# Combine stdout and stderr
+# Useful when 'foo -h | L' doesn't work because the output goes to stderr
+e() { ${@} 2>&1 ; }
 
 # vim: filetype=bash

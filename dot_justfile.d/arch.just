@@ -80,7 +80,7 @@ _check_gui_allowed:
 
 # ghbinaries
 @ghbin:
-	just _install_ghbin {{ghbinaries}}
-	just _ghbin
+	just base::_install_ghbin {{ghbinaries}}
+	just base::_ghbin
 
 ghbinaries := "emd wait4x"

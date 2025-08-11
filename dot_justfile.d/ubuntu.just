@@ -16,5 +16,5 @@ update:
 ghbinaries := "emd wait4x bat croc fzf just yq"
 # ghbinaries
 @ghbin:
-	just _install_ghbin {{ghbinaries}}
-	just _ghbin
+	just base::_install_ghbin {{ghbinaries}}
+	just base::_ghbin

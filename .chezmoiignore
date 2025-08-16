@@ -1,7 +1,5 @@
 {{/*
-The following files are only to be deployed on workstations:
-- ~/.workstation (encrypted)
-- ~/.ssh/config (encrypted)
+The following files are only to be deployed if there is an a gpg key:
 - ~/.gnupg/gpg.conf (template)
 - ~/.gnupg/gpg-agent.conf
 To achieve this, we set up gpg encryption on the host workstation
@@ -9,7 +7,7 @@ machine.
 If 'encryption' is not set as 'gpg and the 'gpg' > 'recipient'
 variable is not found, (or if the config file doesn't exist), then we
 write these following files, i.e. they are NOT ignored.
-Therefore, to have these dotfiles deployed on a workstation,
+Therefore, to have these dotfiles deployed on a machine,
 create the file '~/.config/chezmoi/chezmoi.yaml' with the
 following content:
 -----8<-----
@@ -22,8 +20,6 @@ gpg:
 {{ chezmoi:template:missing-key=zero }}
 {{- if eq .chezmoi.config.encryption "gpg" -}}
 {{- else -}}
-{{- print ".workstation\n" -}}
-{{- print ".ssh/config.asc\n" -}}
 {{- print ".gnupg/gpg-agent.conf\n" -}}
 {{- print ".gnupg/gpg.conf\n" -}}
 {{- end -}}

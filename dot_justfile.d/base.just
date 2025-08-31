@@ -45,7 +45,7 @@ _ghbin: _install_ghbin
 		else
 			print("\27[32mupdate available\27[m")
 			x("sudo rm -v "..path)
-			x("just _install_ghbin "..i.binary)
+			x("just base::_install_ghbin "..i.binary)
 		end
 	::next:: end
 

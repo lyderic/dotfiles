@@ -1,13 +1,23 @@
-export BIGBANG_VERSION="20250801-0"
+export BIGBANG_VERSION="20250901-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
+
+# Greet user if shell is interactive, return otherwise
+if [[ "$-" == *i* ]]; then
+	echo -e "\e[34mHELO ${USER}\e[m"
+else
+	return 0
+fi
 
 # Useful aliases
 alias z='tmux attach'
 alias l=ls
 alias ll="ls -lh"
 alias la="ls -la"
+alias cp="cp -v"
+alias mv="mv -iv"
+alias tree="tree -a"
 alias cls="clear"
 alias L=less
 alias p=pwd
@@ -15,9 +25,27 @@ alias stamp='date +"%Y%m%d%M%H%S"'
 alias croc='croc --relay europe.cybermoped.com'
 alias machinectl='sudo machinectl'
 
+# Disallow 'rm -f' and enable confirmation
+function rm() {
+	# Loop through the arguments to find -f or --force.
+	for arg in "$@"; do
+		if [[ "$arg" == "--force" ]]; then
+			warn "Error: 'rm --force' is not allowed" >&2
+			return 1
+		fi
+		if [[ "$arg" =~ ^-[^-] ]] && [[ "$arg" == *f* ]]; then
+			warn "Error: 'rm -f' is not allowed" >&2
+			return 1
+		fi
+	done
+  # If '-f' or '--force' not found, execute the real rm command,
+	# with confirmation if recursive or more than 3 files to be deleted
+  command rm -Iv "$@"
+}
+
 # PATH management
 # this function is to avoid duplicates
-topath() {
+function topath() {
 	# if no path type specified, then default is 'PATH'
 	local ptype=PATH # path type (PATH, INFOPATH or MANPATH)
 	local var=
@@ -27,7 +55,7 @@ topath() {
     *) export "${ptype}=${var}:${!ptype}";;
   esac
 }
-showpath() {
+function showpath() {
 	for p in PATH CDPATH MANPATH INFOPATH; do
 		echo "${p}:"
 		echo ${!p} | tr ':' '\n' | sort
@@ -69,7 +97,7 @@ alias cz="chezmoi"
 complete -o default -o nospace -F __start_chezmoi cz
 
 # sudo aliases and their completions
-sudoc() {
+function sudoc() {
 	prog=${1:-cryptsetup}
 	which ${prog} > /dev/null 2>&1 || return
 	alias ${prog:0:3}="sudo -E ${prog}"
@@ -108,18 +136,18 @@ export TERM=xterm-256color
 #export UND="\e[4m" REV="\e[7m" NOC="\e[0m"
 
 # Control functions
-header() { echo -e "\e[93;1;44m\e[K${@}\e[m" ; }
-ok()     { echo -e "\e[32m${@}\e[m" ; }
-blue()   { echo -e "\e[34m${@}\e[m"  ; }
-cyan()   { echo -e "\e[36m${@}\e[m"  ; }
-warn()   { echo -e "\e[33m${@}\e[m" ; }
-fail()   { echo -e "\e[31m${@}\e[m" ; }
-bold()   { echo -e "\e[1m${@}\e[m"  ; }
-die()    { fail ${@} ; exit 42 ; }
+function header() { echo -e "\e[93;1;44m\e[K${@}\e[m" ; }
+function ok()     { echo -e "\e[32m${@}\e[m" ; }
+function blue()   { echo -e "\e[34m${@}\e[m"  ; }
+function cyan()   { echo -e "\e[36m${@}\e[m"  ; }
+function warn()   { echo -e "\e[33m${@}\e[m" ; }
+function fail()   { echo -e "\e[31m${@}\e[m" ; }
+function bold()   { echo -e "\e[1m${@}\e[m"  ; }
+function die()    { fail ${@} ; exit 42 ; }
 export -f header ok blue cyan warn fail bold die
 
 # rename a file or directory with vim-like behaviour
-en() {
+function en() {
 	oldname="${@}"
 	read -p "> " -ei "${oldname}" "newname"
 	mv -iv "${oldname}" "${newname}"
@@ -128,6 +156,8 @@ en() {
 # Prompt
 PS1='[\u@\h \W]\$ '
 PROMPT_DIRTRIM=2
+# Always get correct title in Gnome Terminal's tabs
+PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME%%.*}\007"'
 
 alias bigbang='. ${HOME}/.bigbang ; blue "bigbang v${BIGBANG_VERSION}"'
 
@@ -135,15 +165,12 @@ alias bigbang='. ${HOME}/.bigbang ; blue "bigbang v${BIGBANG_VERSION}"'
 export GPG_TTY=$(tty)
 
 # Wipe history when we close shell
-finish() {
+function finish() {
   history -c
   > $HOME/.bash_history
 	clear
 }
 trap finish EXIT
-
-# Always get correct title in Gnome Terminal's tabs
-PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME%%.*}\007"'
 
 # Lua libs
 command -v lua >/dev/null && {
@@ -154,7 +181,7 @@ command -v lua >/dev/null && {
 
 # if called, load ssh-agent setting ssa.sock and writing
 # environment to ssa.env in tmpfs
-ssa() {
+function ssa() {
 	for binary in ssh-agent ssh-add ; do
 		command -v $binary >/dev/null || return
 	done
@@ -171,12 +198,6 @@ ssa() {
 	}
 }
 
-# Special for workstations
-[ -e ~/.workstation ] && {
-	PS1='\h:\w\$ '
-	source ~/.workstation
-}
-
 # If additional setup is required
 [ -e ~/.aqui ] && source ~/.aqui
 
@@ -191,6 +212,6 @@ export DIRENV_LOG_FORMAT=$'\033[2;36m: %s\033[0m'
 
 # Combine stdout and stderr
 # Useful when 'foo -h | L' doesn't work because the output goes to stderr
-e() { ${@} 2>&1 ; }
+function e() { ${@} 2>&1 ; }
 
 # vim: filetype=bash

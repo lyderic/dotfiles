@@ -1,11 +1,11 @@
-export BIGBANG_VERSION="20250901-0"
+export BIGBANG_VERSION="20250903-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
 
 # Greet user if shell is interactive, return otherwise
 if [[ "$-" == *i* ]]; then
-	echo -e "\e[34mHELO ${USER}\e[m"
+	echo -e "\e[34mHELO ${USER}@$(hostname)\e[m"
 else
 	return 0
 fi

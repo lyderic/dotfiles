@@ -77,10 +77,3 @@ _check_gui_allowed:
 	# don't proceed if already gui
 	! pacman -Q xorg-server
 	! pacman -Q wayland
-
-# ghbinaries
-@ghbin:
-	just base::_install_ghbin {{ghbinaries}}
-	just base::_ghbin
-
-ghbinaries := "emd wait4x"

@@ -1,4 +1,4 @@
-common-version := "20250804-0"
+common-version := "20251003-0"
 
 alias up    := base::update
 alias vi    := base::vigilax
@@ -6,21 +6,11 @@ alias ip    := base::ip
 alias ansi  := base::ansi
 alias ghbin := base::ghbin
 alias h     := _help
-alias hh    := _full_help
 
 _help:
 	@just --list --unsorted --alias-style left --color always \
 		--list-heading= --list-prefix='  ' \
 		| sed -e "s/\[alias: /\[/" | awk 'NF'
-
-_full_help: _help
-	#!/bin/bash
-	for module in base ${distro}; do
-	echo -e "  \e[1;94m[${module} module]\e[m"
-		just --list "${module}" --unsorted --alias-style left \
-			--color always --list-heading= --list-prefix='  ' \
-			| sed -e "s/\[alias: /\[/" | awk 'NF'
-	done
 
 # used by vim's ansi plugin
 _wait:
@@ -67,8 +57,6 @@ v:
 
 LUA_PATH := home_dir()/".local/share/lua/?.lua;/usr/share/lua/5.4/?.lua"
 sys := "sudo -E systemctl"
-distro := `awk -F= '/^ID=/ {print $2}' /etc/os-release`
 set shell := ["bash","-uc"]
 set export
 set dotenv-load
-# vim: ft=just

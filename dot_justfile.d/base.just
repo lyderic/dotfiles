@@ -1,4 +1,4 @@
-base-version := "20250804.0"
+base-version := "20251003.0"
 
 _help:
 	@just --list --unsorted --alias-style left --color always \
@@ -20,50 +20,53 @@ update:
 vigilax:
 	@~/.justfile.d/vigilax.lua | yq -P 
 
-# deploy/update github binaries
-ghbin:
-	just {{distro}}::ghbin
-
 # github binaries
-# _install_ghbin and _ghbin depend on the distro, hence
-# they are called in arch.just and ubuntu.just
-_ghbin: _install_ghbin
+ghbin:
 	#!/usr/bin/env -S lua -llee
+	ghbinaries = { "emd", "wait4x" }
+	ubuntu_ghbinaries = {"chezmoi", "bat", "croc", "fzf", "just", "yq"}
+	if env("distro") == "ubuntu" then
+		for _,i in ipairs(ubuntu_ghbinaries) do
+			table.insert(ghbinaries, i)
+		end
+	end
 	data = ea("curl -sL https://lola.lyderic.com/cgi-bin/state")
-	items = json.decode(data)
-	for _,i in pairs(items) do
-		path = "/usr/local/bin/"..i.binary
-		if not abs(path) then goto next end
-		bits = {}
-		for bit in eo("cksum "..path):gmatch("%S+") do
-			table.insert(bits, bit)
+	state = json.decode(data)
+	for _,ghbinary in ipairs(ghbinaries) do
+		path = "/usr/local/bin/"..ghbinary
+		if not abs(path) then
+			x("just base::_deploy_ghbin "..ghbinary) ; goto nxt
 		end
-		cksum = bits[1] ; size = bits[2]
-		printf("\27[1m%-8.8s  \27[m", i.binary..":")
-		if cksum == i.cksum and size == i.size then
-			printf("\27[90mup to date (sum=%s, size=%s)\27[m\n", cksum, size)
-		else
-			print("\27[32mupdate available\27[m")
-			x("sudo rm -v "..path)
-			x("just base::_install_ghbin "..i.binary)
+		cksum, size = eo("cksum "..path):match("(%d+) (%d+)")
+		for _,i in ipairs(state) do
+			if i.binary == ghbinary then
+				printf("\27[1m%-8.8s  \27[m", ghbinary..":")
+				if cksum == i.cksum and size == i.size then
+					printf("\27[90mup to date (sum=%s, size=%s)\27[m\n",
+						cksum, size)
+				else
+					print("\27[32mupdate available\27[m")
+					x("just base::_deploy_ghbin "..ghbinary)
+				end
+			end
 		end
-	::next:: end
+	::nxt::end
 
+# This recipe installs a binary in /usr/local/bin
+# If the binary is found, it is overwritten, which allows for a new
+# version to be deployed
 # 'binaries' are defined in arch.just or ubuntu.just, as there are
 # not the same for each distro
-_install_ghbin *$binaries:
+_deploy_ghbin $binary:
 	#!/bin/bash
 	set -e
-	for binary in ${binaries}; do
-		[ -x /usr/local/bin/${binary} ] && continue
-		echo -e "\e[7m ${binary} \e[m"
-		curl -LO https://lola.lyderic.com/gz/${binary}.gz
-		dst="/usr/local/bin/${binary}"
-		sudo sh -c "gzip -dc ${binary}.gz > ${dst}"
-		sudo chown -v 0:0 "${dst}"
-		sudo chmod -v 0755 "${dst}"
-		sudo rm -v "${binary}.gz"
-	done
+	echo -e "\e[7m ${binary} \e[m"
+	curl -LO https://lola.lyderic.com/gz/${binary}.gz
+	dst="/usr/local/bin/${binary}"
+	sudo sh -c "gzip -dc ${binary}.gz > ${dst}"
+	sudo chown -v 0:0 "${dst}"
+	sudo chmod -v 0755 "${dst}"
+	sudo rm -v "${binary}.gz"
 
 # show ANSI codes
 ansi:
@@ -117,84 +120,4 @@ ip:
 leedoc:
 	@lua -l lee -e "leedoc()"
 
-## check machine uptime, disk space, updates needed, etc.
-#vigilax:
-#	@~/.justfile.d/vigilax.lua | yq -P 
-#
-## github binaries
-## _install_ghbin and _ghbin depend on the distro, hence
-## they are called in arch.just and ubuntu.just
-#_ghbin: _install_ghbin
-#	#!/usr/bin/env lua
-#	require("lee")
-#	data = ea("curl -sL https://lola.lyderic.com/cgi-bin/state")
-#	items = json.decode(data)
-#	for _,i in pairs(items) do
-#		path = "/usr/local/bin/"..i.binary
-#		if not abs(path) then goto next end
-#		bits = {}
-#		for bit in eo("cksum "..path):gmatch("%S+") do
-#			table.insert(bits, bit)
-#		end
-#		cksum = bits[1] ; size = bits[2]
-#		printf("\27[1m%-8.8s  \27[m", i.binary..":")
-#		if cksum == i.cksum and size == i.size then
-#			printf("\27[90mup to date (sum=%s, size=%s)\27[m\n", cksum, size)
-#		else
-#			print("\27[32mupdate available\27[m")
-#			x("sudo rm -v "..path)
-#			x("just _install_ghbin "..i.binary)
-#		end
-#	::next::;end
-#
-#_install_ghbin *$binaries:
-#	#!/bin/bash
-#	set -e
-#	for binary in ${binaries}; do
-#		[ -x /usr/local/bin/${binary} ] && continue
-#		echo -e "\e[7m ${binary} \e[m"
-#		curl -LO https://lola.lyderic.com/gz/${binary}.gz
-#		dst="/usr/local/bin/${binary}"
-#		sudo sh -c "gzip -dc ${binary}.gz > ${dst}"
-#		sudo chown -v 0:0 "${dst}"
-#		sudo chmod -v 0755 "${dst}"
-#		sudo rm -v "${binary}.gz"
-#	done
-#
-## Nice show of services for status
-#_services:
-#	#!/bin/bash
-#	[ -z "${services}" ] && exit 0
-#	max=0
-#	for word in ${services}; do
-#		ln=${#word}
-#		((ln > max)) && max=$ln
-#	done
-#	sc="\e[1m"; up="\e[32m"; down="\e[2m"; nc="\e[m"
-#	for service in ${services} ; do
-#		e=$({{sys}} is-enabled "${service}")
-#		a=$({{sys}} is-active "${service}")
-#		[ "${e}" == "enabled" ] && ec="${up}" || ec="${down}"
-#		[ "${a}" == "active" ] && ac="${up}" || ac="${down}"
-#		printf "${sc}%-*s${nc}   ${ec}%-10.10s${nc} ${ac}%s${nc}\n" \
-#		$max "${service}" "${e}" "${a}"
-#	done
-#
-## MODULES
-## arch commands
-#mod? arch
-## ubuntu commands
-#mod? ubuntu
-#
-## DYNAMIC VARIABLES, SETTINGS AND IMPORTS
-#
-#[private]
-#v:
-#	@just --evaluate
-#
-#LUA_PATH := home_dir()/".local/share/lua/?.lua;/usr/share/lua/5.4/?.lua"
-#sys := "sudo -E systemctl"
-distro := `awk -F= '/^ID=/ {print $2}' /etc/os-release`
-#set shell := ["bash","-uc"]
-#set export
-## vim: ft=just
+export distro := `awk -F= '/^ID=/ {print $2}' /etc/os-release`

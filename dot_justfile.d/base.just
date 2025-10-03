@@ -65,7 +65,7 @@ _deploy_ghbin $binary:
 	dst="/usr/local/bin/${binary}"
 	tmp=$(mktemp)
 	gzip -dc ${binary}.gz > "${tmp}"
-	sudo mv -v ${tmp}" "${dst}"
+	sudo mv -v "${tmp}" "${dst}"
 	sudo chown -v 0:0 "${dst}"
 	sudo chmod -v 0755 "${dst}"
 

@@ -23,8 +23,8 @@ vigilax:
 # github binaries
 ghbin:
 	#!/usr/bin/env -S lua -llee
-	ghbinaries = { "emd", "wait4x" }
-	ubuntu_ghbinaries = {"chezmoi", "bat", "croc", "fzf", "just", "yq"}
+	ghbinaries = {"emd","wait4x"}
+	ubuntu_ghbinaries = {"chezmoi","bat","croc","fzf","yq","just"}
 	if env("distro") == "ubuntu" then
 		for _,i in ipairs(ubuntu_ghbinaries) do
 			table.insert(ghbinaries, i)
@@ -43,7 +43,7 @@ ghbin:
 				printf("\27[1m%-8.8s  \27[m", ghbinary..":")
 				if cksum == i.cksum and size == i.size then
 					printf("\27[90mup to date (sum=%s, size=%s)\27[m\n",
-						cksum, size)
+					cksum, size)
 				else
 					print("\27[32mupdate available\27[m")
 					x("just base::_deploy_ghbin "..ghbinary)
@@ -63,10 +63,11 @@ _deploy_ghbin $binary:
 	echo -e "\e[7m ${binary} \e[m"
 	curl -LO https://lola.lyderic.com/gz/${binary}.gz
 	dst="/usr/local/bin/${binary}"
-	sudo sh -c "gzip -dc ${binary}.gz > ${dst}"
+	tmp=$(mktemp)
+	gzip -dc ${binary}.gz > "${tmp}"
+	sudo mv -v ${tmp}" "${dst}"
 	sudo chown -v 0:0 "${dst}"
 	sudo chmod -v 0755 "${dst}"
-	sudo rm -v "${binary}.gz"
 
 # show ANSI codes
 ansi:

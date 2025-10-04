@@ -5,7 +5,6 @@ package.path = package.path..";"..leepath
 require "lee"
 
 -- GLOBALS
-distro = eo("awk -F= '/^ID=/ {print $2}' /etc/os-release")
 url = "https://lola.lyderic.com"
 
 function main()
@@ -46,12 +45,12 @@ function get_situation(binary)
 	return t
 end
 
--- if binary not in distro repos, then get binary from lola and put it 
--- in /usr/local/bin
+-- if binary not installable with pacman, then get binary from lola
+-- and put it in /usr/local/bin
 -- if binary already found in /usr/local/bin, it is overwritten
 function deploy(binary)
 	printf("\27[7m %s \27[m", binary)
-	if distro_install(binary) then return end
+	if pacman(binary) then return end
 	local gz = binary..".gz"
 	local curl_cmd = f("curl -L -o %q %s/gz/%s", "/tmp/"..gz, url, gz)
 	print("---> [XeQ] ", curl_cmd)
@@ -63,17 +62,11 @@ function deploy(binary)
 	if not x("sudo chmod -v 0755 "..dst) then return end
 end
 
--- try to install binary from pacman or apt
-function distro_install(binary)
-	local ok = false
-	if distro == "arch" then
-		print("---> trying pacman...")
-		ok = x("sudo pacman -S --needed "..binary)
-	elseif distro == "ubuntu" then
-		print("---> trying apt...")
-		ok = x("sudo apt-get install "..binary)
-	end
-	return ok
+-- try to install binary with pacman
+function pacman(binary)
+	if not x("command -v pacman") then return false end
+	print("---> trying pacman...")
+	return x("sudo pacman -S --needed "..binary)
 end
 
 main()

@@ -20,54 +20,9 @@ update:
 vigilax:
 	@~/.justfile.d/vigilax.lua | yq -P 
 
-# github binaries
+# install single binaries from github
 ghbin:
-	#!/usr/bin/env -S lua -llee
-	ghbinaries = {"emd","wait4x"}
-	ubuntu_ghbinaries = {"chezmoi","bat","croc","fzf","yq","just"}
-	if env("distro") == "ubuntu" then
-		for _,i in ipairs(ubuntu_ghbinaries) do
-			table.insert(ghbinaries, i)
-		end
-	end
-	data = ea("curl -sL https://lola.lyderic.com/cgi-bin/state")
-	state = json.decode(data)
-	for _,ghbinary in ipairs(ghbinaries) do
-		path = "/usr/local/bin/"..ghbinary
-		if not abs(path) then
-			x("just base::_deploy_ghbin "..ghbinary) ; goto nxt
-		end
-		cksum, size = eo("cksum "..path):match("(%d+) (%d+)")
-		for _,i in ipairs(state) do
-			if i.binary == ghbinary then
-				printf("\27[1m%-8.8s  \27[m", ghbinary..":")
-				if cksum == i.cksum and size == i.size then
-					printf("\27[90mup to date (sum=%s, size=%s)\27[m\n",
-					cksum, size)
-				else
-					print("\27[32mupdate available\27[m")
-					x("just base::_deploy_ghbin "..ghbinary)
-				end
-			end
-		end
-	::nxt::end
-
-# This recipe installs a binary in /usr/local/bin
-# If the binary is found, it is overwritten, which allows for a new
-# version to be deployed
-# 'binaries' are defined in arch.just or ubuntu.just, as there are
-# not the same for each distro
-_deploy_ghbin $binary:
-	#!/bin/bash
-	set -e
-	echo -e "\e[7m ${binary} \e[m"
-	curl -LO https://lola.lyderic.com/gz/${binary}.gz
-	dst="/usr/local/bin/${binary}"
-	tmp=$(mktemp)
-	gzip -dc ${binary}.gz > "${tmp}"
-	sudo mv -v "${tmp}" "${dst}"
-	sudo chown -v 0:0 "${dst}"
-	sudo chmod -v 0755 "${dst}"
+	@~/.justfile.d/ghbin.lua
 
 # show ANSI codes
 ansi:

@@ -38,6 +38,37 @@ _services:
 		$max "${service}" "${e}" "${a}"
 	done
 
+# BAse CONfiguration files
+# To use:
+# in ~/justfile, create a variable 'baconfiles' e.g.:
+# baconfiles := "/path/to/file /path/to/dir /path/to/another"
+# When you run 'just _bacon' all these files will be put in
+# ~/.bacon.tgz for backup along with the justfile and .env* files
+# This is useful for systemd services in /etc/systemd/system and
+# and other configuration files
+_bacon:
+	#!/bin/bash
+	[ -z "${baconfiles}" ] && exit 0
+	archive="${HOME}/.bacon.tgz"
+	[ -f "${archive}" ] || {
+		echo -ne "\e[33m${archive} not found. Create? [y/N]? \e[m"
+		read yesno ; [[ "${yesno,,}" =~ ^(y|yes)$ ]] || exit 0
+		for file in ${baconfiles}; do
+			[ -e "${file}" ] || echo -e "\e[31m${file}: file not found!\e[m"
+		done
+		tar Pczvf "${archive}" ${baconfiles}
+	}
+	echo -e "\e[34m[tar content]\e[m"
+	tar Ptzvf "${archive}"
+	echo -e "\e[34m[tar deployment check]\e[m"
+	tar Pdzvf "${archive}" && {
+		echo -e "\e[32mall deployed ok\e[m"
+		exit 0
+	}
+	echo -ne "\e[33m(re)deploy ${archive}? [y/N]? \e[m"
+	read yesno ; [[ "${yesno,,}" =~ ^(y|yes)$ ]] || exit 0
+	sudo tar Pxzvwf "${archive}"
+
 # MODULES
 # base commands and tools
 [group('common')]

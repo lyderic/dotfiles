@@ -22,8 +22,8 @@ vigilax:
 	@~/.justfile.d/vigilax.lua | yq -P 
 
 # install single binaries from github
-ghbin:
-	@~/.justfile.d/ghbin.lua
+ghbin *$args:
+	@~/.justfile.d/ghbin.lua $args
 
 # show ANSI codes
 ansi:

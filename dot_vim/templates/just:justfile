@@ -10,7 +10,7 @@ test:
 
 [private]
 v:
-	{{justfile()}} --evaluate
+	just --evaluate
 
 set export
 set shell := ["bash","-uc"]

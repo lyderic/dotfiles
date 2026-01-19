@@ -6,10 +6,10 @@ require "lee"
 
 -- GLOBALS
 url = "https://lola.lyderic.com"
+cpu = eo("uname -m")
 
 function main()
-	if not valid() then os.exit(42) end
-	local cmd = f("curl -sL %s/cgi-bin/state", url)
+	local cmd = f("curl -sL %s/cgi-bin/state?cpu=%s", url, cpu)
 	local state = json.decode(ea(cmd))
 	for _,i in ipairs(state) do
 		printf("\27[1m%-8.8s  \27[m", i.binary..":")
@@ -53,7 +53,7 @@ function deploy(binary)
 	printf("\27[7m %s \27[m", binary)
 	if pacman(binary) then return end
 	local gz = binary..".gz"
-	local curl_cmd = f("curl -s -L -o %q %s/gz/%s", "/tmp/"..gz, url, gz)
+	local curl_cmd = f("curl -s -L -o %q %s/%s/%s", "/tmp/"..gz, url, cpu, gz)
 	print("---> [XeQ] ", curl_cmd)
 	if not x(curl_cmd) then return end
 	if not x("gzip -d /tmp/"..gz) then return end
@@ -68,18 +68,6 @@ function pacman(binary)
 	if not x("command -v pacman") then return false end
 	print("---> trying pacman...")
 	return x("sudo pacman -S --needed "..binary)
-end
-
-function valid()
-	-- This works only on amd64!
-	local validcpu = "x86_64"
-	local cpu = eo("uname -m")
-	if cpu == validcpu then
-		return true
-	else
-		printf("\27[31m%s: invalid cpu (valid is: %s)\n", cpu, validcpu)
-		return false
-	end
 end
 
 main()

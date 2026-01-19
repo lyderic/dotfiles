@@ -12,9 +12,9 @@ main() {
 	}
 	echo -e "Distribution: \e[33m${DISTRO}\e[m"
 	case "${DISTRO}" in
-		"ubuntu" | "debian") ubuntu ;;
+		"debian" | "ubuntu" | "raspbian") debian ;;
 		"arch" | "archarm") arch ;;
-		*) die "${DISTRO}: only archlinux and ubuntu are supported" ;;
+		*) die "${DISTRO}: only archlinux, debian, ubuntu and raspbian are supported" ;;
 	esac
 	echo -e "\e[36mbase packages installed\e[m"
 }
@@ -32,18 +32,18 @@ arch() {
 	$sudo pacman -S --noconfirm --needed ${packages}
 }
 
-ubuntu() {
-	ubuntu-packages
-	ubuntu-base
+debian() {
+	debian-packages
+	debian-base
 }
 
-ubuntu-packages() {
-	local packages="${COMMON_PACKAGES} ${UBUNTU_PACKAGES}"
-	header "ubuntu packages"
+debian-packages() {
+	local packages="${COMMON_PACKAGES} ${DEBIAN_PACKAGES}"
+	header "debian packages"
 	$sudo apt-get update && $sudo apt-get -y install ${packages}
 }
 
-ubuntu-base() {
+debian-base() {
 	header "configure fzf"
 	[ -d "${vimdir}" ] || { warn "${vimdir} not found"; return; }
 	[ -f "${vimdir}/plugin/fzf.vim" ] && return
@@ -74,6 +74,6 @@ the_silver_searcher tree which fakeroot go-yq
 "
 
 # Additional packages for ubuntu/debian
-UBUNTU_PACKAGES="dialog grep less lua5.4 silversearcher-ag tree bsdextrautils"
+DEBIAN_PACKAGES="dialog grep less lua5.4 silversearcher-ag tree bsdextrautils"
 
 main ${@}

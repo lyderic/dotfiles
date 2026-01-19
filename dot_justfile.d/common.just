@@ -82,6 +82,9 @@ mod? debian
 # ubuntu commands
 [group('common')]
 mod? ubuntu
+# raspbian commands
+[group('common')]
+mod? raspbian
 
 # DYNAMIC VARIABLES, SETTINGS AND IMPORTS
 

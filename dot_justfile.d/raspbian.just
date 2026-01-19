@@ -9,7 +9,3 @@ update:
 	sudo apt-get autoclean
 	sudo apt-get clean
 	exit 0
-
-# (re)bootstrap
-boostrap:
-	@curl -sL https://lola.lyderic.com/bootstrap | sudo bash

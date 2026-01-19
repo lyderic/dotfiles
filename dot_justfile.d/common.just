@@ -1,4 +1,4 @@
-common-version := "20251003-0"
+common-version := "20260119-0"
 
 alias up    := base::update
 alias vi    := base::vigilax

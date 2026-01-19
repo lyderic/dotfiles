@@ -1,4 +1,4 @@
-base-version := "20251004.0"
+base-version := "20260119.0"
 
 _help:
 	@just --list --unsorted --alias-style left --color always \
@@ -13,8 +13,8 @@ update:
 	chezmoi update
 	echo -e "\e[34m[chezmoi (root)]\e[0m"
 	sudo chezmoi update
-	echo -e "\e[34m[distro:${distro}]\e[0m"
 	distro=$(awk -F= '/^ID=/ {print $2}' /etc/os-release)
+	echo -e "\e[34m[distro:${distro}]\e[0m"
 	just ${distro}::update
 
 # check machine uptime, disk space, updates needed, etc.

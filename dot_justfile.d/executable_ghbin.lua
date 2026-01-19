@@ -8,6 +8,7 @@ require "lee"
 url = "https://lola.lyderic.com"
 
 function main()
+	if not valid() then os.exit(42) end
 	local cmd = f("curl -sL %s/cgi-bin/state", url)
 	local state = json.decode(ea(cmd))
 	for _,i in ipairs(state) do
@@ -67,6 +68,18 @@ function pacman(binary)
 	if not x("command -v pacman") then return false end
 	print("---> trying pacman...")
 	return x("sudo pacman -S --needed "..binary)
+end
+
+function valid()
+	-- This works only on amd64!
+	local validcpu = "x86_64"
+	local cpu = eo("uname -m")
+	if cpu == validcpu then
+		return true
+	else
+		printf("\27[31m%s: invalid cpu (not %s)\n", validcpu, cpu)
+		return false
+	end
 end
 
 main()

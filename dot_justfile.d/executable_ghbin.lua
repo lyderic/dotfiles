@@ -77,7 +77,7 @@ function valid()
 	if cpu == validcpu then
 		return true
 	else
-		printf("\27[31m%s: invalid cpu (not %s)\n", validcpu, cpu)
+		printf("\27[31m%s: invalid cpu (valid is: %s)\n", cpu, validcpu)
 		return false
 	end
 end

@@ -61,19 +61,21 @@ ok()     { echo -e "\e[32m${@}\e[m"; }
 warn()   { echo -e "\e[33m${@}\e[m"; }
 die()    { fail "${@}"; exit 42; }
 
-# Packages that are common to arch and ubuntu
+# Packages that are common to arch and debian
 COMMON_PACKAGES="
-bash bash-completion gdu curl direnv file git htop sudo
+bash bash-completion bat gdu curl direnv file git htop sudo
 tmux vim lua-dkjson
 "
 
 # Additional packages for archlinux
 ARCH_PACKAGES="
-croc diffutils bat duf fzf gdu lua grep just less pacman-contrib \
+croc diffutils duf fzf gdu lua grep just less pacman-contrib \
 the_silver_searcher tree which fakeroot go-yq
 "
 
 # Additional packages for ubuntu/debian
-DEBIAN_PACKAGES="dialog grep less lua5.4 silversearcher-ag tree bsdextrautils"
+DEBIAN_PACKAGES="
+dialog grep less lua5.4 silversearcher-ag tree bsdextrautils
+"
 
 main ${@}

@@ -53,7 +53,7 @@ function deploy(binary)
 	printf("\27[7m %s \27[m", binary)
 	if pacman(binary) then return end
 	local gz = binary..".gz"
-	local curl_cmd = f("curl -s -L -o %q %s/%s/%s", "/tmp/"..gz, url, cpu, gz)
+	local curl_cmd = f("curl -s -L -o %q %s/%s/gz/%s", "/tmp/"..gz, url, cpu, gz)
 	print("---> [XeQ] ", curl_cmd)
 	if not x(curl_cmd) then return end
 	if not x("gzip -d /tmp/"..gz) then return end

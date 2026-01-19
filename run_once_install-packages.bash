@@ -63,13 +63,13 @@ die()    { fail "${@}"; exit 42; }
 
 # Packages that are common to arch and debian
 COMMON_PACKAGES="
-bash bash-completion bat gdu curl direnv file git htop sudo
+bash bash-completion gdu curl direnv file git htop sudo
 tmux vim lua-dkjson
 "
 
 # Additional packages for archlinux
 ARCH_PACKAGES="
-croc diffutils duf fzf gdu lua grep just less pacman-contrib \
+bat croc diffutils duf fzf gdu lua grep just less pacman-contrib \
 the_silver_searcher tree which fakeroot go-yq
 "
 

@@ -35,6 +35,7 @@ function init()
 	m.chassis = hinfo.Chassis
 	m.rkernel = knorm(hinfo.KernelRelease)
 	m.distro = hinfo.OperatingSystemPrettyName
+	m.processor = eo("uname -m")
 	m.virt = eo("systemd-detect-virt")
 	m.loadavg = io.open("/proc/loadavg"):read("*n")
 	m.nproc = tonumber(eo("nproc"))

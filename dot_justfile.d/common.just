@@ -85,6 +85,9 @@ mod? ubuntu
 # raspbian commands
 [group('common')]
 mod? raspbian
+# fedora commands
+[group('common')]
+mod? fedora
 
 # DYNAMIC VARIABLES, SETTINGS AND IMPORTS
 

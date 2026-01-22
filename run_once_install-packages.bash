@@ -14,6 +14,7 @@ main() {
 	case "${DISTRO}" in
 		"debian" | "ubuntu" | "raspbian") debian ;;
 		"arch" | "archarm") arch ;;
+		"fedora") fedora ;;
 		*) die "${DISTRO}: only archlinux, debian, ubuntu and raspbian are supported" ;;
 	esac
 	echo -e "\e[36mbase packages installed\e[m"
@@ -35,6 +36,12 @@ arch() {
 debian() {
 	debian-packages
 	debian-base
+}
+
+fedora() {
+	local packages="${COMMON_PACKAGES} ${FEDORA_PACKAGES}"
+	header "fedora packages"
+	$sudo dnf --assumeyes install ${packages}
 }
 
 debian-packages() {
@@ -63,19 +70,23 @@ die()    { fail "${@}"; exit 42; }
 
 # Packages that are common to arch and debian
 COMMON_PACKAGES="
-bash bash-completion gdu curl direnv file git htop sudo
-tmux vim lua-dkjson
+bash bash-completion gdu curl direnv file git htop tmux sudo tree
 "
 
 # Additional packages for archlinux
 ARCH_PACKAGES="
-bat croc diffutils duf fzf gdu lua grep just less pacman-contrib \
-the_silver_searcher tree which fakeroot go-yq
+bat croc diffutils duf fzf gdu lua lua-dkjson grep just less pacman-contrib \
+the_silver_searcher tree which fakeroot go-yq vim
 "
 
 # Additional packages for ubuntu/debian
 DEBIAN_PACKAGES="
-dialog grep less lua5.4 silversearcher-ag tree bsdextrautils
+dialog grep less lua5.4 lua-dkjson silversearcher-ag tree bsdextrautils vim
+"
+
+# Additional packages for fedora
+FEDORA_PACKAGES="
+just lua vim-enhanced
 "
 
 main ${@}

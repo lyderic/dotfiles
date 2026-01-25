@@ -22,9 +22,15 @@ main() {
 }
 
 alpine() {
-	local packages="${COMMON_PACKAGES}"
+	local packages="${COMMON_PACKAGES} ${ALPINE_PACKAGES}"
 	header "alpine packages"
-	$sudo apk add "${COMMON_PACKAGES}"
+	$sudo apk add ${packages}
+	# There is no plain lua command, one needs to symlink it on alpine
+	[ -e /usr/bin/lua ] || {
+		$sudo ln -s /usr/bin/lua5.4 /usr/bin/lua
+	}
+	# dkjson is missing from alpine repositories
+	dkjson
 }
 
 arch() {
@@ -50,9 +56,15 @@ fedora() {
 	header "fedora packages"
 	$sudo dnf --assumeyes install ${packages}
 	# dkjson is missing from fedora repositories
-	# $sudo cp -uv dkjson.lua /usr/share/lua/5.4/dkjson.lua
-	$sudo curl -L -o /usr/share/lua/5.4/dkjson.lua \
-		"https://dkolf.de/dkjson-lua/dkjson-2.8.lua"
+	dkjson
+}
+
+dkjson() {
+	local dir="/usr/share/lua/5.4"
+	[ -d "${dir}" ] || $sudo mkdir -pv "${dir}"
+	local file="${dir}/dkjson.lua"
+	[ -e "${file}" ] && return
+	$sudo curl -L -o "${file}" "https://dkolf.de/dkjson-lua/dkjson-2.8.lua"
 }
 
 debian-packages() {
@@ -81,13 +93,20 @@ die()    { fail "${@}"; exit 42; }
 
 # Packages that are common to arch and debian
 COMMON_PACKAGES="
-bash bash-completion gdu curl direnv file git htop tmux sudo tree
+bash bash-completion gdu curl direnv file git htop tmux sudo tree \
+diffutils
+"
+
+# Additional packages for alpine
+ALPINE_PACKAGES="
+vim croc fzf lua5.4 just bat dufs fzf gdu grep less the_silver_searcher \
+which fakeroot
 "
 
 # Additional packages for archlinux
 ARCH_PACKAGES="
-bat croc diffutils duf fzf gdu lua lua-dkjson grep just less pacman-contrib \
-the_silver_searcher tree which fakeroot go-yq vim
+bat croc duf fzf gdu lua lua-dkjson grep just less pacman-contrib \
+the_silver_searcher which fakeroot go-yq vim
 "
 
 # Additional packages for ubuntu/debian

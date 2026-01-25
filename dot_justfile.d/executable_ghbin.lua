@@ -9,7 +9,7 @@ url = "https://lola.lyderic.com"
 cpu = eo("uname -m")
 
 function main()
-	local cmd = f("curl -sL %s/cgi-bin/state?cpu=%s", url, cpu)
+	local cmd = f("curl -s %s/cgi-bin/state?cpu=%s", url, cpu)
 	local state = json.decode(ea(cmd))
 	for _,i in ipairs(state) do
 		printf("\27[1m%-8.8s  \27[m", i.binary..":")
@@ -53,7 +53,7 @@ function deploy(binary)
 	printf("\27[7m %s \27[m", binary)
 	if pacman(binary) then return end
 	local gz = binary..".gz"
-	local curl_cmd = f("curl -s -L -o %q %s/%s/gz/%s", "/tmp/"..gz, url, cpu, gz)
+	local curl_cmd = f("curl -s -o %q %s/%s/gz/%s", "/tmp/"..gz, url, cpu, gz)
 	print("---> [XeQ] ", curl_cmd)
 	if not x(curl_cmd) then return end
 	if not x("gzip -d /tmp/"..gz) then return end

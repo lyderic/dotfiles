@@ -12,12 +12,19 @@ main() {
 	}
 	echo -e "Distribution: \e[33m${DISTRO}\e[m"
 	case "${DISTRO}" in
+		"alpine") alpine ;;
 		"debian" | "ubuntu" | "raspbian") debian ;;
 		"arch" | "archarm") arch ;;
 		"fedora") fedora ;;
-		*) die "${DISTRO}: only archlinux, debian, ubuntu and raspbian are supported" ;;
+		*) die "${DISTRO}: only alpine, archlinux, debian, ubuntu and raspbian are supported" ;;
 	esac
 	echo -e "\e[36mbase packages installed\e[m"
+}
+
+alpine() {
+	local packages="${COMMON_PACKAGES}"
+	header "alpine packages"
+	$sudo apk add "${COMMON_PACKAGES}"
 }
 
 arch() {
@@ -42,6 +49,10 @@ fedora() {
 	local packages="${COMMON_PACKAGES} ${FEDORA_PACKAGES}"
 	header "fedora packages"
 	$sudo dnf --assumeyes install ${packages}
+	# dkjson is missing from fedora repositories
+	# $sudo cp -uv dkjson.lua /usr/share/lua/5.4/dkjson.lua
+	$sudo curl -L -o /usr/share/lua/5.4/dkjson.lua \
+		"https://dkolf.de/dkjson-lua/dkjson-2.8.lua"
 }
 
 debian-packages() {

@@ -76,6 +76,9 @@ mod base
 # arch commands
 [group('common')]
 mod? arch
+# alpine commands
+[group('common')]
+mod? alpine
 # debian commands
 [group('common')]
 mod? debian

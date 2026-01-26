@@ -62,8 +62,7 @@ function virt()
 end
 
 function found(command)
-	local fh = e(f("[ -x /usr/bin/%s ]", command))
-	local _,_,retcode = fh:close()
+	local _,_,retcode = x(f("[ -x /usr/bin/%s ]", command))
 	return retcode == 0
 end
 

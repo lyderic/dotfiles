@@ -5,7 +5,6 @@ package.path = package.path..";"..leepath
 require "lee"
 
 local m = {}
-local hinfo = json.decode(ea("hostnamectl --json=short status"))
 
 function main()
 	init()
@@ -27,26 +26,57 @@ function display()
 end
 
 function init()
-	m.timestamp = os.time()
-	m.hostname = hinfo.Hostname
-	if hinfo.HardwareVendor then
-		m.hardware = hinfo.HardwareVendor.." "..hinfo.HardwareModel
-	end
-	m.chassis = hinfo.Chassis
-	m.rkernel = knorm(hinfo.KernelRelease)
-	m.distro = hinfo.OperatingSystemPrettyName
+	hinfo()
+	virt()
 	m.processor = eo("uname -m")
-	m.virt = eo("systemd-detect-virt")
+	m.timestamp = os.time()
+	m.hostname = eo("uname -n"):match("([%w%-]+)%.?")
+	m.rkernel = eo("uname -r")
+	m.full=eo("awk -F= '/^PRETTY_NAME=/ { print $2 }' /etc/os-release"):gsub('"','')
+	m.distro=eo("awk -F= '/^ID=/ { print $2 }' /etc/os-release")
+	m.processor = eo("uname -m")
 	m.loadavg = io.open("/proc/loadavg"):read("*n")
 	m.nproc = tonumber(eo("nproc"))
 	m.secondsup = io.open("/proc/uptime"):read("*n")
 	m.uptime = dhms(m.secondsup, true)
 end
 
+function hinfo()
+	if not found("hostnamectl") then return end
+	local hinfo = json.decode(ea("hostnamectl --json=short status"))
+	if info then
+		if hinfo.HardwareVendor then
+			m.hardware = hinfo.HardwareVendor.." "..hinfo.HardwareModel
+		end
+		m.chassis = hinfo.Chassis
+	end
+end
+
+function virt()
+	-- if there is no systemd, then we assume lxc
+	if found("systemd-detect-virt") then
+		m.virt = eo("systemd-detect-virt")
+	else
+		m.virt = "lxc"
+	end
+end
+
+function found(command)
+	local fh = e(f("[ -x /usr/bin/%s ]", command))
+	local _,_,retcode = fh:close()
+	return retcode == 0
+end
+
 function updates()
-	local cmd = "checkupdates | wc -l"
-	if m.distro:lower():sub(1,6) == "ubuntu" then
-		cmd = "apt list --upgradeable 2>/dev/null | sed 1d | wc -l"
+	local cmd = "echo 0"
+	if m.distro == "arch" then
+		cmd = "checkupdates | wc -l"
+	elseif m.distro == "alpine" then
+		cmd = "apk version | grep -c '>'"
+	elseif m.distro == "debian" or m.distro == "raspbian" or m.distro == "ubuntu" then
+		cmd = "apt list --upgradable | grep -c upgradeable"
+	elseif m.distro == "fedora" then
+		cmd = "dnf check-update -q | wc -l"
 	end
 	m.updates = tonumber(eo(cmd))
 end
@@ -66,19 +96,26 @@ end
 -- on arch: if running kernel or glibc is different than the
 -- installed kernel or glibc, then we want to reboot
 function reboot()
-	if m.mtype == "lxc" then return end
-	if m.distro:lower():sub(1,4) == "arch" then
+	if m.virt == "lxc" then return end
+	if m.distro == "arch" then
 		local cmd = "pacman -Q linux linux-lts"
 		cmd = cmd .. " 2>/dev/null | awk '{print $2}'"
-		local ikernel = eo(cmd)
-		if not ikernel then return end
-		m.ikernel = knorm(ikernel)
-		if m.rkernel ~= m.ikernel then m.reboot = true end
-		m.rglibc = eo("ldd --version"):match("(%d+.%d+)")
-		m.iglibc = eo("pacman -Q glibc"):match("(%d+.%d+)")
+		m.ikernel = eo(cmd)
+		if not m.ikernel then return end
+		if knorm(m.rkernel) ~= knorm(m.ikernel) then m.reboot = true end
+		m.rglibc = tonumber(eo("ldd --version"):match("(%d+%.%d+)"))
+		m.iglibc = tonumber(eo("pacman -Q glibc"):match("(%d+%.%d+)"))
 		if m.rglibc ~= m.iglibc then m.reboot = true end
-	elseif m.distro == "ubuntu" then
+	elseif m.distro == "alpine" then
+		local fh = e("apk version | grep '>'")
+		local _,_,n = fh:close()
+		if n > 1 then m.reboot = true end
+	elseif m.distro == "debian" or m.distro == "ubuntu" or m.distro == "raspbian" then
 		if abs("/var/run/reboot-required") then m.reboot = true end
+	elseif m.distro == "fedora" then
+		local fh = e("needs-restarting --reboothint")
+		local _,_,n = fh:close()
+		if n > 0 then m.reboot = true end
 	end
 end
 

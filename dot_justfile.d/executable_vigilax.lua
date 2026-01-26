@@ -73,7 +73,7 @@ function updates()
 	elseif m.distro == "alpine" then
 		cmd = "apk version | grep -c '>'"
 	elseif m.distro == "debian" or m.distro == "raspbian" or m.distro == "ubuntu" then
-		cmd = "apt list --upgradable | grep -c upgradeable"
+		cmd = "apt list --upgradable 2>/dev/null | grep -c upgradeable"
 	elseif m.distro == "fedora" then
 		cmd = "dnf check-update -q | wc -l"
 	end

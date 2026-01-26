@@ -100,7 +100,7 @@ diffutils
 # Additional packages for alpine
 ALPINE_PACKAGES="
 vim croc fzf lua5.4 just bat dufs fzf gdu grep less the_silver_searcher \
-which fakeroot
+which fakeroot coreutils
 "
 
 # Additional packages for archlinux
@@ -116,7 +116,7 @@ dialog grep less lua5.4 lua-dkjson silversearcher-ag tree bsdextrautils vim
 
 # Additional packages for fedora
 FEDORA_PACKAGES="
-just lua vim-enhanced
+just lua vim-enhanced dnf-utils
 "
 
 main ${@}

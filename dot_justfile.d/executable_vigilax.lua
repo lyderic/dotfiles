@@ -28,12 +28,13 @@ end
 function init()
 	hinfo()
 	virt()
+	m.processor = eo("uname -m")
 	m.timestamp = os.time()
-	uname = eo("uname -mnr")
-	m.fqdn, m.rkernel, m.processor = uname:match("(%S+) (%S+) (%S+)")
-	m.hostname = m.fqdn:match("([%w%-]+)%.?")
+	m.hostname = eo("uname -n"):match("([%w%-]+)%.?")
+	m.rkernel = eo("uname -r")
 	m.full=eo("awk -F= '/^PRETTY_NAME=/ { print $2 }' /etc/os-release"):gsub('"','')
 	m.distro=eo("awk -F= '/^ID=/ { print $2 }' /etc/os-release")
+	m.processor = eo("uname -m")
 	m.loadavg = io.open("/proc/loadavg"):read("*n")
 	m.nproc = tonumber(eo("nproc"))
 	m.secondsup = io.open("/proc/uptime"):read("*n")
@@ -52,11 +53,18 @@ function hinfo()
 end
 
 function virt()
-	-- if there is no systemd, then we assume lxc
 	if found("systemd-detect-virt") then
 		m.virt = eo("systemd-detect-virt")
-	else
+		return
+	end
+	-- If we reach here, then it means that the system
+	-- doesn't have systemd. However, we can still try
+	-- to detect if it's an LXC container by looking for the
+	-- '/dev/.lxc-boot-id' file.
+	if abs("/dev/.lxc-boot-id") then
 		m.virt = "lxc"
+	else
+		m.virt = "unknown"
 	end
 end
 

@@ -28,13 +28,11 @@ end
 function init()
 	hinfo()
 	virt()
-	m.processor = eo("uname -m")
+	m.fqdn, m.rkernel, m.processor = eo("uname -mnr"):match("(%S+) (%S+) (%S+)")
+	m.hostname = m.fqdn:match("([%w%-]+)%.?")
 	m.timestamp = os.time()
-	m.hostname = eo("uname -n"):match("([%w%-]+)%.?")
-	m.rkernel = eo("uname -r")
 	m.full=eo("awk -F= '/^PRETTY_NAME=/ { print $2 }' /etc/os-release"):gsub('"','')
 	m.distro=eo("awk -F= '/^ID=/ { print $2 }' /etc/os-release")
-	m.processor = eo("uname -m")
 	m.loadavg = io.open("/proc/loadavg"):read("*n")
 	m.nproc = tonumber(eo("nproc"))
 	m.secondsup = io.open("/proc/uptime"):read("*n")
@@ -44,11 +42,9 @@ end
 function hinfo()
 	if not x("[ -x /usr/bin/hostnamectl ]") then return end
 	local hinfo = json.decode(ea("hostnamectl -j"))
-	if hinfo then
-		m.vendor = hinfo.HardwareVendor
-		m.model = hinfo.HardwareModel
-		m.chassis = hinfo.Chassis
-	end
+	m.vendor = hinfo.HardwareVendor
+	m.model = hinfo.HardwareModel
+	m.chassis = hinfo.Chassis
 end
 
 function virt()

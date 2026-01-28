@@ -42,35 +42,29 @@ function init()
 end
 
 function hinfo()
-	if not found("hostnamectl") then return end
-	local hinfo = json.decode(ea("hostnamectl --json=short status"))
-	if info then
-		if hinfo.HardwareVendor then
-			m.hardware = hinfo.HardwareVendor.." "..hinfo.HardwareModel
-		end
+	if not x("[ -x /usr/bin/hostnamectl ]") then return end
+	local hinfo = json.decode(ea("hostnamectl -j"))
+	if hinfo then
+		m.vendor = hinfo.HardwareVendor
+		m.model = hinfo.HardwareModel
 		m.chassis = hinfo.Chassis
 	end
 end
 
 function virt()
-	if found("systemd-detect-virt") then
+	if x("[ -x /usr/bin/systemd-detect-virt ]") then
 		m.virt = eo("systemd-detect-virt")
 		return
 	end
 	-- If we reach here, then it means that the system
 	-- doesn't have systemd. However, we can still try
-	-- to detect if it's an LXC container by looking for the
-	-- '/dev/.lxc-boot-id' file.
+	-- to detect if it's an LXC container by looking for
+	-- the '/dev/.lxc-boot-id' file.
 	if abs("/dev/.lxc-boot-id") then
 		m.virt = "lxc"
 	else
 		m.virt = "unknown"
 	end
-end
-
-function found(command)
-	local _,_,retcode = x(f("[ -x /usr/bin/%s ]", command))
-	return retcode == 0
 end
 
 function updates()

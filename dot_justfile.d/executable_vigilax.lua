@@ -41,7 +41,7 @@ end
 
 function hinfo()
 	if not x("[ -x /usr/bin/hostnamectl ]") then return end
-	local hinfo = json.decode(ea("hostnamectl -j"))
+	local hinfo = json.decode(ea("hostnamectl --json=short"))
 	m.vendor = hinfo.HardwareVendor
 	m.model = hinfo.HardwareModel
 	m.chassis = hinfo.Chassis

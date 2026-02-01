@@ -100,7 +100,7 @@ diffutils
 # Additional packages for alpine
 ALPINE_PACKAGES="
 vim croc fzf lua5.4 just bat dufs fzf gdu grep less the_silver_searcher \
-which fakeroot coreutils
+which fakeroot coreutils util-linux
 "
 
 # Additional packages for archlinux

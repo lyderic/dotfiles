@@ -1,4 +1,4 @@
-base-version := "20260119.0"
+base-version := "20260202.0"
 
 _help:
 	@just --list --unsorted --alias-style left --color always \
@@ -61,17 +61,20 @@ geolocate:
 
 # IPv4 addresses
 ip:
-	#!/usr/bin/lua
-	require("lee")
-	data = json.decode(ea("ip -j -4 address")); buf = {}
+	#!/usr/bin/env -S lua -llee
+	data = json.decode(ea("ip -j -4 address"))
+	db = e("sqlite3 -box -noheader", "w")
+	db:write("create table t(Interface,IPv4);")
 	for i = 1, #data do
 		addresses = data[i]["addr_info"]
 		for _, a in pairs(addresses) do
-			if a["label"] == "lo" then goto next end
-			table.insert(buf, f("%s %s\n", a["label"], a["local"]))
-		::next::;end
+			iface, ipv4 = a["label"], a["local"]
+			if iface == "lo" then goto next end
+			db:write("insert into t values"..
+			f("('%s','%s');", iface, ipv4))
+		::next::end
 	end
-	x(f('echo "%s" | column -t', table.concat(buf)))
+	db:write("select * from t;") db:close()
 
 # lee lua module doc
 leedoc:

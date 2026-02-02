@@ -94,13 +94,13 @@ die()    { fail "${@}"; exit 42; }
 # Packages that are common to arch and debian
 COMMON_PACKAGES="
 bash bash-completion gdu curl direnv file git htop tmux sudo tree \
-diffutils
+diffutils sqlite
 "
 
 # Additional packages for alpine
 ALPINE_PACKAGES="
 vim croc fzf lua5.4 just bat dufs fzf gdu grep less the_silver_searcher \
-which fakeroot coreutils util-linux sqlite
+which fakeroot coreutils util-linux
 "
 
 # Additional packages for archlinux

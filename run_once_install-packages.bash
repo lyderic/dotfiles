@@ -94,29 +94,30 @@ die()    { fail "${@}"; exit 42; }
 # Packages that are common to arch and debian
 COMMON_PACKAGES="
 bash bash-completion gdu curl direnv file git htop tmux sudo tree \
-diffutils sqlite
+diffutils
 "
 
 # Additional packages for alpine
 ALPINE_PACKAGES="
 vim croc fzf lua5.4 just bat dufs fzf gdu grep less the_silver_searcher \
-which fakeroot coreutils util-linux
+which fakeroot coreutils util-linux sqlite
 "
 
 # Additional packages for archlinux
 ARCH_PACKAGES="
 bat croc duf fzf gdu lua lua-dkjson grep just less pacman-contrib \
-the_silver_searcher which fakeroot go-yq vim
+the_silver_searcher which fakeroot go-yq vim sqlite
 "
 
 # Additional packages for ubuntu/debian
 DEBIAN_PACKAGES="
-dialog grep less lua5.4 lua-dkjson silversearcher-ag tree bsdextrautils vim
+dialog grep less lua5.4 lua-dkjson silversearcher-ag tree bsdextrautils \
+vim sqlite3
 "
 
 # Additional packages for fedora
 FEDORA_PACKAGES="
-just lua vim-enhanced dnf-utils
+just lua vim-enhanced dnf-utils sqlite
 "
 
 main ${@}

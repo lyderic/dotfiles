@@ -22,7 +22,7 @@ end
 
 -- return absolute path or nil
 function abs(path)
-	return eo("realpath -qe "..path)
+	return eo(f("realpath -qe %q", path))
 end
 
 -- traditional (C, go) printf

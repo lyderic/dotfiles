@@ -29,6 +29,8 @@ alpine() {
 	[ -e /usr/bin/lua ] || {
 		$sudo ln -s /usr/bin/lua5.4 /usr/bin/lua
 	}
+	# ansible needs /bin/id
+	sudo ln -s /usr/bin/id /bin/id
 	# dkjson is missing from alpine repositories
 	dkjson
 }

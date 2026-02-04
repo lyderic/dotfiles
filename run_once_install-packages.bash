@@ -27,12 +27,12 @@ alpine() {
 	$sudo apk add ${packages}
 	# There is no plain lua command, one needs to symlink it on alpine
 	[ -e /usr/bin/lua ] || {
-		$sudo ln -s /usr/bin/lua5.4 /usr/bin/lua
+		$sudo ln -s /usr/bin/lua5.5 /usr/bin/lua
 	}
 	# ansible needs /bin/id
 	[ -L /bin/id ] || $sudo ln -s /usr/bin/id /bin/id
 	# dkjson is missing from alpine repositories
-	dkjson
+	dkjson 5.5
 }
 
 arch() {
@@ -58,11 +58,12 @@ fedora() {
 	header "fedora packages"
 	$sudo dnf --assumeyes install ${packages}
 	# dkjson is missing from fedora repositories
-	dkjson
+	dkjson 5.4
 }
 
 dkjson() {
-	local dir="/usr/share/lua/5.4"
+	[ -z "${1}" ] && return
+	local dir="/usr/share/lua/${1}"
 	[ -d "${dir}" ] || $sudo mkdir -pv "${dir}"
 	local file="${dir}/dkjson.lua"
 	[ -e "${file}" ] && return
@@ -101,7 +102,7 @@ diffutils
 
 # Additional packages for alpine
 ALPINE_PACKAGES="
-vim croc fzf lua5.4 just bat dufs fzf gdu grep less the_silver_searcher \
+vim croc fzf lua just bat dufs fzf gdu grep less the_silver_searcher \
 which fakeroot coreutils util-linux sqlite
 "
 

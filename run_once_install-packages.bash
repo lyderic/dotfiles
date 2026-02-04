@@ -25,6 +25,8 @@ alpine() {
 	local packages="${COMMON_PACKAGES} ${ALPINE_PACKAGES}"
 	header "alpine packages"
 	$sudo apk add ${packages}
+	# we want root to have bash
+	$sudo usermod -s /bin/bash root
 	# There is no plain lua command, one needs to symlink it on alpine
 	[ -e /usr/bin/lua ] || {
 		$sudo ln -sf /usr/bin/lua5.5 /usr/bin/lua

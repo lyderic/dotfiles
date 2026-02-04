@@ -62,7 +62,7 @@ fedora() {
 }
 
 dkjson() {
-	[ command -v lua ] || return
+	command -v lua || return
 	local luaversion=$(lua -e 'print(string.match(_VERSION,"%d%.%d"))')
 	local dir="/usr/share/lua/${luaversion}"
 	[ -d "${dir}" ] || $sudo mkdir -pv "${dir}"

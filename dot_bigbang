@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260125-0"
+export BIGBANG_VERSION="20260204-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -19,6 +19,8 @@ alias cp="cp -v"
 alias mv="mv -iv"
 alias tree="tree -a"
 alias cls="clear"
+alias md5="md5sum"
+alias sha="sha256sum"
 alias L=less
 alias stamp='date +"%Y%m%d%M%H%S"'
 alias croc='croc --relay europe.cybermoped.com'

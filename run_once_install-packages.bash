@@ -27,7 +27,7 @@ alpine() {
 	$sudo apk add ${packages}
 	# There is no plain lua command, one needs to symlink it on alpine
 	[ -e /usr/bin/lua ] || {
-		$sudo ln -s /usr/bin/lua5.5 /usr/bin/lua
+		$sudo ln -sf /usr/bin/lua5.5 /usr/bin/lua
 	}
 	# ansible needs /bin/id
 	[ -L /bin/id ] || $sudo ln -s /usr/bin/id /bin/id

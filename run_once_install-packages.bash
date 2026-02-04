@@ -32,7 +32,7 @@ alpine() {
 	# ansible needs /bin/id
 	[ -L /bin/id ] || $sudo ln -s /usr/bin/id /bin/id
 	# dkjson is missing from alpine repositories
-	dkjson 5.5
+	dkjson
 }
 
 arch() {
@@ -58,12 +58,13 @@ fedora() {
 	header "fedora packages"
 	$sudo dnf --assumeyes install ${packages}
 	# dkjson is missing from fedora repositories
-	dkjson 5.4
+	dkjson
 }
 
 dkjson() {
-	[ -z "${1}" ] && return
-	local dir="/usr/share/lua/${1}"
+	[ command -v lua ] || return
+	local luaversion=$(lua -e 'print(string.match(_VERSION,"%d%.%d"))')
+	local dir="/usr/share/lua/${luaversion}"
 	[ -d "${dir}" ] || $sudo mkdir -pv "${dir}"
 	local file="${dir}/dkjson.lua"
 	[ -e "${file}" ] && return

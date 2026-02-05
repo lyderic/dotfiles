@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260204-0"
+export BIGBANG_VERSION="20260205-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -172,13 +172,6 @@ function finish() {
 	clear
 }
 trap finish EXIT
-
-# Lua libs
-command -v lua >/dev/null && {
-	LUA_PATH="$(lua -E -e 'print(package.path)')"
-	LUA_PATH="${LUA_PATH};${HOME}/.local/share/lua/?.lua"
-	export LUA_PATH
-}
 
 # if called, load ssh-agent setting ssa.sock and writing
 # environment to ssa.env in tmpfs

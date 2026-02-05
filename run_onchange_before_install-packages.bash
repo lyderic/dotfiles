@@ -33,8 +33,6 @@ alpine() {
 	}
 	# ansible needs /bin/id
 	[ -L /bin/id ] || $sudo ln -s /usr/bin/id /bin/id
-	# dkjson is missing from alpine repositories
-	dkjson
 }
 
 arch() {
@@ -59,18 +57,6 @@ fedora() {
 	local packages="${COMMON_PACKAGES} ${FEDORA_PACKAGES}"
 	header "fedora packages"
 	$sudo dnf --assumeyes install ${packages}
-	# dkjson is missing from fedora repositories
-	dkjson
-}
-
-dkjson() {
-	command -v lua || return
-	local luaversion=$(lua -e 'print(string.match(_VERSION,"%d%.%d"))')
-	local dir="/usr/share/lua/${luaversion}"
-	[ -d "${dir}" ] || $sudo mkdir -pv "${dir}"
-	local file="${dir}/dkjson.lua"
-	[ -e "${file}" ] && return
-	$sudo curl -L -o "${file}" "https://dkolf.de/dkjson-lua/dkjson-2.8.lua"
 }
 
 debian-packages() {
@@ -111,13 +97,13 @@ which fakeroot coreutils util-linux sqlite
 
 # Additional packages for archlinux
 ARCH_PACKAGES="
-bat croc duf fzf gdu lua lua-dkjson grep just less pacman-contrib \
+bat croc duf fzf gdu lua grep just less pacman-contrib \
 the_silver_searcher which fakeroot go-yq vim sqlite
 "
 
 # Additional packages for ubuntu/debian
 DEBIAN_PACKAGES="
-dialog grep less lua5.4 lua-dkjson silversearcher-ag tree bsdextrautils \
+dialog grep less lua5.4 silversearcher-ag tree bsdextrautils \
 vim sqlite3
 "
 

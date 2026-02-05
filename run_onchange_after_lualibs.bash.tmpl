@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# To understand what's going on here check this:
+# https://www.chezmoi.io/user-guide/use-scripts-to-perform-actions/#run-a-script-when-the-contents-of-another-file-changes
+
+URL="https://lola.lyderic.com/lua"
+BASEDIR="/usr/share/lua"
+
+declare -A LUALIBS
+LUALIBS[dkjson]="{{ include "lualibs/dkjson.lua" | sha256sum }}"
+LUALIBS[lee]="{{ include "lualibs/lee.lua" | sha256sum }}"
+
+main() {
+	command -v lua > /dev/null || {
+		echo -e "\e[1;31mlua not found!\e[m"
+		return
+	}
+	[ "$EUID" -ne 0 ] && sudo="sudo"
+	luaversion=$(lua -e 'print(string.match(_VERSION, "(%d%.%d)"))')
+	dir="${BASEDIR}/${luaversion}"
+	$sudo mkdir -pv "${dir}"
+	for key in "${!LUALIBS[@]}"; do
+		luafile="${key}.lua"
+		dst="${dir}/${luafile}"
+		esum="${LUALIBS[${key}]}"
+		[ -e "${dst}" ] && {
+			isum=$(sha256sum "${dst}" | awk '{print$1}')
+			if [ "${isum}" == "${esum}" ]; then
+				echo -e "\e[1;32mOK\e[m ${luafile}"
+				continue
+			else
+				echo -e "\e[33m${luafile}: checksum mismatch\e[m"
+			fi
+		}
+		$sudo cp -v "{{ joinPath .chezmoi.sourceDir "lualibs/${luafile}" | quote }}" "${dst}" && {
+			echo -e "\e[32mSuccessfully installed ${dst}\e[m"
+		}
+	done
+}
+
+main ${@}
+
+# vim: ft=bash

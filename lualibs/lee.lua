@@ -1,4 +1,4 @@
-leeversion = "202507110857"
+leeversion = "20260205-0"
 
 json = require 'dkjson'
 
@@ -23,6 +23,11 @@ end
 -- return absolute path or nil
 function abs(path)
 	return eo(f("realpath -qe %q", path))
+end
+
+-- check if a command is available
+function has(command)
+	return x(f("command -v %q >/dev/null", command))
 end
 
 -- traditional (C, go) printf

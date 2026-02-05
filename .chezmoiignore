@@ -28,3 +28,5 @@ gpg:
 {{- range $k, $v := without $distros .chezmoi.osRelease.id }}
 .justfile.d/{{ $v }}.just
 {{- end }}
+
+lualibs/

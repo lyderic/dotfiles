@@ -1,8 +1,4 @@
-#!/usr/bin/env lua
-
-local leepath = os.getenv("HOME").."/.local/share/lua/?.lua"
-package.path = package.path..";"..leepath
-require "lee"
+#!/usr/bin/env -S lua -llee
 
 local m = {}
 

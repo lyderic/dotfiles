@@ -98,7 +98,6 @@ mod? fedora
 v:
 	@just --evaluate
 
-LUA_PATH := home_dir()/".local/share/lua/?.lua;/usr/share/lua/5.4/?.lua"
 sys := "sudo -E systemctl"
 set shell := ["bash","-uc"]
 set export

@@ -116,26 +116,6 @@ export EDITOR=vim
 export GIT_PAGER="less -erX"
 export TERM=xterm-256color
 
-## ANSI colors
-## BASIC
-#export RED="\e[0;31m" GRN="\e[0;32m" YEL="\e[0;33m"
-#export BLU="\e[0;34m" MAG="\e[0;35m" CYA="\e[0;36m"
-## BRIGHT
-#export BRED="\e[0;91m" BGRN="\e[0;92m" BYEL="\e[0;93m"
-#export BBLU="\e[0;94m" BMAG="\e[0;95m" BCYA="\e[0;96m"
-## BOLD (GRAS)
-#export GRED="\e[1;31m" GGRN="\e[1;32m" GYEL="\e[1;33m"
-#export GBLU="\e[1;34m" GMAG="\e[1;35m" GCYA="\e[1;36m"
-## BRIGHT AND BOLD
-#export BGRED="\e[1;91m" BGGRN="\e[1;92m" BGYEL="\e[1;93m"
-#export BGBLU="\e[1;94m" BGMAG="\e[1;95m" BGCYA="\e[1;96m"
-## BACKGROUNDS
-#export BKRED="\e[41m" BKGRN="\e[42m" BKYEL="\e[43m"
-#export BKBLU="\e[44m" BKMAG="\e[45m" BKCYA="\e[46m"
-## SPECIAL
-#export BOL="\e[1m" DIM="\e[2m" ITA="\e[3m"
-#export UND="\e[4m" REV="\e[7m" NOC="\e[0m"
-
 # Control functions
 function header() { echo -e "\e[93;1;44m\e[K${@}\e[m" ; }
 function ok()     { echo -e "\e[32m${@}\e[m" ; }

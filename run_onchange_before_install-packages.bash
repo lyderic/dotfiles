@@ -91,7 +91,7 @@ diffutils
 
 # Additional packages for alpine
 ALPINE_PACKAGES="
-vim croc fzf lua just bat dufs fzf gdu grep less the_silver_searcher \
+vim croc fzf lua just bat fzf gdu grep less the_silver_searcher \
 which fakeroot coreutils util-linux sqlite
 "
 

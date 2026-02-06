@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260205-0"
+export BIGBANG_VERSION="20260206-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -177,7 +177,7 @@ function ssa() {
 
 # show when in chezmoi subshell
 [ -z ${CHEZMOI_SUBSHELL} ] || {
-	PS1="\e[3;36m[SUBSHELL]\e[0;93m ---[ $(basename ${CHEZMOI_CONFIG_FILE/.yaml}) ]---\e[m\n${PS1}"
+	PS1="\e[3;36m[SUBSHELL]\e[0;93m ---[ chezmoi ]---\e[m\n${PS1}"
 }
 
 # direnv integration

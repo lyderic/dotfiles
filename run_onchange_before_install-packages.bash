@@ -109,7 +109,7 @@ vim sqlite3
 
 # Additional packages for fedora
 FEDORA_PACKAGES="
-bat chezmoi croc dnf-utils just lua sqlite vim-enhanced yq
+bat chezmoi dnf-utils just lua sqlite vim-enhanced yq
 "
 
 main ${@}

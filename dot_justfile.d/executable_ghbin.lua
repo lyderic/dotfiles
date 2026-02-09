@@ -5,8 +5,8 @@ url = "https://lola.lyderic.com"
 cpu = eo("uname -m")
 
 function main()
-	local cmd = f("curl -s %s/cgi-bin/state?cpu=%s", url, cpu)
-	local state = json.decode(ea(cmd))
+	local output = ea(f("curl -s %s/cgi-bin/state?cpu=%s", url, cpu))
+	local state = json.decode(output)
 	for _,i in ipairs(state) do
 		printf("\27[1m%-8.8s  \27[m", i.binary..":")
 		local c = get_situation(i.binary)
@@ -33,7 +33,7 @@ function get_situation(binary)
 	t.binary = binary
 	t.path = eo("command -v "..binary)
 	if not t.path then
-		printf("\27[33m%s: binary not found\n\27[m", binary)
+		printf("\27[33m%s: binary not found\27[m\n", binary)
 		deploy(binary)
 		return nil
 	end
@@ -49,7 +49,7 @@ function deploy(binary)
 	printf("\27[7m %s \27[m", binary)
 	if pacman(binary) then return end
 	local gz = binary..".gz"
-	local curl_cmd = f("curl -s -o %q %s/required/%s/gz/%s", "/tmp/"..gz, url, cpu, gz)
+	local curl_cmd = f("curl -s -o %q %s/binaries/%s/%s", "/tmp/"..gz, url, cpu, gz)
 	print("---> [XeQ] ", curl_cmd)
 	if not x(curl_cmd) then return end
 	if not x("gzip -d /tmp/"..gz) then return end
@@ -61,9 +61,9 @@ end
 
 -- try to install binary with pacman
 function pacman(binary)
-	if not x("command -v pacman") then return false end
+	if not x("[ -x /usr/bin/pacman ]") then return false end
 	print("---> trying pacman...")
-	return x("sudo pacman -S --needed "..binary)
+	return x("sudo pacman --color=never -S --needed "..binary)
 end
 
 main()

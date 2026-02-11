@@ -76,6 +76,8 @@ function pacman(binary)
 	return x("sudo pacman --color=never -S --needed "..binary)
 end
 
+-- use this to install a single, optional, binary
+-- or to force the reinstall of a installed binary
 function installone(binary)
 	deploy(binary)
 end

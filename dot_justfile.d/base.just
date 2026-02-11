@@ -21,10 +21,11 @@ update:
 vigilax:
 	@~/.justfile.d/vigilax.lua | yq -P 
 
-# install single binaries from github
+# run ghbin (all required or single binary)
 ghbin *$args:
 	@~/.justfile.d/ghbin.lua $args
 
+#
 # show ANSI codes
 ansi:
 	#!/bin/bash

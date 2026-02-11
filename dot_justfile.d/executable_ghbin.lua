@@ -5,6 +5,7 @@ url = "https://lola.lyderic.com"
 cpu = eo("uname -m")
 
 function main()
+	if arg[1] then installone(arg[1]) return end
 	local output = ea(f("curl -s %s/cgi-bin/state?cpu=%s", url, cpu))
 	local state = json.decode(output)
 	for _,i in ipairs(state) do
@@ -48,15 +49,24 @@ end
 function deploy(binary)
 	printf("\27[7m %s \27[m", binary)
 	if pacman(binary) then return end
-	local gz = binary..".gz"
-	local curl_cmd = f("curl -s -o %q %s/binaries/%s/%s", "/tmp/"..gz, url, cpu, gz)
-	print("---> [XeQ] ", curl_cmd)
-	if not x(curl_cmd) then return end
-	if not x("gzip -d /tmp/"..gz) then return end
+	local buf = "/dev/shm/"..binary..".gz"
+	local curl_cmd = f("curl -sLo %q -w '%%{json}' %s/binaries/%s/%s",
+		buf, url, cpu, binary..".gz")
+	print("---> [XeQ] " .. curl_cmd)
+	local result = json.decode(ea(curl_cmd))
+	local rcode = result.http_code
+	if rcode == 200 then
+		printf("\27[32mOK\27[m CODE %d\n",rcode)
+	else
+		printf("\27[31mERROR, HTTP response: %d\27[m\n", rcode)
+		if abs(buf) then io.write(io.open(buf):read("a")) end
+		return
+	end
 	local dst="/usr/local/bin/"..binary
-	if not x(f("sudo mv -v %q %q", "/tmp/"..binary, dst)) then return end
+	if not x(f("zcat %q | sudo tee %q >/dev/null",buf,dst)) then return end
 	if not x("sudo chown -v 0:0 "..dst) then return end
 	if not x("sudo chmod -v 0755 "..dst) then return end
+	os.remove(buf)
 end
 
 -- try to install binary with pacman
@@ -64,6 +74,10 @@ function pacman(binary)
 	if not x("[ -x /usr/bin/pacman ]") then return false end
 	print("---> trying pacman...")
 	return x("sudo pacman --color=never -S --needed "..binary)
+end
+
+function installone(binary)
+	deploy(binary)
 end
 
 main()

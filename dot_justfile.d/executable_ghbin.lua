@@ -1,12 +1,13 @@
 #!/usr/bin/env -S lua -llee
 
 -- GLOBALS
+version = "20260212-0"
 url = "https://lola.lyderic.com"
 cpu = eo("uname -m")
 
 function main()
 	if arg[1] then installone(arg[1]) return end
-	local output = ea(f("curl -s %s/cgi-bin/state?cpu=%s", url, cpu))
+	local output = ea("curl -s %s/cgi-bin/state?cpu=%s", url, cpu)
 	local state = json.decode(output)
 	for _,i in ipairs(state) do
 		printf("\27[1m%-8.8s  \27[m", i.binary..":")
@@ -32,14 +33,14 @@ end
 function get_situation(binary)
 	local t = {} -- local situation on host
 	t.binary = binary
-	t.path = eo("command -v "..binary)
+	t.path = eo("command -v %q", binary)
 	if not t.path then
 		printf("\27[33m%s: binary not found\27[m\n", binary)
 		deploy(binary)
 		return nil
 	end
 	t.parent = t.path:match(".*/")
-	t.cksum, t.size = eo("cksum "..t.path):match("(%d+) (%d+)")
+	t.cksum, t.size = eo("cksum %q",t.path):match("(%d+) (%d+)")
 	return t
 end
 
@@ -63,9 +64,9 @@ function deploy(binary)
 		return
 	end
 	local dst="/usr/local/bin/"..binary
-	if not x(f("zcat %q | sudo tee %q >/dev/null",buf,dst)) then return end
-	if not x("sudo chown -v 0:0 "..dst) then return end
-	if not x("sudo chmod -v 0755 "..dst) then return end
+	if not x("zcat %q | sudo tee %q >/dev/null",buf,dst) then return end
+	if not x("sudo chown -v 0:0 %q",dst) then return end
+	if not x("sudo chmod -v 0755 %q",dst) then return end
 	os.remove(buf)
 end
 
@@ -73,7 +74,7 @@ end
 function pacman(binary)
 	if not x("[ -x /usr/bin/pacman ]") then return false end
 	print("---> trying pacman...")
-	return x("sudo pacman --color=never -S --needed "..binary)
+	return x("sudo pacman --color=never -S --needed %s",binary)
 end
 
 -- use this to install a single, optional, binary

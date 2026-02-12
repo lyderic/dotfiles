@@ -1,33 +1,38 @@
-leeversion = "20260205-0"
+leeversion = "20260212-0"
 
 json = require 'dkjson'
 
 f = string.format
-x = os.execute
 e = io.popen
 env = os.getenv
 
+-- same as os.execute, but also allows
+-- printf-like input
+function x(...)
+	os.execute(f(...))
+end
+
 -- execute <cmd>, one line
 -- returns first line of output as a string
-function eo(cmd)
-	return e(cmd):read()
+function eo(...)
+	return e(f(...)):read()
 end
 
 -- execute <cmd>, all lines
 -- returns all output lines as a string
 -- includes final "\n"
-function ea(cmd)
-	return e(cmd):read("*a")
+function ea(...)
+	return e(f(...)):read("a")
 end
 
 -- return absolute path or nil
 function abs(path)
-	return eo(f("realpath -qe %q", path))
+	return eo("realpath -qe %q", path)
 end
 
 -- check if a command is available
 function has(command)
-	return x(f("command -v %q >/dev/null", command))
+	return x("command -v %q >/dev/null", command)
 end
 
 -- traditional (C, go) printf

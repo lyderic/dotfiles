@@ -58,7 +58,7 @@ _services:
 		$rcs -q "${service}" status && {
 			echo -en "\e[32mstarted"
 		} || {
-			echo -en "\e[33mstopped"
+			echo -en "\e[31mstopped"
 		}
 		echo -e "\e[m"
 	done

@@ -38,8 +38,7 @@ _services:
 		printf "${sc}%-*s${nc}   ${ec}%-10.10s${nc} ${ac}%s${nc}\n" \
 		$max "${service}" "${e}" "${a}"
 	done
-{{- end }}
-{{- if eq .chezmoi.osRelease.id "alpine" }}
+{{- else if eq .chezmoi.osRelease.id "alpine" -}}
 # Nice show of services for status (openrc)
 _services:
 	#!/bin/bash

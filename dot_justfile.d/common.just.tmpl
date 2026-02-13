@@ -1,4 +1,4 @@
-common-version := "20260125-0"
+common-version := "20260213-0"
 
 alias up    := base::update
 alias vi    := base::vigilax
@@ -19,7 +19,8 @@ _wait:
 	read -sn 1
 	echo
 
-# Nice show of services for status
+{{- if eq .chezmoi.osRelease.id "arch" }}
+# Nice show of services for status (systemd)
 _services:
 	#!/bin/bash
 	[ -z "${services}" ] && exit 0
@@ -30,13 +31,40 @@ _services:
 	done
 	sc="\e[1m"; up="\e[32m"; down="\e[2m"; nc="\e[m"
 	for service in ${services} ; do
-		e=$({{sys}} is-enabled "${service}")
-		a=$({{sys}} is-active "${service}")
+		e=$($sys is-enabled "${service}")
+		a=$($sys is-active "${service}")
 		[ "${e}" == "enabled" ] && ec="${up}" || ec="${down}"
 		[ "${a}" == "active" ] && ac="${up}" || ac="${down}"
 		printf "${sc}%-*s${nc}   ${ec}%-10.10s${nc} ${ac}%s${nc}\n" \
 		$max "${service}" "${e}" "${a}"
 	done
+{{ end }}
+{{ if eq .chezmoi.osRelease.id "alpine" }}
+# Nice show of services for status (openrc)
+_services:
+	#!/bin/bash
+	[ -z "${services}" ] && exit 0
+	max=0
+	for word in ${services}; do
+		ln=${#word}
+		((ln > max)) && max=$ln
+	done
+	rcs="rc-service"
+	for service in ${services} ; do
+		printf "\e[1m%-*s\e[m  " $max "${service}"
+		$rcs -e "${service}" || {
+			echo -e "\e[33mnot found\e[m"
+			continue
+		}
+		$rcs -q "${service}" status && {
+			echo -en "\e[32mstarted"
+		} || {
+			echo -en "\e[33mstopped"
+		}
+		echo -e "\e[m"
+	done
+	exit 0
+{{- end }}
 
 # BAse CONfiguration files
 # To use:
@@ -102,3 +130,4 @@ sys := "sudo -E systemctl"
 set shell := ["bash","-uc"]
 set export
 set dotenv-load
+# vim: ft=just

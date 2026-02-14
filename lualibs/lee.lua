@@ -1,4 +1,4 @@
-leeversion = "20260212-0"
+leeversion = "20260214-0"
 
 json = require 'dkjson'
 
@@ -9,7 +9,7 @@ env = os.getenv
 -- same as os.execute, but also allows
 -- printf-like input
 function x(...)
-	os.execute(f(...))
+	return os.execute(f(...))
 end
 
 -- execute <cmd>, one line

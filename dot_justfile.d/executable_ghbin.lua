@@ -51,7 +51,7 @@ function deploy(binary)
 	printf("\27[7m %s \27[m", binary)
 	if pacman(binary) then return end
 	local buf = "/dev/shm/"..binary..".gz"
-	local curl_cmd = f("curl -sLo %q -w '%%{json}' %s/binaries/%s/%s",
+	local curl_cmd = f("curl -sLo %q -w '%%%%{json}' %s/binaries/%s/%s",
 		buf, url, cpu, binary..".gz")
 	print("---> [XeQ] " .. curl_cmd)
 	local result = json.decode(ea(curl_cmd))

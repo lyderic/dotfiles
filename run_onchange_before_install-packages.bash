@@ -2,6 +2,8 @@
 
 set -e
 
+VERSION="20260215-0"
+
 # CONFIGURATION
 vimdir="/usr/share/vim/vim91"
 

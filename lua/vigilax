@@ -1,21 +1,30 @@
 #!/usr/bin/env -S lua -llee
 
+version = "20260215-0"
+
 local m = {}
 
 function main()
+	if arg[1] == "-p" then target = "yaml" end
 	init()
 	reboot()
 	updates()
 	diskusage()
 	coc()
-	display()
+	display(target)
 end
 
-function display()
+function display(target)
+	local output = io.stdout
+	if target == "yaml" then
+		if has("yq") then
+			output = e("yq -P","w")
+		end
+	end
 	local keys = {}
 	for key in pairs(m) do table.insert(keys, key) end
 	table.sort(keys)
-	print(json.encode(m, {
+	output:write(json.encode(m, {
 		indent = true,
 		keyorder = keys
 	}))

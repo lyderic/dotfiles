@@ -19,13 +19,8 @@ update:
 
 # check machine uptime, disk space, updates needed, etc.
 vigilax:
-	@~/.justfile.d/vigilax.lua | yq -P 
+	@vigilax -p
 
-# run ghbin (all required or single binary)
-ghbin *$args:
-	@~/.justfile.d/ghbin.lua $args
-
-#
 # show ANSI codes
 ansi:
 	#!/bin/bash
@@ -79,5 +74,5 @@ ip:
 
 # lee lua module doc
 leedoc:
-	@lua -l lee -e "leedoc()"
+	@lua -llee -e "leedoc()"
 

@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# To understand what's going on here check this:
+# https://www.chezmoi.io/user-guide/use-scripts-to-perform-actions/#run-a-script-when-the-contents-of-another-file-changes
+
+[ "$EUID" -eq 0 ] && {
+	echo -e "\e[33mroot doesn't need to run this\e[m"
+	exit 0
+}
+
+VERSION="20260215-1"
+BASEDIR="/usr/share/lua"
+
+declare -A LUALIBS
+LUALIBS[dkjson]="{{ include "lua/dkjson.lua" | sha256sum }}"
+LUALIBS[lee]="{{ include "lua/lee.lua" | sha256sum }}"
+
+declare -A LUASCRIPTS
+LUASCRIPTS[ghbin]="{{ include "lua/ghbin" | sha256sum }}"
+LUASCRIPTS[vigilax]="{{ include "lua/vigilax" | sha256sum }}"
+
+main() {
+	echo -e "\e[34m[LUA Libs And Scripts]\e[m"
+	command -v lua > /dev/null || {
+		echo -e "\e[1;31mlua not found!\e[m"
+		return
+	}
+	deploy_libs
+	deploy_scripts
+}
+
+deploy_libs() {
+	luaversion=$(lua -e 'print(string.match(_VERSION, "(%d%.%d)"))')
+	dst="${BASEDIR}/${luaversion}"
+	for key in "${!LUALIBS[@]}"; do
+		luafile="${key}.lua"
+		sudo install --compare -D --target "${dst}" --mode 0644 \
+		--verbose --debug \
+		"{{ joinPath .chezmoi.sourceDir "lua/${luafile}" | quote }}" && {
+			echo -e "\e[1;32mOK\e[m ${luafile}"
+		} || {
+			echo -e "\e[1;31mFAIL!\e[m ${luafile}"
+		}
+	done
+}
+
+deploy_scripts() {
+	for luascript in "${!LUASCRIPTS[@]}"; do
+		sudo install --compare -D --target "/usr/local/bin" --mode 0755 --verbose \
+		"{{ joinPath .chezmoi.sourceDir "lua/${luascript}" | quote }}" && {
+			echo -e "\e[1;32mOK\e[m ${luascript}"
+		} || {
+			echo -e "\e[1;31mFAIL!\e[m ${luascript}"
+		}
+	done
+}
+
+main ${@}
+
+# vim: ft=bash

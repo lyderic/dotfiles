@@ -2,10 +2,7 @@
 
 set -e
 
-VERSION="20260215-0"
-
-# CONFIGURATION
-vimdir="/usr/share/vim/vim91"
+VERSION="20260215-1"
 
 main() {
 	[ $(id -u) -eq 0 ] || sudo="sudo"
@@ -69,6 +66,8 @@ debian-packages() {
 
 debian-base() {
 	header "configure fzf"
+	vimdir="/usr/share/vim/vim91"
+	[ -d "/usr/share/vim/vim92" ] && vimdir="/usr/share/vim/vim92"
 	[ -d "${vimdir}" ] || { warn "${vimdir} not found"; return; }
 	[ -f "${vimdir}/plugin/fzf.vim" ] && return
 	cd /dev/shm

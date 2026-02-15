@@ -2,13 +2,13 @@
 
 set -e
 
-VERSION="20260215-0"
+VERSION="20260215-1"
 
 # To understand what's going on here check this:
 # https://www.chezmoi.io/user-guide/use-scripts-to-perform-actions/#run-a-script-when-the-contents-of-another-file-changes
 
 [ "$EUID" -eq 0 ] && {
-	echo -e "\e[33mroot doesn't need to deplay lua stuff\e[m"
+	echo -e "\e[33mroot doesn't need to deploy lua stuff\e[m"
 	exit 0
 }
 

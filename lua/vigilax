@@ -1,11 +1,12 @@
 #!/usr/bin/env -S lua -llee
 
-version = "20260215-0"
+version = "20260215-1"
 
 local m = {}
 
 function main()
-	if arg[1] == "-p" then target = "yaml" end
+	if arg[1] == "-p" or arg[1] == "--pretty" then target = "yaml"
+	elseif arg[1] == "--version" then print(version) return end
 	init()
 	reboot()
 	updates()

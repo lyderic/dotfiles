@@ -2,7 +2,12 @@
 
 set -e
 
-VERSION="20260215-1"
+VERSION="20260215-2"
+
+[ "$EUID" -eq 0 ] && {
+	echo -e "\e[33mroot doesn't need to install packages\e[m"
+	exit 0
+}
 
 main() {
 	[ $(id -u) -eq 0 ] || sudo="sudo"

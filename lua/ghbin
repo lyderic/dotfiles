@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- GLOBALS
-version = "20260215-0"
+version = "20260216-0"
 url = "https://lola.lyderic.com"
 cpu = eo("uname -m")
 
@@ -11,10 +11,10 @@ function main()
 	local state = json.decode(output)
 	for _,i in ipairs(state) do
 		printf("\27[1m%-8.8s  \27[m", i.binary..":")
-		local c = get_situation(i.binary)
+		local c = get_situation(i.binary, i.v_info)
 		if not c then goto next end
 		if c.parent ~= "/usr/local/bin/" then
-			printf("\27[90mskipped as found in %q\27[m\n", c.parent)
+			printf("\27[90m%-8.8s skipped as found in %q\27[m\n", c.version, c.parent)
 			goto next
 		end
 		if c.cksum == i.cksum and c.size == i.size then
@@ -24,22 +24,24 @@ function main()
 			print("\27[32mupdate available\27[m")
 			deploy(i.binary)
 		end
+		x("%s %s", i.binary, i_v_info)
 	::next::end
 end
 
 -- get situation of a binary on the host, i.e.path, parent, cksum
 -- and size
 -- if a binary is not found, it is deployed
-function get_situation(binary)
+function get_situation(binary, v_info)
 	local t = {} -- local situation on host
 	t.binary = binary
+	t.version = eo("%s %s", binary, v_info)
 	t.path = eo("command -v %q", binary)
 	if not t.path then
 		printf("\27[33m%s: binary not found\27[m\n", binary)
 		deploy(binary)
 		return nil
 	end
-	t.parent = t.path:match(".*/")
+	t.parent = t.path:match("^(%g+)/")
 	t.cksum, t.size = eo("cksum %q",t.path):match("(%d+) (%d+)")
 	return t
 end
@@ -64,9 +66,12 @@ function deploy(binary)
 		return
 	end
 	local dst="/usr/local/bin/"..binary
-	if not x("zcat %q | sudo tee %q >/dev/null",buf,dst) then return end
-	if not x("sudo chown -v 0:0 %q",dst) then return end
-	if not x("sudo chmod -v 0755 %q",dst) then return end
+	--if not x("zcat %q | sudo tee %q >/dev/null",buf,dst) then return end
+	--if not x("sudo chown -v 0:0 %q",dst) then return end
+	--if not x("sudo chmod -v 0755 %q",dst) then return end
+	if not x("zcat %q | sudo install -C -v -m 0755 -o root -g root /dev/stdin %q", buf, dst) then
+		printf("\27[31mDeployment of %q failed!\27[m\n", dst)
+	end
 	os.remove(buf)
 end
 

@@ -18,7 +18,10 @@ _wait:
 	read -sn 1
 	echo
 
-{{ if eq .chezmoi.osRelease.id "arch" -}}
+{{ $thisdistro := .chezmoi.osRelease.id -}}
+{{- $systemddistros := list "arch" "debian" "ubuntu" "fedora" -}}
+{{- range $k, $v := $systemddistros -}}
+	{{- if eq $thisdistro $v -}}
 # Nice show of services for status (systemd)
 _services:
 	#!/bin/bash
@@ -37,7 +40,9 @@ _services:
 		printf "${sc}%-*s${nc}   ${ec}%-10.10s${nc} ${ac}%s${nc}\n" \
 		$max "${service}" "${e}" "${a}"
 	done
-{{- else if eq .chezmoi.osRelease.id "alpine" -}}
+	{{- end -}}
+{{- end -}}
+{{- if eq .chezmoi.osRelease.id "alpine" -}}
 # Nice show of services for status (openrc)
 _services:
 	#!/bin/bash

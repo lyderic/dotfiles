@@ -2,7 +2,7 @@
 
 set -e
 
-VERSION="20260215-2"
+VERSION="20260218-0"
 
 [ "$EUID" -eq 0 ] && {
 	echo -e "\e[33mroot doesn't need to install packages\e[m"
@@ -110,7 +110,7 @@ the_silver_searcher which fakeroot go-yq vim sqlite
 # Additional packages for ubuntu/debian
 DEBIAN_PACKAGES="
 dialog grep less lua5.4 silversearcher-ag tree bsdextrautils \
-vim sqlite3
+vim sqlite3 xz-utils
 "
 
 # Additional packages for fedora

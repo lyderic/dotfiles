@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- GLOBALS
-version = "20260219-0"
+version = "20260219-1"
 url = "https://lola.lyderic.com"
 unamecpu = eo("uname -m")
 
@@ -51,6 +51,7 @@ function get_situation(binary, b)
 	if not c.path then
 		printf("\27[90m%s: binary not found\27[m", binary)
 		if not b.src.optional then
+			print()
 			deploy(binary, b)
 		else
 			printf("\27[90m (optional)\27[m\n", binary)

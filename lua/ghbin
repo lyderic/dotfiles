@@ -1,60 +1,79 @@
 #!/usr/bin/env -S lua -llee
 
 -- GLOBALS
-version = "20260216-0"
+version = "20260219-0"
 url = "https://lola.lyderic.com"
-cpu = eo("uname -m")
+unamecpu = eo("uname -m")
 
 function main()
-	if arg[1] then installone(arg[1]) return end
-	local output = ea("curl -s %s/cgi-bin/state?cpu=%s", url, cpu)
+	local cpu = normalizecpu(unamecpu)
+	local output = ea("curl -s %s/cgi-bin/state", url)
 	local state = json.decode(output)
-	for _,i in ipairs(state) do
-		printf("\27[1m%-8.8s  \27[m", i.binary..":")
-		local c = get_situation(i.binary, i.v_info)
-		if not c then goto next end
-		if c.parent ~= "/usr/local/bin/" then
-			printf("\27[90m%-8.8s skipped as found in %q\27[m\n", c.version, c.parent)
+	local cpubinaries = {}
+	for state_cpu, binaries in pairs(state) do
+		if cpu == state_cpu then cpubinaries = binaries break end
+	end
+	if arg[1] then
+		for binary, b in pairs(cpubinaries) do
+			if binary == arg[1] then
+				print("found in state: "..binary)
+				deploy(binary, b)
+				break
+			end
+		end
+		return
+	end
+	for binary, b in pairs(cpubinaries) do
+		printf("\27[1m%-8.8s  \27[m", binary..":")
+		local c = get_situation(binary, b)
+		if not c then goto next end -- binary not found
+		if c.parent ~= "/usr/local/bin" then
+			printf("\27[90m%-8.8s found in %q\27[m\n", c.version, c.parent)
 			goto next
 		end
-		if c.cksum == i.cksum and c.size == i.size then
-			printf("\27[90mup to date (sum=%s, size=%s)\27[m\n",
-			c.cksum, c.size)
+		if c.cksum == b.cksum and c.size == b.size then
+			printf("\27[90m%-8.8s up to date (sum=%s, size=%s)\27[m\n",
+				c.version, c.hexsum, c.hsize)
 		else
 			print("\27[32mupdate available\27[m")
-			deploy(i.binary)
+			deploy(binary,b)
 		end
-		x("%s %s", i.binary, i_v_info)
 	::next::end
 end
 
--- get situation of a binary on the host, i.e.path, parent, cksum
--- and size
--- if a binary is not found, it is deployed
-function get_situation(binary, v_info)
-	local t = {} -- local situation on host
-	t.binary = binary
-	t.version = eo("%s %s", binary, v_info)
-	t.path = eo("command -v %q", binary)
-	if not t.path then
-		printf("\27[33m%s: binary not found\27[m\n", binary)
-		deploy(binary)
+-- get situation of a binary on the host,
+-- i.e. path, parent, cksum and size
+-- if a binary is not found and is not optional, it is deployed
+function get_situation(binary, b)
+	local c = {} -- local situation on host
+	c.binary = binary
+	c.path = eo("command -v %q", binary)
+	if not c.path then
+		printf("\27[90m%s: binary not found\27[m", binary)
+		if not b.src.optional then
+			deploy(binary, b)
+		else
+			printf("\27[90m (optional)\27[m\n", binary)
+		end
 		return nil
 	end
-	t.parent = t.path:match("^(%g+)/")
-	t.cksum, t.size = eo("cksum %q",t.path):match("(%d+) (%d+)")
-	return t
+	c.version = eo("%s %s", binary, b.src.v_info)
+	c.parent = c.path:match("^(%g+)/")
+	c.cksum, c.size = eo("cksum %q",c.path):match("(%d+) (%d+)")
+	c.hexsum = f("%x", c.cksum)
+	c.hsize = bfmt(tonumber(c.size))
+	return c
 end
 
 -- if binary not installable with pacman, then get binary from lola
 -- and put it in /usr/local/bin
 -- if binary already found in /usr/local/bin, it is overwritten
-function deploy(binary)
+function deploy(binary, b)
 	printf("\27[7m %s \27[m", binary)
 	if pacman(binary) then return end
-	local buf = "/dev/shm/"..binary..".gz"
-	local curl_cmd = f("curl -sLo %q -w '%%%%{json}' %s/binaries/%s/%s",
-		buf, url, cpu, binary..".gz")
+	local buf = "/dev/shm/"..b.xzname
+	local curl_cmd = f("curl -sLo %q -w '%%%%{json}' %s/xz/%s",
+		buf, url, b.xzname)
 	print("---> [XeQ] " .. curl_cmd)
 	local result = json.decode(ea(curl_cmd))
 	local rcode = result.http_code
@@ -66,10 +85,7 @@ function deploy(binary)
 		return
 	end
 	local dst="/usr/local/bin/"..binary
-	--if not x("zcat %q | sudo tee %q >/dev/null",buf,dst) then return end
-	--if not x("sudo chown -v 0:0 %q",dst) then return end
-	--if not x("sudo chmod -v 0755 %q",dst) then return end
-	if not x("zcat %q | sudo install -C -v -m 0755 -o root -g root /dev/stdin %q", buf, dst) then
+	if not x("xzcat %q | sudo install -C -v -m 0755 -o root -g root /dev/stdin %q", buf, dst) then
 		printf("\27[31mDeployment of %q failed!\27[m\n", dst)
 	end
 	os.remove(buf)
@@ -82,9 +98,23 @@ function pacman(binary)
 	return x("sudo pacman --color=never -S --needed %s",binary)
 end
 
+-- cpu are sometimes called differently e.g. amd64 = x86_64
+-- we have to normalize this to possible values: amd64, arm64, arm
+function normalizecpu(cpu)
+	if cpu == "x86_64" or cpu == "x86-64" then
+		return "amd64"
+	elseif cpu == "aarch64" then
+		return "arm64"
+	elseif cpu:match("^armv") then
+		return "arm"
+	else
+		return cpu
+	end
+end
+
 -- use this to install a single, optional, binary
 -- or to force the reinstall of a installed binary
-function installone(binary)
+function installone(binary, b)
 	deploy(binary)
 end
 

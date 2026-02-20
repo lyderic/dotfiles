@@ -87,6 +87,21 @@ function dhms(seconds,ignoreseconds)
 	return result
 end
 
+-- most used information about a file
+function ffile(path)
+	local t = {}
+	t.path = abs(path)
+	if not t.path then return end
+	t.filename = t.path:match("%g+/(%g+)$")
+	t.parent = t.path:match("^(%g+)/")
+	t.extension = t.path:match("^%g+%.(%g+)$")
+	local o = eo("cksum %q",t.path)
+	local sm, sz = o:match("(%d+) (%d+)")
+	t.sum = f("%x", tonumber(sm))
+	t.size = tonumber(sz)
+	return t
+end
+
 -- dump <var> for debugging: show type and json representation
 function dump(var)
 	printf("=== %s ===\n%s\n", type(var),

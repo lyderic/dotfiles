@@ -39,7 +39,6 @@ deploy_libs() {
 	for key in "${!LUALIBS[@]}"; do
 		luafile="${key}.lua"
 		sudo install --compare -D --target "${dst}" --mode 0644 \
-		--verbose --debug \
 		"{{ joinPath .chezmoi.sourceDir "lua/${luafile}" | quote }}" && {
 			echo -e "\e[1;32mOK\e[m ${luafile}"
 		} || {
@@ -50,7 +49,7 @@ deploy_libs() {
 
 deploy_scripts() {
 	for luascript in "${!LUASCRIPTS[@]}"; do
-		sudo install --compare -D --target "/usr/local/bin" --mode 0755 --verbose \
+		sudo install --compare -D --target "/usr/local/bin" --mode 0755 \
 		"{{ joinPath .chezmoi.sourceDir "lua/${luascript}" | quote }}" && {
 			echo -e "\e[1;32mOK\e[m ${luascript}"
 		} || {

@@ -1,4 +1,4 @@
-leeversion = "20260220-0"
+leeversion = "20260222-0"
 
 json = require 'dkjson'
 
@@ -87,18 +87,29 @@ function dhms(seconds,ignoreseconds)
 	return result
 end
 
--- most used information about a file
-function ffile(path)
+-- gather most used information about a file into a table
+-- if calcsum is 'true', then cksum is calculated
+-- but at the cost of a little speed loss
+function ffile(path, calcsum)
 	local t = {}
 	t.path = abs(path)
 	if not t.path then return end
 	t.filename = t.path:match("%g+/(%g+)$")
 	t.parent = t.path:match("^(%g+)/")
 	t.extension = t.path:match("^%g+%.(%g+)$")
-	local o = eo("cksum %q",t.path)
-	local sm, sz = o:match("(%d+) (%d+)")
-	t.sum = f("%x", tonumber(sm))
+	local stat = eo("stat -c '%%s,%%F,%%U,%%G,%%a' %q", t.path)
+	local pattern = "^(%d+),(.+),(%g+),(%g+),(%d+)$"
+	local sz = 0
+	sz,t.ftype,t.owner,t.group,t.mode = stat:match(pattern)
 	t.size = tonumber(sz)
+	if t.ftype == "directory" or t.ftype == "fifo" then
+		return t
+	end
+	if calcsum then
+		local cksum = e("cksum "..t.path)
+		local sm = cksum:read("n") cksum:close()
+		t.sum = f("%x", tonumber(sm))
+	end
 	return t
 end
 

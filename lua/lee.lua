@@ -1,4 +1,4 @@
-leeversion = "20260222-0"
+leeversion = "20260223-0"
 
 json = require 'dkjson'
 
@@ -94,9 +94,14 @@ function ffile(path, calcsum)
 	local t = {}
 	t.path = abs(path)
 	if not t.path then return end
-	t.filename = t.path:match("%g+/(%g+)$")
-	t.parent = t.path:match("^(%g+)/")
-	t.extension = t.path:match("^%g+%.(%g+)$")
+	t.filename = t.path:match(".+/(.+)$")
+	t.dirname = t.path:match("^(.+)/")
+	t.extension = t.path:match("^.+%.(%g+)$")
+	if t.extension then
+		t.basename = t.filename:gsub("%."..t.extension.."$", "")
+	else
+		t.basename = t.filename
+	end
 	local stat = eo("stat -c '%%s,%%F,%%U,%%G,%%a' %q", t.path)
 	local pattern = "^(%d+),(.+),(%g+),(%g+),(%d+)$"
 	local sz = 0
@@ -106,7 +111,7 @@ function ffile(path, calcsum)
 		return t
 	end
 	if calcsum then
-		local cksum = e("cksum "..t.path)
+		local cksum = e(f("cksum %q", t.path))
 		local sm = cksum:read("n") cksum:close()
 		t.sum = f("%x", tonumber(sm))
 	end

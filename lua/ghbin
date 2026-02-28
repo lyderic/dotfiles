@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- GLOBALS
-version = "20260219-1"
+version = "20260228-0"
 url = "https://lola.lyderic.com"
 unamecpu = eo("uname -m")
 
@@ -96,7 +96,11 @@ end
 function pacman(binary)
 	if not x("[ -x /usr/bin/pacman ]") then return false end
 	print("---> trying pacman...")
-	return x("sudo pacman --color=never -S --needed %s",binary)
+	local cmd = f("sudo pacman -S --needed %s", binary)
+	local found = x(cmd .. ">/dev/null 2>&1")
+	if found then print("found in pacman")
+	else print("not found in pacman") end
+	return found
 end
 
 -- cpu are sometimes called differently e.g. amd64 = x86_64

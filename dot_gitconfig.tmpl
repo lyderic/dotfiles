@@ -31,4 +31,6 @@
 	ignored = ls-files --other --ignored --exclude-standard
 	s = status -bs
 	t = !git show-ref --abbrev=7 --tags | sed \"s|refs/tags/||\"
+	top = rev-parse --show-toplevel
+	last = log -1 --pretty=%h
 	url = config get remote.origin.url

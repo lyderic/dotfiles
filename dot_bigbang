@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260206-0"
+export BIGBANG_VERSION="20260306-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -17,7 +17,7 @@ alias ll="ls -lh"
 alias la="ls -la"
 alias cp="cp -v"
 alias mv="mv -iv"
-alias tree="tree -a"
+alias tree="tree -a -I .git"
 alias cls="clear"
 alias md5="md5sum"
 alias sha="sha256sum"

@@ -1,4 +1,4 @@
-leeversion = "20260310-0"
+leeversion = "20260310-1"
 
 json = require 'dkjson'
 
@@ -87,15 +87,16 @@ function dhms(seconds,ignoreseconds)
 	return result
 end
 
--- djb2 hashing algorithm
--- https://theartincode.stanis.me/008-djb2
-function djb2(str)
-	local h = 5381;
-	for c in str:gmatch(".") do
-		h = ((h << 5) + h) + string.byte(c)
-		-- same as: h = h * 33 + string.byte(c)
+-- fnv1 hashing algorithm
+function hash(str)
+	local FNV_OFFSET_BASIS = 0x811c9dc5
+	local FNV_PRIME = 0x01000193
+	local hash = FNV_OFFSET_BASIS
+	for i = 1, #str do
+		hash = hash ~ string.byte(str, i)
+		hash = (hash * FNV_PRIME) & 0xFFFFFFFF
 	end
-	return f("%x", h)
+	return string.format("%08x", hash)
 end
 
 -- gather most used information about a file into a table
@@ -155,14 +156,14 @@ end
 function getopt(o)
   local p = {}
   for k,v in ipairs(arg) do
-    if v:byte(1) == 45 then
-      local l = v:sub(2,2)
-      if o:match(l) then
-        p[l] = arg[k+1]
-      else
-        p[l] = true
-      end
-    end
+	if v:byte(1) == 45 then
+	  local l = v:sub(2,2)
+	  if o:match(l) then
+		p[l] = arg[k+1]
+	  else
+		p[l] = true
+	  end
+	end
   end
   return p
 end

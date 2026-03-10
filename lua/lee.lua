@@ -1,4 +1,4 @@
-leeversion = "20260223-0"
+leeversion = "20260310-0"
 
 json = require 'dkjson'
 
@@ -85,6 +85,17 @@ function dhms(seconds,ignoreseconds)
 	end
 	if result:len() == 0 then result = "<1m" end
 	return result
+end
+
+-- djb2 hashing algorithm
+-- https://theartincode.stanis.me/008-djb2
+function djb2(str)
+	local h = 5381;
+	for c in str:gmatch(".") do
+		h = ((h << 5) + h) + string.byte(c)
+		-- same as: h = h * 33 + string.byte(c)
+	end
+	return f("%x", h)
 end
 
 -- gather most used information about a file into a table

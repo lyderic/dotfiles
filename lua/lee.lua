@@ -1,6 +1,7 @@
-leeversion = "20260310-1"
+leeversion = "20260312-1"
 
 json = require 'dkjson'
+realpath = require "posix.stdlib".realpath
 
 f = string.format
 e = io.popen
@@ -27,7 +28,7 @@ end
 
 -- return absolute path or nil
 function abs(path)
-	return eo("realpath -qe %q", path)
+	return realpath(path)
 end
 
 -- check if a command is available
@@ -104,7 +105,7 @@ end
 -- but at the cost of a little speed loss
 function ffile(path, calcsum)
 	local t = {}
-	t.path = abs(path)
+	t.path = realpath(path)
 	if not t.path then return end
 	t.filename = t.path:match(".+/(.+)$")
 	t.dirname = t.path:match("^(.+)/")

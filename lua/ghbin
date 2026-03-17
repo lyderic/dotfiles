@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- GLOBALS
-version = "20260228-0"
+version = "20260317-1"
 url = "https://lola.lyderic.com"
 unamecpu = eo("uname -m")
 
@@ -89,6 +89,8 @@ function deploy(binary, b)
 	if not x("xzcat %q | sudo install -C -v -m 0755 -o root -g root /dev/stdin %q", buf, dst) then
 		printf("\27[31mDeployment of %q failed!\27[m\n", dst)
 	end
+	local dversion = eo("/usr/local/bin/%s %s", binary, b.src.v_info)
+	printf("Deployed %s version: \27[96m%s\27[m\n", binary, dversion)
 	os.remove(buf)
 end
 

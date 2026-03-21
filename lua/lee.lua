@@ -1,7 +1,8 @@
-leeversion = "20260312-1"
+leeversion = "20260321-0"
 
 json = require 'dkjson'
 realpath = require "posix.stdlib".realpath
+stat = require "posix.sys.stat"
 
 f = string.format
 e = io.popen
@@ -115,12 +116,15 @@ function ffile(path, calcsum)
 	else
 		t.basename = t.filename
 	end
-	local stat = eo("stat -c '%%s,%%F,%%U,%%G,%%a' %q", t.path)
-	local pattern = "^(%d+),(.+),(%g+),(%g+),(%d+)$"
-	local sz = 0
-	sz,t.ftype,t.owner,t.group,t.mode = stat:match(pattern)
-	t.size = tonumber(sz)
-	if t.ftype == "directory" or t.ftype == "fifo" then
+	local s = stat.stat(t.path) -- lua posix stat
+	t.size = s.st_size
+	t.uid, t.gid = s.st_uid, s.st_gid
+	t.isdir = false
+	t.mode = s.st_mode
+	if stat.S_ISDIR(t.mode) > 0 then
+		t.isdir = true
+	end
+	if stat.S_ISREG(t.mode) == 0 then
 		return t
 	end
 	if calcsum then

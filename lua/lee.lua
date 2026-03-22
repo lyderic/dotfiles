@@ -1,4 +1,4 @@
-leeversion = "20260322-1"
+leeversion = "20260322-2"
 
 json = require 'dkjson'
 realpath = require "posix.stdlib".realpath
@@ -126,6 +126,9 @@ function ffile(path, calcsum)
 	local s = stat.stat(t.path) -- lua posix stat
 	t.size = s.st_size
 	t.uid, t.gid = s.st_uid, s.st_gid
+	t.atime = s.st_atime -- last accessed (read)
+	t.mtime = s.st_mtime -- last modified content
+	t.ctime = s.st_ctime -- last changed metadata
 	t.mode = s.st_mode
 	if stat.S_ISDIR(t.mode) > 0 then
 		t.isdir = true
@@ -155,6 +158,8 @@ function kv(t)
 	end
 end
 
+-- We're phasing this out in favour of posix's getopt
+-- 
 -- a nice hacky getopt
 -- example usage of this:
 -- function main()
@@ -164,20 +169,20 @@ end
 --   local debug = opts.d and true or false
 --   print(user, debug)
 -- end
-function getopt(o)
-  local p = {}
-  for k,v in ipairs(arg) do
-	if v:byte(1) == 45 then
-	  local l = v:sub(2,2)
-	  if o:match(l) then
-		p[l] = arg[k+1]
-	  else
-		p[l] = true
-	  end
-	end
-  end
-  return p
-end
+--function getopt(o)
+--  local p = {}
+--  for k,v in ipairs(arg) do
+--	if v:byte(1) == 45 then
+--	  local l = v:sub(2,2)
+--	  if o:match(l) then
+--		p[l] = arg[k+1]
+--	  else
+--		p[l] = true
+--	  end
+--	end
+--  end
+--  return p
+--end
 
 -- show lee's reserved words
 function leedoc()

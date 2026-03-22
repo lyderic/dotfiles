@@ -1,4 +1,4 @@
-leeversion = "20260321-0"
+leeversion = "20260322-0"
 
 json = require 'dkjson'
 realpath = require "posix.stdlib".realpath
@@ -119,7 +119,6 @@ function ffile(path, calcsum)
 	local s = stat.stat(t.path) -- lua posix stat
 	t.size = s.st_size
 	t.uid, t.gid = s.st_uid, s.st_gid
-	t.isdir = false
 	t.mode = s.st_mode
 	if stat.S_ISDIR(t.mode) > 0 then
 		t.isdir = true
@@ -143,7 +142,7 @@ end
 
 -- show key/values of any table, mainly for debugging
 function kv(t)
-	if not type(t) == "table" then return end
+	if type(t) ~= "table" then return end
 	for k,v in pairs(t) do
 		print(k,v)
 	end

@@ -1,4 +1,4 @@
-leeversion = "20260322-0"
+leeversion = "20260322-1"
 
 json = require 'dkjson'
 realpath = require "posix.stdlib".realpath
@@ -17,17 +17,24 @@ end
 -- execute <cmd>, one line
 -- returns first line of output as a string
 function eo(...)
-	return e(f(...)):read()
+	local fh = e(f(...))
+	local firstline = fh:read()
+	fh:close()
+	return firstline
 end
 
 -- execute <cmd>, all lines
 -- returns all output lines as a string
 -- includes final "\n"
 function ea(...)
-	return e(f(...)):read("a")
+	local fh = e(f(...))
+	local output = fh:read("a")
+	fh:close()
+	return output
 end
 
 -- return absolute path or nil
+-- wrapper to lua posix's realpath(path)
 function abs(path)
 	return realpath(path)
 end

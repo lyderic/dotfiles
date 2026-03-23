@@ -1,4 +1,4 @@
-leeversion = "20260322-2"
+leeversion = "20260322-3"
 
 json = require 'dkjson'
 realpath = require "posix.stdlib".realpath
@@ -111,10 +111,11 @@ end
 -- gather most used information about a file into a table
 -- if calcsum is 'true', then cksum is calculated
 -- but at the cost of a little speed loss
-function ffile(path, calcsum)
+function ffile(file, calcsum)
 	local t = {}
-	t.path = realpath(path)
-	if not t.path then return end
+	t.path = realpath(file)
+	if not t.path then return nil end
+	t.file = file
 	t.filename = t.path:match(".+/(.+)$")
 	t.dirname = t.path:match("^(.+)/")
 	t.extension = t.path:match("^.+%.(%g+)$")

@@ -1,4 +1,4 @@
-leeversion = "20260322-3"
+leeversion = "20260322-4"
 
 json = require 'dkjson'
 realpath = require "posix.stdlib".realpath

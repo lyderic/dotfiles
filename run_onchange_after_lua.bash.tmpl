@@ -2,7 +2,11 @@
 
 set -e
 
-VERSION="20260215-1"
+VERSION="20260324-0"
+
+# To force a trigger of this file, even if no changes have 
+# occured, increment this:
+# TRIGGER = 0
 
 # To understand what's going on here check this:
 # https://www.chezmoi.io/user-guide/use-scripts-to-perform-actions/#run-a-script-when-the-contents-of-another-file-changes
@@ -12,7 +16,6 @@ VERSION="20260215-1"
 	exit 0
 }
 
-VERSION="20260215-1"
 BASEDIR="/usr/share/lua"
 
 declare -A LUALIBS

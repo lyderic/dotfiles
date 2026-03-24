@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260306-0"
+export BIGBANG_VERSION="20260324-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -78,7 +78,7 @@ function showpath() {
 which just > /dev/null && {
 	alias k=just
 	source <(just --completions bash)
-	complete -F _just -o bashdefault -o default k
+	complete -F _clap_complete_just -o bashdefault -o default k
 	alias kk='just --justfile ~/justfile'
 	complete -W "$(just --global-justfile --summary)" kk
 }

@@ -142,6 +142,18 @@ if !exists("*s:newscene")
 	function s:newscene()
 		"Inserting empty line only if needed
 		if getline(line('.')) =~ '\S' | execute "normal! o" | endif
-		luafile $HOME/.vim/ftplugin/litt/lua/newscene.lua
+		let l:uuid = system('uuidgen | head -c4')
+		let l:id = '[//' . l:uuid . ']'
+		let l:cmd = "grep -siIrq '^\\[//" . l:uuid . "\\]:' *"
+		let l:out = system(l:cmd)
+		if v:shell_error == 0 "collision found, aborting
+			echohl WarningMsg
+			echomsg 'Scene #' . l:uuid . ' found: collision detected! Please try again...'
+			echohl None
+			return
+		endif
+		execute 'normal! o' . l:id . ': # ('
+		startinsert!
+		echo "Created scene #" . l:uuid
 	endfunction
 endif

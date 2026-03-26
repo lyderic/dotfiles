@@ -166,7 +166,8 @@ function ssa() {
 	}
 	source "${SSA_ENV}" >/dev/null
 	echo -e "\e[2;32mssh-agent pid: ${SSH_AGENT_PID}\e[m"
-	# check if pid exists and if it is actually ssh-agent command:
+	# check if pid exists and if it is actually ssh-agent 
+	# command:
 	[[ $(ps q $SSH_AGENT_PID o comm=) == "ssh-agent" ]] || {
 		echo -e "\e[2;32mssh-agent pid error!\e[m"
 	}
@@ -185,7 +186,8 @@ function ssa() {
 export DIRENV_LOG_FORMAT=$'\033[2;36m: %s\033[0m'
 
 # Combine stdout and stderr
-# Useful when 'foo -h | L' doesn't work because the output goes to stderr
+# Useful when 'foo -h | L' doesn't work because the output 
+# goes to stderr
 function e() { ${@} 2>&1 ; }
 
 # vim: filetype=bash

@@ -2,7 +2,7 @@
 
 set -e
 
-VERSION="20260218-0"
+VERSION="20260426-0"
 
 [ "$EUID" -eq 0 ] && {
 	echo -e "\e[33mroot doesn't need to install packages\e[m"
@@ -92,19 +92,19 @@ die()    { fail "${@}"; exit 42; }
 # Packages that are common to arch and debian
 COMMON_PACKAGES="
 bash bash-completion gdu curl direnv file git htop tmux sudo tree \
-diffutils lua-posix lowdown
+diffutils
 "
 
 # Additional packages for alpine
 ALPINE_PACKAGES="
 vim croc fzf lua just bat fzf gdu grep less the_silver_searcher \
-which fakeroot coreutils util-linux sqlite xz
+which fakeroot coreutils util-linux sqlite xz lowdown
 "
 
 # Additional packages for archlinux
 ARCH_PACKAGES="
 bat croc duf fzf gdu lua grep just less pacman-contrib \
-the_silver_searcher which fakeroot go-yq vim sqlite
+the_silver_searcher which fakeroot go-yq vim sqlite lowdown
 "
 
 # Additional packages for ubuntu/debian

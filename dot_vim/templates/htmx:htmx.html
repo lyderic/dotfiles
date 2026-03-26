@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Htmx HTML Template</title>
+		<style>
+			@media(prefers-color-scheme: light) {
+				body {
+					color: #002b36;
+					background: #fdf6e3;
+				}
+			}
+			@media(prefers-color-scheme: dark) {
+				body {
+					color: #586e75;
+					background: #002b36;
+				}
+			}
+			body {
+				font-family: sans-serif;
+			}
+		</style>
+		<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
+		<meta name="htmx-config" content='{"selfRequestsOnly": false}' />
+	</head>
+	<body>
+		<h1>Minimal Htmx Demo</h1>
+		<button hx-get="/clicked" hx-swap="outerHTML" hx-target="#display">
+			Click Me
+		</button>
+		<div id="display">
+			foo
+		</div>
+	</body>
+</html>

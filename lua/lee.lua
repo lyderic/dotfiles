@@ -1,4 +1,4 @@
-leeversion = "20260326-0"
+leeversion = "20260328-0"
 
 json = require 'dkjson'
 
@@ -33,7 +33,7 @@ end
 
 -- return absolute path or nil
 function abs(path)
-	return(eo("realpath " .. path))
+	return(eo("realpath -qe " .. path))
 end
 
 -- check if a command is available

@@ -1,4 +1,4 @@
-leeversion = "20260328-0"
+leeversion = "20260329-0"
 
 json = require 'dkjson'
 
@@ -116,6 +116,77 @@ function kv(t)
 	if type(t) ~= "table" then return end
 	for k,v in pairs(t) do
 		print(k,v)
+	end
+end
+
+-- getopt implementation produced by opencode
+-- that seems to work well
+-- example:
+--[[
+	local verbose = false
+	local name = "--unset--"
+	local opts = "vn:"
+	local optcount = 1
+	for opt, optarg, optind in getopt(arg, opts) do
+		optcount = optind
+		if opt == "v" then
+			verbose = true
+		elseif opt == "a" then
+			name = optarg
+		elseif opt == "?" then
+			print("invalid option: " .. arg[optcount-1])
+		end
+	end
+	local args = { table.unpack(arg, optcount) }
+--]]
+function getopt(args, opts)
+	local i, pos = 1, 0
+	return function()
+		while i <= #args do
+			local a = args[i]
+			if pos == 0 then
+				if a:sub(1,1) ~= "-" or a == "-" then
+					i = i + 1
+					return nil, nil, i
+				end
+				pos = 2
+			end
+			local opt = a:sub(pos, pos)
+			local j = 1
+			while j <= #opts do
+				local o = opts:sub(j, j)
+				local has_arg = opts:sub(j+1, j+1) == ":"
+				if o == opt then
+					local optarg = nil
+					if has_arg then
+						if #a > pos then
+							optarg = a:sub(pos+1)
+							pos = 0
+							i = i + 1
+							return opt, optarg, i
+						else
+							i = i + 1
+							optarg = args[i]
+							pos = 0
+							i = i + 1
+							return opt, optarg, i
+						end
+					else
+						pos = pos + 1
+						if pos > #a then
+							pos = 0
+							i = i + 1
+						end
+					end
+					return opt, optarg, i
+				end
+				j = j + (has_arg and 2 or 1)
+			end
+			i = i + 1
+			pos = 0
+			return "?", nil, i
+		end
+		return nil, nil, i
 	end
 end
 

@@ -18,7 +18,13 @@ orphans:
 
 # deep clean archlinux cache
 deep-clean:
+	#!/bin/bash
 	sudo paccache -ruk0
+	pkgdir="/var/cache/pacman/pkg"
+	for dir in $(sudo find "${pkgdir}" -type d); do
+		[ "${dir}" == "${pkgdir}" ] && continue
+		sudo rmdir -v "${dir}"
+	done
 	sudo pacman -Sc --noconfirm
 
 # refresh or install lyderic's aur

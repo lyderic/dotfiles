@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260324-0"
+export BIGBANG_VERSION="20260331-6"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -17,7 +17,8 @@ alias ll="ls -lh"
 alias la="ls -la"
 alias cp="cp -v"
 alias mv="mv -iv"
-alias tree="tree -a -I .git"
+alias tree="tree -C -a -I .git"
+alias diff="diff --color=auto"
 alias cls="clear"
 alias md5="md5sum"
 alias sha="sha256sum"
@@ -25,6 +26,9 @@ alias L=less
 alias stamp='date +"%Y%m%d%M%H%S"'
 alias croc='croc --relay europe.cybermoped.com'
 alias machinectl='sudo machinectl'
+
+# No duplicates in history
+export HISTCONTROL=ignoredups
 
 # Disallow 'rm -f' and enable confirmation
 function rm() {
@@ -91,7 +95,7 @@ which just > /dev/null && {
 	source /usr/local/share/bash-completion/completions/fzf-completion.bash 
 
 # chezmoi management
-alias cz="chezmoi"
+alias cz="chezmoi --color=true"
 [ -e /usr/share/bash-completion/completions/chezmoi ] && {
 	. /usr/share/bash-completion/completions/chezmoi 
 }
@@ -189,5 +193,27 @@ export DIRENV_LOG_FORMAT=$'\033[2;36m: %s\033[0m'
 # Useful when 'foo -h | L' doesn't work because the output 
 # goes to stderr
 function e() { ${@} 2>&1 ; }
+
+# pp: Page Previous
+# run last command, combine stdout and stderr,
+# and page it. It's the same (albeit quicker) as doing:
+# $ !! 2>&1 | less -FRIX
+function pp() {
+	local lastcli=$(history -p !!)
+	local binary="${lastcli%% *}"
+	local args="${lastcli#* }"
+	local cmd="${lastcli}"
+	case "${binary}" in
+		diff|fd|grep|ls|l|la|ll)
+			cmd="${lastcli} --color=always" ;;
+		chezmoi|cz) cmd="chezmoi --color=true ${args}" ;;
+		ag) cmd="ag --color ${args}" ;;
+		ip) cmd="ip -c ${args}" ;;
+	esac
+	eval "${cmd}" 2>&1 | less -FRIX
+}
+# 'pp' cannot be in history because that'd create an
+# infinite loop
+export HISTIGNORE='pp'
 
 # vim: filetype=bash

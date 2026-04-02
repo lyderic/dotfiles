@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260402-0"
+export BIGBANG_VERSION="20260402-2"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -133,8 +133,15 @@ function die()    { fail ${@} ; exit 42 ; }
 
 # tmux session: create or attach
 function z() {
+	local n=1
+	[ -z "${1}" ] || n=${1}
 	tmux has -t sess >/dev/null 2>&1 || {
 		tmux new-session -d -s sess -n root 'sudo -i'
+		[ $n > 1 ] && {
+			for i in $(seq 2 $n); do
+				tmux new-window -t sess:${i} -n ''
+			done
+		}
 		tmux new-window -t sess:1 -n ''
 	}
 	tmux attach -t sess

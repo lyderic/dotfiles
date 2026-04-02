@@ -1,4 +1,4 @@
-leeversion = "20260329-0"
+leeversion = "20260402-0"
 
 json = require 'dkjson'
 
@@ -94,12 +94,12 @@ function dhms(seconds,ignoreseconds)
 end
 
 -- fnv1 hashing algorithm
+local FNV_OFFSET_BASIS = 0x811c9dc5
+local FNV_PRIME = 0x01000193
 function hash(str)
-	local FNV_OFFSET_BASIS = 0x811c9dc5
-	local FNV_PRIME = 0x01000193
 	local hash = FNV_OFFSET_BASIS
-	for i = 1, #str do
-		hash = hash ~ string.byte(str, i)
+	for b in str:gmatch(".") do
+		hash = hash ~ string.byte(b)
 		hash = (hash * FNV_PRIME) & 0xFFFFFFFF
 	end
 	return string.format("%08x", hash)

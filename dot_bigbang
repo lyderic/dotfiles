@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260402-2"
+export BIGBANG_VERSION="20260404-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -137,7 +137,7 @@ function z() {
 	[ -z "${1}" ] || n=${1}
 	tmux has -t sess >/dev/null 2>&1 || {
 		tmux new-session -d -s sess -n root 'sudo -i'
-		[ $n > 1 ] && {
+		[ $n -gt 1 ] && {
 			for i in $(seq 2 $n); do
 				tmux new-window -t sess:${i} -n ''
 			done
@@ -147,7 +147,7 @@ function z() {
 	tmux attach -t sess
 }
 
-export -f header ok blue cyan warn fail bold die z
+export -f header ok blue cyan warn fail bold die
 
 #########################################################
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env -S lua -llee
 
-version = "20260215-1"
+version = "20260407-0"
 
 local m = {}
 
@@ -90,9 +90,9 @@ function diskusage()
 	if not targets then targets = "/" end
 	local cmd = f("df --output=target,pcent %s | sed 1d", targets)
 	for line in e(cmd):lines() do
-		mountpoint, pcent = line:match('(%S+)%s+(%S+)')
-		m.diskusage[mountpoint] = tonumber(pcent:sub(1,-2))
-	::next:: end
+		mountpoint, pcent = line:match('(%g+)%s+(%d+)')
+		m.diskusage[mountpoint] = tonumber(pcent)
+	end
 end
 
 -- on arch: if running kernel or glibc is different than the

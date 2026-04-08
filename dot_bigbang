@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260404-0"
+export BIGBANG_VERSION="20260408-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -224,7 +224,7 @@ function pp() {
 	local args="${lastcli#* }"
 	local cmd="${lastcli}"
 	case "${binary}" in
-		diff|fd|grep|ls|l|la|ll)
+		diff|fd|grep|ls|l|la|ll|pacman)
 			cmd="${lastcli} --color=always" ;;
 		chezmoi|cz) cmd="chezmoi --color=true ${args}" ;;
 		ag) cmd="ag --color ${args}" ;;

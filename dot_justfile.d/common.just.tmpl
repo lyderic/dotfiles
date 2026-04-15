@@ -1,4 +1,4 @@
-common-version := "20260213-0"
+common-version := "20260415-0"
 
 alias up    := base::update
 alias vi    := base::vigilax
@@ -81,8 +81,8 @@ _bacon:
 	#!/bin/bash
 	[ -z "${baconfiles}" ] && exit 0
 	archive="${HOME}/.bacon.tgz"
-	[ -f "${archive}" ] || {
-		echo -ne "\e[33m${archive} not found. Create? [y/N]? \e[m"
+	[ -f "${archive}" ] && {
+		echo -ne "\e[33m${archive} found. Overwrite? [y/N]? \e[m"
 		read yesno ; [[ "${yesno,,}" =~ ^(y|yes)$ ]] || exit 0
 		for file in ${baconfiles}; do
 			[ -e "${file}" ] || echo -e "\e[31m${file}: file not found!\e[m"
@@ -91,14 +91,6 @@ _bacon:
 	}
 	echo -e "\e[34m[tar content]\e[m"
 	tar Ptzvf "${archive}"
-	echo -e "\e[34m[tar deployment check]\e[m"
-	tar Pdzvf "${archive}" && {
-		echo -e "\e[32mall deployed ok\e[m"
-		exit 0
-	}
-	echo -ne "\e[33m(re)deploy ${archive}? [y/N]? \e[m"
-	read yesno ; [[ "${yesno,,}" =~ ^(y|yes)$ ]] || exit 0
-	sudo tar Pxzvwf "${archive}"
 
 # MODULES
 # base commands and tools

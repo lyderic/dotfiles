@@ -84,11 +84,11 @@ _bacon:
 	[ -f "${archive}" ] && {
 		echo -ne "\e[33m${archive} found. Overwrite? [y/N]? \e[m"
 		read yesno ; [[ "${yesno,,}" =~ ^(y|yes)$ ]] || exit 0
-		for file in ${baconfiles}; do
-			[ -e "${file}" ] || echo -e "\e[31m${file}: file not found!\e[m"
-		done
-		tar Pczvf "${archive}" ${baconfiles}
 	}
+	for file in ${baconfiles}; do
+		[ -e "${file}" ] || echo -e "\e[31m${file}: file not found!\e[m"
+	done
+	tar Pczvf "${archive}" ${baconfiles}
 	echo -e "\e[34m[tar content]\e[m"
 	tar Ptzvf "${archive}"
 

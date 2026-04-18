@@ -1,4 +1,4 @@
-common-version := "20260415-0"
+common-version := "20260418-0"
 
 alias up    := base::update
 alias vi    := base::vigilax
@@ -80,17 +80,27 @@ _services:
 _bacon:
 	#!/bin/bash
 	[ -z "${baconfiles}" ] && exit 0
-	archive="${HOME}/.bacon.tgz"
-	[ -f "${archive}" ] && {
-		echo -ne "\e[33m${archive} found. Overwrite? [y/N]? \e[m"
-		read yesno ; [[ "${yesno,,}" =~ ^(y|yes)$ ]] || exit 0
-	}
-	for file in ${baconfiles}; do
-		[ -e "${file}" ] || echo -e "\e[31m${file}: file not found!\e[m"
+	bacondir="${HOME}/.bacon"
+	# we overwrite ~/.bacon always
+	rm -r "${bacondir}"
+	mkdir -pv "${bacondir}"
+	for path in ${baconfiles}; do
+		[ -e "${path}" ] || {
+			echo -e "\e[31m${path}: path not found!\e[m"
+			continue
+		}
+		[[ "$path" == /* ]] || {
+			echo -e "\e[31m${path}: not an absolute path!\e[m"
+			continue
+		}
+		parent=$(dirname "${path}")
+		dstdir="${bacondir}/${parent#/}"
+		mkdir -p "${dstdir}"
+		dst="${dstdir}/${basename}"
+		cp "${path}" "${dst}" && { echo -n "${dst}: " ; ok added ; }
 	done
-	tar Pczvf "${archive}" ${baconfiles}
-	echo -e "\e[34m[tar content]\e[m"
-	tar Ptzvf "${archive}"
+	echo -e "\e[34m[bacon content]\e[m"
+	tree -a --noreport "${bacondir}"
 
 # MODULES
 # base commands and tools

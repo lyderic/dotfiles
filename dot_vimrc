@@ -1,5 +1,7 @@
 "Lyderic Landry's ViM configuration file
 
+"Version: 20260420-0
+
 "Required
 set nocompatible
 
@@ -30,23 +32,23 @@ nnoremap [[ :call WrapQuickFixCPrevious()<cr>
 nnoremap ]] :call WrapQuickFixCNext()<cr>
 "When reaching the end of Quickfix items, go back to :cfirst
 function! WrapQuickFixCNext()
-  let qf_idx = getqflist({'idx': 0}).idx
-  let qf_size = getqflist({'size': 0}).size
-  if qf_idx == qf_size
-    cfirst
-  else
-    cnext
-  endif
+	let qf_idx = getqflist({'idx': 0}).idx
+	let qf_size = getqflist({'size': 0}).size
+	if qf_idx == qf_size
+		cfirst
+	else
+		cnext
+	endif
 endfunction
 "When reaching the beginning of Quickfix items, go back to :clast
 function! WrapQuickFixCPrevious()
-  let qf_idx = getqflist({'idx': 0}).idx
-  let qf_size = getqflist({'size': 0}).size
-  if qf_idx == 1
-    clast
-  else
-    cprevious
-  endif
+	let qf_idx = getqflist({'idx': 0}).idx
+	let qf_size = getqflist({'size': 0}).size
+	if qf_idx == 1
+		clast
+	else
+		cprevious
+	endif
 endfunction
 
 "ftplugin mechanism
@@ -185,6 +187,9 @@ nnoremap <silent> <leader>x
 	\    syntax enable <bar>
 	\ endif<cr>
 
+"Apply syntax on save if buffer not already colored
+autocmd BufWritePost * if empty(&filetype) | filetype detect | endif
+
 "Toggle spellcheck on/off
 nnoremap <silent> <leader>e :let &spell=!&spell<cr>
 
@@ -192,11 +197,11 @@ nnoremap <silent> <leader>e :let &spell=!&spell<cr>
 nnoremap <leader>q :call ToggleQuickfix()<cr>
 function! ToggleQuickfix()
 	let l:isopen = 0
-  for win in range(1, winnr('$'))
-    if win_gettype(win) ==# 'quickfix'
-      let l:isopen = 1 | break
-    endif
-  endfor
+	for win in range(1, winnr('$'))
+		if win_gettype(win) ==# 'quickfix'
+			let l:isopen = 1 | break
+		endif
+	endfor
 	if l:isopen
 		cclose
 		echo "Quickfix closed"
@@ -218,6 +223,9 @@ set display=lastline
 "Remap j and k to be usable on long lines
 nnoremap j gj
 nnoremap k gk
+"... except in Quickfix window
+autocmd FileType qf nnoremap <buffer> j j
+autocmd FileType qf nnoremap <buffer> k k
 
 "Quit and save all (same as 'ZZ' but for all buffers)
 nnoremap ZA :wqa<cr>
@@ -262,16 +270,6 @@ set cryptmethod=blowfish2
 
 "Open terminal to the right (vim 8.1+ required!)
 command! VTerm :vertical rightbelow terminal
-
-"Format bash files when writing them if the
-"program 'shfmt' is found
-autocmd! BufNewFile,BufRead *
-	\ if &filetype == 'sh' | set autoread | endif
-autocmd! BufWritePost *
-	\ if &filetype == 'sh' && executable('shfmt')
-	\ | silent! execute "!shfmt -w %"
-	\ | redraw!
-	\ | endif
 
 "----------------------------------------------
 "    ABBREVIATIONS
@@ -373,8 +371,7 @@ let g:lkhelp = [
 	\g:mapleader.'b switch buffer',
 	\g:mapleader.'c CountInRange <[line1]> <[line2]>',
 	\g:mapleader.'g show file information',
-	\g:mapleader.'k make current file executable',
-	\g:mapleader.'K make current file unexecutable',
+	\g:mapleader.'k toggle file executable status',
 	\g:mapleader.'l toggle show hidden characters',
 	\g:mapleader.'n toggle number',
 	\g:mapleader.'N toggle relativenumber',
@@ -432,11 +429,49 @@ nnoremap <leader>c :CountInRange
 "Search for string in dir/subdirs
 function! Search()
 	let l:selected = input("Search for: ")
-	if l:selected == ""
+	if empty(l:selected)
 		return
 	endif
-	execute 'vimgrep /' . l:selected . '/j **/*'
-	copen
+	"the following line is necessary to pre-filter out binary files
+	"we don't use !grep directly as it causes an annoying flicker
+	let l:filelist = systemlist('grep -riIl ' . shellescape(l:selected) . ' .')
+  if empty(l:filelist)
+    redraw! | echo "No match: " . l:selected
+    return
+  endif
+	try
+		execute 'vimgrep /' . escape(l:selected, '/\') . '/j ' . join(map(l:filelist, 'fnameescape(v:val)'), ' ')
+		copen
+		redraw!
+	catch /^Vim\%((\a\+)\)\=:E480/
+		echo "'" . l:selected . "' not found"
+	endtry
+endfunction
+
+"this is an alterate "Search" function which is not
+"used by default "as it causes an annoying flicker
+"and also silver-searcher needs to be installed
+if executable('ag')
+	set grepprg=ag\ --vimgrep
+	set grepformat=%f:%l:%c:%m
+endif
+function! AgSearch()
+	let l:selected = input('Search for: ')
+	if empty(l:selected) | return | endif
+		noautocmd silent! execute 'grep! ' . shellescape(l:selected) . ' .'
+	if empty(getqflist())
+		redraw!
+		if v:shell_error > 1
+			echohl ErrorMsg | echo "Search error (Check your syntax/args)" | echohl None
+		else
+			echohl WarningMsg | echo "No matches found for: " . l:selected | echohl None
+		endif
+		cclose
+	else
+		copen
+		redraw!
+	endif
 endfunction
 command! Search call Search()
-nnoremap <leader>s :Search<cr>
+command! AgSearch call AgSearch()
+nnoremap <leader>s :call Search()<cr>

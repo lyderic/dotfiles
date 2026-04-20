@@ -1,6 +1,6 @@
 "Lyderic Landry's ViM configuration file
 
-"Version: 20260420-0
+"Version: 20260420-1
 
 "Required
 set nocompatible
@@ -447,31 +447,3 @@ function! Search()
 		echo "'" . l:selected . "' not found"
 	endtry
 endfunction
-
-"this is an alterate "Search" function which is not
-"used by default "as it causes an annoying flicker
-"and also silver-searcher needs to be installed
-if executable('ag')
-	set grepprg=ag\ --vimgrep
-	set grepformat=%f:%l:%c:%m
-endif
-function! AgSearch()
-	let l:selected = input('Search for: ')
-	if empty(l:selected) | return | endif
-		noautocmd silent! execute 'grep! ' . shellescape(l:selected) . ' .'
-	if empty(getqflist())
-		redraw!
-		if v:shell_error > 1
-			echohl ErrorMsg | echo "Search error (Check your syntax/args)" | echohl None
-		else
-			echohl WarningMsg | echo "No matches found for: " . l:selected | echohl None
-		endif
-		cclose
-	else
-		copen
-		redraw!
-	endif
-endfunction
-command! Search call Search()
-command! AgSearch call AgSearch()
-nnoremap <leader>s :call Search()<cr>

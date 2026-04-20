@@ -139,7 +139,7 @@ if !exists("*s:scenefold")
 endif
 
 if !exists("*s:newscene")
-	function s:newscene()
+	function! s:newscene()
 		"Inserting empty line only if needed
 		if getline(line('.')) =~ '\S' | execute "normal! o" | endif
 		let l:uuid = system('uuidgen | head -c4')

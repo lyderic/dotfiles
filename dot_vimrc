@@ -1,6 +1,6 @@
 "Lyderic Landry's ViM configuration file
 
-"Version: 20260420-1
+"Version: 20260420-2
 
 "Required
 set nocompatible
@@ -427,23 +427,27 @@ command! -buffer GetBuffers call GetBuffers()
 nnoremap <leader>c :CountInRange 
 
 "Search for string in dir/subdirs
-function! Search()
-	let l:selected = input("Search for: ")
+function! Search(...)
+	let l:selected = a:0 > 0 ? join(a:000) : ""
 	if empty(l:selected)
 		return
 	endif
 	"the following line is necessary to pre-filter out binary files
 	"we don't use !grep directly as it causes an annoying flicker
-	let l:filelist = systemlist('grep -riIl ' . shellescape(l:selected) . ' .')
-  if empty(l:filelist)
-    redraw! | echo "No match: " . l:selected
-    return
-  endif
+	let l:filelist = systemlist('grep -FriIl ' . shellescape(l:selected) . ' .')
+	if empty(l:filelist)
+		cexpr []
+		cclose
+		redraw! | echo "No match: " . l:selected
+		return
+	endif
 	try
-		execute 'vimgrep /' . escape(l:selected, '/\') . '/j ' . join(map(l:filelist, 'fnameescape(v:val)'), ' ')
+		execute 'vimgrep /\V' . escape(l:selected, '/\') . '/j ' . join(map(l:filelist, 'fnameescape(v:val)'), ' ')
 		copen
 		redraw!
 	catch /^Vim\%((\a\+)\)\=:E480/
 		echo "'" . l:selected . "' not found"
 	endtry
 endfunction
+command! -nargs=* Search call Search(<q-args>)
+nnoremap <leader>s :Search 

@@ -1,6 +1,6 @@
 "Lyderic Landry's ViM configuration file
 
-"Version: 20260420-2
+"Version: 20260421-0
 
 "Required
 set nocompatible
@@ -24,7 +24,6 @@ nnoremap = :w<cr>
 nnoremap <leader>b :buffer <C-d>
 
 "Quicker way to call FZF
-nnoremap <leader>z :FZF<cr>
 nnoremap <leader>p :FZF<cr>
 
 "Quickfix navigation
@@ -52,17 +51,25 @@ function! WrapQuickFixCPrevious()
 endfunction
 
 "ftplugin mechanism
-"nice tuto here: https://ejmastnak.github.io/tutorials/vim-latex/ftplugin.html
+"nice tuto here: https://ejmastnak.com/tutorials/vim-latex/ftplugin/
 filetype on          " enable filetype detection
 filetype plugin on   " load file-specific plugins
 filetype indent on   " load file-specific indentation
+
+"modelinestrict prevents foldmarker to be set since v9.2.350
+"might need to change this in the future if my enhancement
+"request is ever implemented
+"https://github.com/vim/vim/issues/20028
+if has('patch-9.2.350')
+	set nomodelinestrict
+endif
 
 "Show italics and bolds nicely when editing markdown
 "in normal and command modes
 set conceallevel=3
 set concealcursor=nc
 
-" In code mode, 'Q' simply shows the registers
+" In normal mode, 'Q' simply shows the registers
 nnoremap Q :registers<cr>
 
 "Jump to the last position when reopening a file
@@ -105,12 +112,15 @@ set autowriteall
 set number
 
 "Move easily from one window to another by hitting TAB
+"in normal mode
 nnoremap <tab> <c-w>w
 
 "Scrolling down one page by pressing of [Space]
+"in normal mode
 nnoremap <Space> <PageDown>
 
 "Scrolling up one page by pressing of [Backspace]
+"in normal mode
 map <BS> <PageUp>
 
 "Always show at least one line above/below the cursor
@@ -164,11 +174,14 @@ set nolist
 set listchars=lead:·,trail:·,tab:--»,nbsp:␣,eol:$
 nnoremap <leader>l :set list!<cr>
 
+"Toggle number on/off
+nnoremap <leader>n :setlocal number!<cr>
+
 "Enhanced commandline completion
 set wildmenu
 
 "Ignore these extensions when searching with vimgrep
-set wildignore=*.png,*.jpg,*.pdf,*.xcf,*.epub,*.sla
+set wildignore=*.png,*.jpg,*.pdf,*.xcf,*.epub,*.sla,*.db
 
 "Completion in a pop-up menu (new in vim 9)
 set wildoptions=pum
@@ -181,11 +194,7 @@ syntax on
 
 "Toggle syntax on/off with <leader>x
 nnoremap <silent> <leader>x
-	\ : if exists("syntax_on") <bar>
-	\    syntax off <bar>
-	\ else <bar>
-	\    syntax enable <bar>
-	\ endif<cr>
+	\ :execute exists("syntax_on") ? "syntax off" : "syntax enable"<cr>
 
 "Apply syntax on save if buffer not already colored
 autocmd BufWritePost * if empty(&filetype) | filetype detect | endif
@@ -196,15 +205,8 @@ nnoremap <silent> <leader>e :let &spell=!&spell<cr>
 "Toggle Quickfix window open/close
 nnoremap <leader>q :call ToggleQuickfix()<cr>
 function! ToggleQuickfix()
-	let l:isopen = 0
-	for win in range(1, winnr('$'))
-		if win_gettype(win) ==# 'quickfix'
-			let l:isopen = 1 | break
-		endif
-	endfor
-	if l:isopen
+	if getqflist({'winid': 0}).winid
 		cclose
-		echo "Quickfix closed"
 	else
 		copen
 	endif
@@ -227,35 +229,37 @@ nnoremap k gk
 autocmd FileType qf nnoremap <buffer> j j
 autocmd FileType qf nnoremap <buffer> k k
 
-"Quit and save all (same as 'ZZ' but for all buffers)
+"Quit and save all (same as default 'ZZ' but for all buffers)
+nnoremap ZZ :wqa<cr>
 nnoremap ZA :wqa<cr>
 
-"Quit all without saving (same as 'ZQ' but for all buffers)
-nnoremap ZAQ :qa!<cr>
+"Quit all without saving (same as default 'ZQ' but for all buffers)
+nnoremap ZQ :qa!<cr>
 
 "Command to change the directory to the directory of the current file
-command! CurrentDir normal :cd %:h<cr>:pwd<cr>
+command! CD normal :cd %:h<cr>:pwd<cr>
 
 "UTF-8 non breaking space
 inoremap ¬  
 
 "Toggle accents keymap (found in ~/.vim/keymap/lkaccents.vim)
+let s:accents_installed = filereadable(expand('~/.vim/keymap/lkaccents.vim'))
 function! ToggleAccents()
-	if ! filereadable(expand('~/.vim/keymap/lkaccents.vim'))
+	if !s:accents_installed
 		echo "Accents not installed"
 		return
 	endif
 	if &keymap == "lkaccents"
-			echo "Accents Off"
-			setlocal keymap=
+		echo "Accents Off"
+		setlocal keymap=
 	else
-			echo "Accents On"
-			setlocal keymap=lkaccents
+		echo "Accents On"
+		setlocal keymap=lkaccents
 	endif
 endfunction
 nnoremap <c-j> :call ToggleAccents()<cr>
-inoremap <c-j> <esc>:call ToggleAccents()<cr>a
-inoremap ;; <esc>:call ToggleAccents()<cr>a
+inoremap <c-j> <esc>:call ToggleAccents()<cr>gi
+inoremap ;; <esc>:call ToggleAccents()<cr>gi
 
 "Deal with background
 set background=dark
@@ -284,7 +288,8 @@ cabbrev nocomm s/^#//
 "    FUNCTIONS
 "----------------------------------------------
 
-"Word completion with [TAB], except when at begining of line
+"Word completion with [TAB], except at beginning of line
+"or after whitespace
 function! SmartTabCompletion()
 	let pos = col('.') - 1
 	"if pos == 0 || getline('.')[pos - 1] !~ '\k'
@@ -303,27 +308,30 @@ endfunction
 command! -nargs=* Git call GitExecute(<f-args>)
 
 "If a session exists, save it before leaving
-"(Only for .lkl, .yaml and .go files)
 function! SaveSessionIfFound()
-	if !empty(v:this_session)
-		echohl WarningMsg
-		echo "saving session..."
-		mksession!
-		sleep 350m
-		echohl None
-	endif
+	if empty(v:this_session) | return | endif
+	echohl WarningMsg
+	echo "saving session..."
+	mksession!
+	sleep 350m
+	echohl None
 endfunction
-autocmd! VimLeave *.lkl,*.yaml,*.go :call SaveSessionIfFound()
+"(Only for .lkl, .yaml and .go files)
+"autocmd! VimLeave *.lkl,*.yaml,*.go :call SaveSessionIfFound()
+"For all files
+autocmd! VimLeave * :call SaveSessionIfFound()
 
-function! ToggleNumber()
-	setlocal number!
-	if &number == 0
-		echo "number disabled"
-	else
-		echo "number enabled"
-	endif
+"List buffers with not corresponding file on disk
+"This is useful if, after having restored a function,
+"some files have deleted or renamed
+function! ListGhostBuffers()
+	for buf in getbufinfo({'buflisted': 1})
+		if !filereadable(buf.name)
+			echo buf.bufnr . ': ' . buf.name
+		endif
+	endfor
 endfunction
-nnoremap <leader>n :call ToggleNumber()<cr>
+command! ListGhostBuffers :call ListGhostBuffers()
 
 function! ToggleRelativenumber()
 	setlocal relativenumber!
@@ -341,11 +349,11 @@ nnoremap <leader>N :call ToggleRelativenumber()<cr>
 
 function! DisplayInformation()
 	let l:u = "unset"
-	echo "Path: " . expand('%:p')
-		\ "--"
-		\ printf("[%s]", (&filetype == ""   ? l:u : &filetype))
-		\ printf("[%s]", (&encoding == ""   ? l:u : &encoding))
-		\ printf("[%s]", (&fileformat == "" ? l:u : &fileformat))
+	echo printf("Path: %s -- [%s] [%s] [%s]",
+		\ expand('%:p'),
+		\ (&filetype  == "" ? l:u : &filetype),
+		\ (&encoding  == "" ? l:u : &encoding),
+		\ (&fileformat == "" ? l:u : &fileformat))
 	let l:chars = ThousandsSeparator(wordcount().chars)
 	let l:words = ThousandsSeparator(wordcount().words)
 	let l:bytes = ThousandsSeparator(wordcount().bytes)
@@ -393,13 +401,17 @@ endfunction
 command! LeaderHelp :call LeaderHelp()
 nnoremap <leader>h :call LeaderHelp()<cr>
 
-function! CountInRange(arg1 = line('.'), arg2 = line('$'))
-	let l:first = a:arg1
-	let l:last = a:arg2
-	if a:arg1 == "." | let l:first = line('.') | endif
-	if a:arg2 == "." | let l:last = line('.') | endif
-	if a:arg2 == "$" | let l:last = line('$') | endif
-	if a:arg1 == a:arg2
+"Count line, words and characters of range
+"if no range is provided: count from current line to end of file
+function! CountInRange() range
+	if a:firstline == a:lastline && a:firstline == line('.')
+		let l:first = line('.')
+		let l:last = line('$')
+	else
+		let l:first = a:firstline
+		let l:last = a:lastline
+	endif
+	if l:first == l:last
 		echon "Count in line " . l:first
 	else
 		echon "Count in lines " . l:first . "-" . l:last
@@ -407,24 +419,9 @@ function! CountInRange(arg1 = line('.'), arg2 = line('$'))
 	echon " (lines, words, chars):"
 	execute l:first.",".l:last."w !wc -lwm"
 endfunction
-command! -nargs=* CountInRange call CountInRange(<f-args>)
-
-"List all the files found in the buffers list
-if !exists("*GetBuffers")
-	function! GetBuffers()
-		let l:all = range(1, bufnr('$'))
-		let listing = []
-		for id in l:all
-			"buffer must be listed and not be a directory
-			if buflisted(id) && ! isdirectory(bufname(id))
-				call add(listing, bufname(id))
-			endif
-		endfor
-		return listing
-	endfunction
-endif
-command! -buffer GetBuffers call GetBuffers()
-nnoremap <leader>c :CountInRange 
+command! -nargs=0 -range CountInRange <line1>,<line2>call CountInRange()
+nnoremap <leader>c :CountInRange<cr>
+vnoremap <leader>c :CountInRange<cr>
 
 "Search for string in dir/subdirs
 function! Search(...)

@@ -8,7 +8,7 @@ if exists("g:loaded_sanitizer") || v:version < 703
 endif
 let g:loaded_sanitizer = 1
 
-function Sanitize(...)
+function! Sanitize(...)
 	"This is only allowed in markdown files written in French
 	"i.e. filetypes 'markdown' and 'litt'
 	if (&ft != "markdown" && &ft != "litt")
@@ -28,7 +28,7 @@ function Sanitize(...)
 	normal! `y
 endfunction
 
-function s:firstpass(r)
+function! s:firstpass(r)
 	"Separator normalization
 	silent! execute a:r.'s/^---$/* * */g'
 	silent! execute a:r.'s/\*\*\*/* * */g'
@@ -46,7 +46,9 @@ function s:firstpass(r)
 	"note: we don't include '.' otherwise URLs e.g. 'a.b.com' would
 	"become 'a. b. com'
 	"silent! execute a:r.'s/\v([?!;:»,])(\K)/\1 \2/g'
-	silent! execute a:r.'s/\v([?!;:»,])([0-9A-Za-z])/\1 \2/g'
+	silent! execute a:r.'s/\v([?!;:»,])([0-9A-Za-zÀ-ÿ])/\1 \2/g'
+	"space after period, if following word starts with an uppercase letter
+	silent! execute a:r.'s/\v\.([A-ZÀ-Ÿ])/. \1/g'
 	"0x00A0 after tiret quadratin at beginning of line
 	"silent! execute a:r.'s/\v^—\s*(.)/— \1/'
 	"0x00A0 after/before — (ignoring at beginning of line)
@@ -67,10 +69,10 @@ function s:firstpass(r)
 	silent! execute a:r.'s/\v +/ /g'
 endfunction
 
-function s:secondpass(r)
-	"Allow time stamp like '12:34' or '12:34:56' e.g. in journal
-	silent! execute a:r.'s/\v([0-2][0-9]) :\s*([0-5][0-9])/\1:\2/'
+function! s:secondpass(r)
+	"Allow time stamp like '12:34:56' or '12:34' e.g. in journal
 	silent! execute a:r.'s/\v([0-2][0-9]):\s*([0-5][0-9]) :\s*([0-5][0-9])/\1:\2:\3/'
+	silent! execute a:r.'s/\v([0-2][0-9]) :\s*([0-5][0-9])/\1:\2/'
 	"0x00A0 between » and ?!;:
 	"e.g. foo »bar becomes: foo » bar
 	silent! execute a:r.'s/\v»\s*([?!;:])/» \1/g'
@@ -95,3 +97,8 @@ command! -range Sanitize call Sanitize(<line1>,<line2>)
 "  — : tiret quadratin (0x2014)
 "  … : 3-dots (0x2026)
 "    : espace insécable (0x00A0)
+"
+" Character classes:
+" [À-Ÿ]: uppercase accented letters
+" [à-ÿ]: lowercase accented letters
+" [À-ÿ]: all accented letters

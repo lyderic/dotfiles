@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260408-0"
+export BIGBANG_VERSION="20260425-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -118,6 +118,9 @@ export LESS="FRIX"
 export EDITOR=vim
 export GIT_PAGER="less -erX"
 export TERM=xterm-256color
+command -v vimpop >/dev/null 2>&1 && {
+	export VISUAL=vimpop
+}
 
 #### EXPORTED FUNCTIONS #################################
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -n "${TMUX}" ]; then
+if [[ "${1}" == /tmp/bash-fc.* ]] && [ -n "${TMUX}" ]; then
 	tmux popup -E -b rounded -S fg=yellow -d '#{pane_current_path}' -w 70% -h 50% "vim $*"
 else
 	vim ${@}

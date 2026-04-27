@@ -1,4 +1,4 @@
-common-version := "20260418-0"
+common-version := "20260427-0"
 
 alias up    := base::update
 alias vi    := base::vigilax
@@ -94,6 +94,7 @@ _bacon:
 			continue
 		}
 		parent=$(dirname "${path}")
+		basename=$(basename "${path}")
 		dstdir="${bacondir}/${parent#/}"
 		mkdir -p "${dstdir}"
 		dst="${dstdir}/${basename}"

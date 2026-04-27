@@ -17,15 +17,12 @@ function! Sanitize(...)
 	endif
 	"This is the default, to which '*' is added (because of markdown's bold)
 	setlocal iskeyword=@,48-57,_,192-255,#,*
-	"This sets a 'y' mark to go back to when all substitutions have been done
-	"(see below: `y)
-	normal! my
+	"CursorSave() and CursorRestore() in cursor.vim
+	call CursorSave()
 	let l:r = a:1.','.a:2
 	call s:firstpass(l:r)
-	"The second pass deals with special cases in order to fix the
-	"changes introduced by the first pass
 	call s:secondpass(l:r)
-	normal! `y
+	call CursorRestore()
 endfunction
 
 function! s:firstpass(r)

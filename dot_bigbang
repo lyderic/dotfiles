@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260428-0"
+export BIGBANG_VERSION="20260428-1"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -24,6 +24,8 @@ alias sha="sha256sum"
 alias L=less
 alias stamp='date +"%Y%m%d%M%H%S"'
 alias croc='croc --relay europe.cybermoped.com'
+alias send='croc --relay europe.cybermoped.com send -c Vg6Q3f5FJi8M0FXMHx0'
+alias recv='croc --relay europe.cybermoped.com Vg6Q3f5FJi8M0FXMHx0'
 alias machinectl='sudo machinectl'
 
 # No duplicates in history
@@ -43,7 +45,7 @@ function rm() {
 		fi
 	done
 	# special case for .git directories, as they contain r/o files
-	find "$@" -name ".git" -type d -exec chmod -R u+w {} \;
+	find "$@" -type d -name ".git" -exec chmod -R u+w {} \;
   # If '-f' or '--force' not found, execute the real rm command,
 	# with confirmation if recursive or more than 3 files to be deleted
   command rm -Iv "$@"

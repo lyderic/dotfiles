@@ -7,7 +7,7 @@ local global_module_name = 'json'
 
 David Kolf's JSON module for Lua 5.1 - 5.5
 
-Version 2.9-beta.2
+Version 2.9
 
 
 For the documentation see the corresponding readme.txt or visit
@@ -52,7 +52,7 @@ local strrep, gsub, strsub, strbyte, strchar, strfind, strlen, strformat =
 local strmatch = string.match
 local concat = table.concat
 
-local json = { version = "dkjson 2.9-beta.2" }
+local json = { version = "dkjson 2.9" }
 
 local jsonlpeg = {}
 

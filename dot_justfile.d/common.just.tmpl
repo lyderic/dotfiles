@@ -1,4 +1,4 @@
-common-version := "20260427-0"
+common-version := "20260503-0"
 
 alias up    := base::update
 alias vi    := base::vigilax
@@ -133,6 +133,8 @@ v:
 	@just --evaluate
 
 sys := "sudo -E systemctl"
+noconfirm := env("noconfirm", "no")
+
 set shell := ["bash","-uc"]
 set export
 set dotenv-load

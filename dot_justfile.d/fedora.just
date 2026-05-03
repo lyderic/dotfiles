@@ -1,5 +1,6 @@
 # update fedora
 update:
 	#!/bin/bash
-	sudo dnf upgrade
+	[ $noconfirm == "yes" ] && arg="-y"
+	sudo dnf upgrade ${arg}
 

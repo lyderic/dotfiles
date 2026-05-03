@@ -1,7 +1,7 @@
 # update archlinux
 update:
 	#!/bin/bash
-	[[ $noconfirm == "yes" ]] && arg="--noconfirm"
+	[ $noconfirm == "yes" ] && arg="--noconfirm"
 	sudo pacman -Syu $arg
 	sudo paccache -rk 1
 	printf "\e[7;93m"

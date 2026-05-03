@@ -1,5 +1,7 @@
 # update alpine
 update:
 	#!/bin/bash
-	sudo apk -U upgrade
+	arg="-i"
+	[ $noconfirm == "yes" ] && arg=
+	sudo apk -U ${arg} upgrade
 	sudo apk -v cache clean

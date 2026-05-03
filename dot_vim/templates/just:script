@@ -1,9 +1,10 @@
 #!/usr/bin/env -S just --justfile
 
-alias h := _help
+alias h := help
 
-_help:
-	@{{justfile()}} --list --unsorted --alias-style left --color always \
+[private]
+help:
+	@$yo --list --unsorted --alias-style left --color always \
 		--list-heading='' --list-prefix=' ' \
 		| sed -e 's/alias: //' | awk 'NF'
 
@@ -12,8 +13,11 @@ test:
 
 [private]
 v:
-	{{justfile()}} --evaluate
+	$yo --evaluate
+
+yo := justfile()
 
 set export
 set shell := ["bash","-uc"]
+
 # vim: ft=just

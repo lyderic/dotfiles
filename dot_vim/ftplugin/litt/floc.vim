@@ -10,6 +10,7 @@ let s:persdir = s:flocdir."/personnages"
 "######################################################
 
 command! -buffer FlocInit call s:flocinit()
+command! -buffer SceneFold call s:enablescenefold()
 
 "Characters commands
 command! -buffer -nargs=? NewPersonnage call s:newpers(<f-args>)

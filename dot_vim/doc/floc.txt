@@ -15,11 +15,11 @@ In the "floc" subdirectory, there is a subsubdirectory called
 CONTENT
 
 	1. Commands                                    |FlocCommands|
-	1. Synopsis                                    |FlocSynopsis|
-	1. Personnages                                 |FlocPersonnages|
-	2. Scenes                                      |FlocScenes|
-	3. Conception documents                        |FlocConception|
-	4. Steps                                       |FlocSteps|
+	2. Synopsis                                    |FlocSynopsis|
+	3. Personnages                                 |FlocPersonnages|
+	4. Scenes                                      |FlocScenes|
+	5. Conception documents                        |FlocConception|
+	6. Steps                                       |FlocSteps|
 
 ====================================================================
 
@@ -33,6 +33,7 @@ COMMANDS                                            *FlocCommands*
 	:FlocScenes        | :SC            |  List scenes
 	:FlocNewPersonnage | :NewPersonnage |  Create new personnage
 	:FlocNewScene      | :NewScene      |  Create new scene
+	:EnableSceneFold   | N/A            |  Fold scenes
 
 ====================================================================
 

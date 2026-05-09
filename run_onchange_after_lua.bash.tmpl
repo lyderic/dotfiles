@@ -20,11 +20,13 @@ BASEDIR="/usr/share/lua"
 
 declare -A LUALIBS
 LUALIBS[dkjson]="{{ include "lua/dkjson.lua" | sha256sum }}"
+LUALIBS[argparse]="{{ include "lua/argparse.lua" | sha256sum }}"
 LUALIBS[lee]="{{ include "lua/lee.lua" | sha256sum }}"
 
 declare -A LUASCRIPTS
 LUASCRIPTS[ghbin]="{{ include "lua/ghbin" | sha256sum }}"
 LUASCRIPTS[vigilax]="{{ include "lua/vigilax" | sha256sum }}"
+LUASCRIPTS[lod]="{{ include "lua/lod" | sha256sum }}"
 
 main() {
 	echo -e "\e[34m[LUA Libs And Scripts]\e[m"

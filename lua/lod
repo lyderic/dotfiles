@@ -1,6 +1,6 @@
 #!/usr/bin/env -S lua -llee
 
-local version = "20260509-0"
+local version = "20260509-1"
 local progname = "lod"
 local defaultwidth = 58
 local dbg = env("debug") or false
@@ -14,6 +14,7 @@ function main()
 	parser:argument("file", "A markdown file")
 	parser:option("-w") {
 		argname = "width",
+		convert = tonumber,
 		description = f("Word wrap (default=%d)", defaultwidth), 
 		default = defaultwidth,
 	}
@@ -21,22 +22,31 @@ function main()
 		description = "Don't use pager",
 		default = false,
 	}
+	parser:flag("--version") {
+		description = "show version",
+		default = false,
+		action = function()
+			print(version)
+			os.exit(0)
+		end
+	}
 	local a = parser:parse()
 	if dbg then print(">>>>args: "..json.encode(a)) end
-	local file, termwidth = a.file, tonumber(a.w)
+	local file, width = a.file, a.w
 	local cols = tonumber(eo("tput cols")) or 100
 	if dbg then printf(">>>>cols = %d\n", cols) end
-	if termwidth == 0 or cols < defaultwidth then
-		termwidth = cols - 2
+	if width > cols then width = cols end
+	if width == 0 or cols < defaultwidth then
+		width = cols - 2
 	end
 	local pager = true
 	if a.n then pager = false end
-	local cmd = getcmd(termwidth, file, pager)
+	local cmd = getcmd(width, file, pager)
 	if dbg then print(">>>>[XeQ] "..cmd) end
 	x(cmd)
 end
 
-function getcmd(termwidth, file, pager)
+function getcmd(width, file, pager)
 local ppipe = pager and " | less -FRIX" or ""
 return f([[lowdown -tterm \
 --out-no-smart \
@@ -44,7 +54,7 @@ return f([[lowdown -tterm \
 --term-width=%d \
 --term-hpadding=2 \
 --term-vmargin=1 %q \
-%s]], termwidth, termwidth, file, ppipe)
+%s]], width, width, file, ppipe)
 end
 
 main()

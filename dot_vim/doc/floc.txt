@@ -33,7 +33,7 @@ COMMANDS                                            *FlocCommands*
 	:FlocScenes        | :SC            |  List scenes
 	:FlocNewPersonnage | :NewPersonnage |  Create new personnage
 	:FlocNewScene      | :NewScene      |  Create new scene
-	:EnableSceneFold   | N/A            |  Fold scenes
+	:EnableSceneFold   | :SceneFold     |  Fold scenes
 
 ====================================================================
 

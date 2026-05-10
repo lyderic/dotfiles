@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260428-1"
+export BIGBANG_VERSION="20260510-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -30,26 +30,6 @@ alias machinectl='sudo machinectl'
 
 # No duplicates in history
 export HISTCONTROL=ignoredups
-
-# Disallow 'rm -f' and enable confirmation
-function rm() {
-	# Loop through the arguments to find -f or --force.
-	for arg in "$@"; do
-		if [[ "$arg" == "--force" ]]; then
-			warn "Error: 'rm --force' is not allowed" >&2
-			return 1
-		fi
-		if [[ "$arg" =~ ^-[^-] ]] && [[ "$arg" == *f* ]]; then
-			warn "Error: 'rm -f' is not allowed" >&2
-			return 1
-		fi
-	done
-	# special case for .git directories, as they contain r/o files
-	find "$@" -type d -name ".git" -exec chmod -R u+w {} \;
-  # If '-f' or '--force' not found, execute the real rm command,
-	# with confirmation if recursive or more than 3 files to be deleted
-  command rm -Iv "$@"
-}
 
 # PATH management
 # this function is to avoid duplicates

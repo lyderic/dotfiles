@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260510-0"
+export BIGBANG_VERSION="20260511-0"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -102,6 +102,7 @@ export LESS="FRIX"
 export EDITOR=vim
 export GIT_PAGER="less -erX"
 export TERM=xterm-256color
+export RIPGREP_CONFIG_PATH="${HOME}/.config/ripgreprc"
 command -v vimpop >/dev/null 2>&1 && {
 	export VISUAL=vimpop
 }

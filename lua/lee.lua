@@ -1,10 +1,12 @@
-leeversion = "20260509-0"
+leeversion = "20260522-0"
 
 json = require 'dkjson'
 
 f = string.format
 e = io.popen
 env = os.getenv
+concat = table.concat
+append = table.insert
 
 -- same as os.execute, but also allows
 -- printf-like input

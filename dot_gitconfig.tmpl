@@ -16,6 +16,10 @@
 	smudge = "f() { tmpfile=$(mktemp); sqlite3 $tmpfile; cat $tmpfile; rm $tmpfile; }; f"
 	required = true
 
+[diff "sopsdiff"]
+	textconv = sh -c 'sops -d "$0" 2>/dev/null || cat "$0"'
+	cachetextconv = true
+
 [alias]
 	a = add
 	b = branch -avv

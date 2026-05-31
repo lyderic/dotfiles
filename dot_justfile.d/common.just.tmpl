@@ -1,4 +1,4 @@
-common-version := "20260503-0"
+common-version := "20260531-0"
 
 alias up    := base::update
 alias vi    := base::vigilax
@@ -98,7 +98,9 @@ _bacon:
 		dstdir="${bacondir}/${parent#/}"
 		mkdir -p "${dstdir}"
 		dst="${dstdir}/${basename}"
-		cp "${path}" "${dst}" && { echo -n "${dst}: " ; ok added ; }
+		cp "${path}" "${dst}" && {
+			echo -e "${dst}: \e[32madded\e[m"
+		}
 	done
 	echo -e "\e[34m[bacon content]\e[m"
 	tree -a --noreport "${bacondir}"

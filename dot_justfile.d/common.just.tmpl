@@ -1,4 +1,4 @@
-common-version := "20260531-0"
+common-version := "20260605-0"
 
 alias up    := base::update
 alias vi    := base::vigilax
@@ -98,7 +98,7 @@ _bacon:
 		dstdir="${bacondir}/${parent#/}"
 		mkdir -p "${dstdir}"
 		dst="${dstdir}/${basename}"
-		cp "${path}" "${dst}" && {
+		cp -r "${path}" "${dst}" && {
 			echo -e "${dst}: \e[32madded\e[m"
 		}
 	done

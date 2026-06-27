@@ -1,4 +1,4 @@
-export BIGBANG_VERSION="20260627-1"
+export BIGBANG_VERSION="20260627-3"
 
 # If this script is not sourced, it does nothing
 (return 0 2>/dev/null) || kill -INT $$
@@ -124,13 +124,13 @@ function z() {
 	local n=1
 	[ -z "${1}" ] || n=${1}
 	tmux has -t sess >/dev/null 2>&1 || {
-		tmux new-session -d -s sess -n 'Ⓡ' 'sudo -i'
+		tmux new-session -d -s sess -n 'R' 'sudo -i'
 		[ $n -gt 1 ] && {
 			for i in $(seq 2 $n); do
-				tmux new-window -t sess:${i} -n '[1]'
+				tmux new-window -t sess:${i} -n 'U'
 			done
 		}
-		tmux new-window -t sess:1 -n '[1]'
+		tmux new-window -t sess:1 -n 'U'
 	}
 	tmux attach -t sess
 }
@@ -147,7 +147,8 @@ function en() {
 }
 
 # Prompt
-PS1='[\u@\h \W]\$ '
+#PS1='[\u@\h \W]\$ '
+PS1='$(printf "\1\e[35m\2%03d\1\e[m\2 " $?)\h:\w\$ '
 PROMPT_DIRTRIM=2
 # Always get correct title in Gnome Terminal's tabs
 PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME%%.*}\007"'

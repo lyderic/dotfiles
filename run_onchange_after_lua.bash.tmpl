@@ -22,6 +22,7 @@ declare -A LUALIBS
 LUALIBS[dkjson]="{{ include "lua/dkjson.lua" | sha256sum }}"
 LUALIBS[argparse]="{{ include "lua/argparse.lua" | sha256sum }}"
 LUALIBS[lee]="{{ include "lua/lee.lua" | sha256sum }}"
+LUALIBS[tmpl]="{{ include "lua/tmpl.lua" | sha256sum }}"
 
 declare -A LUASCRIPTS
 LUASCRIPTS[ghbin]="{{ include "lua/ghbin" | sha256sum }}"

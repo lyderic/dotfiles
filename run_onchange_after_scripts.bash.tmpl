@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -e
+
+VERSION="20260727-0"
+
+# To force a trigger of this file, even if no changes have 
+# occured, increment this:
+# TRIGGER = 0
+
+# To understand what's going on here check this:
+# https://www.chezmoi.io/user-guide/use-scripts-to-perform-actions/#run-a-script-when-the-contents-of-another-file-changes
+
+[ "$EUID" -eq 0 ] && {
+	echo -e "\e[33mroot doesn't need to deploy scripts\e[m"
+	exit 0
+}
+
+LOCALBIN="/usr/local/bin"
+
+declare -A SCRIPTS
+SCRIPTS[wg-json]="{{ include "bin/wg-json" | sha256sum }}"
+
+main() {
+	echo -e "\e[34m[Various Scripts]\e[m"
+	for script in "${!SCRIPTS[@]}"; do
+		sudo install --compare -D --target "/usr/local/bin" --mode 0755 \
+		"{{ joinPath .chezmoi.sourceDir "bin/${script}" | quote }}" && {
+			echo -e "\e[1;32mOK\e[m ${script}"
+		} || {
+			echo -e "\e[1;31mFAIL!\e[m ${script}"
+		}
+	done
+}
+
+main ${@}
+
+# vim: ft=bash

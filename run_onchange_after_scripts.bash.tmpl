@@ -17,8 +17,8 @@ VERSION="20260727-0"
 }
 
 declare -A WGSCRIPTS
-WGSCRIPTS[wg-json]="{{ include "bin/wg-json" | sha256sum }}"
-WGSCRIPTS[wg-status]="{{ include "bin/wg-status" | sha256sum }}"
+WGSCRIPTS[wg-json]="{{ include "scripts/wg-json" | sha256sum }}"
+WGSCRIPTS[wg-status]="{{ include "scripts/wg-status" | sha256sum }}"
 
 main() {
 	which wg >/dev/null 2>&1 && {

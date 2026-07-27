@@ -1,0 +1,77 @@
+#!/usr/bin/env -S lua -llee
+
+-- globals
+wgdump = {} -- output of wg-json
+peerNames = {} -- mapping pubkey-peername
+
+function main()
+	checkroot() -- cannot run wg-json if not root
+	wgdump = json.decode(ea("wg-json")) -- global
+	peerNames = loadPeerNames() -- global
+	local ifaces = {}
+	if #arg == 0 then
+		for iface in pairs(wgdump) do append(ifaces, iface) end
+	else
+		for iface in pairs(wgdump) do
+			if iface == arg[1] then append(ifaces, iface) end
+		end
+	end
+	table.sort(ifaces)
+	processInterfaces(ifaces)
+end
+
+function processInterfaces(ifaces)
+	for _,name in ipairs(ifaces) do
+		printf("\27[1;7m%-64.64s\27[m\n", name)
+		local pubkeys = {}
+		for pubkey in pairs(wgdump[name].peers) do
+			append(pubkeys, pubkey)
+		end
+		table.sort(pubkeys)
+		for _,pubkey in ipairs(pubkeys) do
+			display(name, pubkey)
+		end
+	end
+end
+
+function display(name, pubkey)
+	local d = wgdump[name].peers[pubkey]
+	printf("\27[4mpeer\27[m: ")
+	printf("\27[1;97m%s\27[m ", getNameFromPubkey(pubkey))
+	printf("\27[3m%s\27[m\n", pubkey)
+	printf(" • Endpoint: %s (keepalive=%ds)\n",
+		d.endpoint, d.persistentKeepalive)
+	printf(" • Allowed IPs: %s\n", concat(d.allowedIps," "))
+	printf(" • Transfers: TX=%s RX=%s\n",
+		bfmt(d.transferTx), bfmt(d.transferRx))
+	last = os.date("%Y-%m-%d %H:%M:%S", d.latestHandshake)
+	diff = os.difftime(os.time(), d.latestHandshake)
+	printf(" • Latest Handshake: ")
+	printf("%s (\27[97m%s ago\27[m)\n", last, dhms(diff))
+end
+
+function loadPeerNames()
+	local peerPath = "/etc/wireguard/peers.csv"
+	if not abs(peerPath) then return end
+	return load(ea("yq -pcsv -olua %q", peerPath))()
+end
+
+function getNameFromPubkey(pubkey)
+	if not peerNames then return "--unset--" end
+	for _,peer in ipairs(peerNames) do
+		if peer.pubkey == pubkey then
+			return peer.name
+		end
+	end
+	return "--unset--"
+end
+
+function checkroot()
+	local uid = tonumber(eo("id -u"))
+	if uid ~= 0 then
+		printf("UID=%d\nyou're not root!\n", uid)
+		os.exit(22)
+	end
+end
+
+main()

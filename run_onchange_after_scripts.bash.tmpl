@@ -20,6 +20,7 @@ LOCALBIN="/usr/local/bin"
 
 declare -A SCRIPTS
 SCRIPTS[wg-json]="{{ include "bin/wg-json" | sha256sum }}"
+SCRIPTS[wg-status]="{{ include "bin/wg-status" | sha256sum }}"
 
 main() {
 	echo -e "\e[34m[Various Scripts]\e[m"

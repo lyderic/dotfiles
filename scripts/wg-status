@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260728-2"
+version = "20260728-3"
 wgdump = {} -- output of wg-json
 peerNames = {} -- mapping pubkey-peername
 
@@ -46,13 +46,19 @@ function display(name, pubkey)
 		printf("(keepalive=%ds)", keepalive)
 	end
 	print()
-	printf(" • Allowed IPs: %s\n", concat(d.allowedIps," "))
-	printf(" • Transfers: TX=%s RX=%s\n",
-		bfmt(d.transferTx), bfmt(d.transferRx))
-	last = os.date("%Y-%m-%d %H:%M:%S", d.latestHandshake)
-	diff = os.difftime(os.time(), d.latestHandshake)
-	printf(" • Latest Handshake: ")
-	printf("%s (\27[97m%s ago\27[m)\n", last, dhms(diff))
+	if d.allowedIps then
+		printf(" • Allowed IPs: %s\n", concat(d.allowedIps," "))
+	end
+	if d.transferTx and d.transferRx then
+		printf(" • Transfers: TX=%s RX=%s\n",
+			bfmt(d.transferTx), bfmt(d.transferRx))
+	end
+	if d.latestHandshake then
+		last = os.date("%Y-%m-%d %H:%M:%S", d.latestHandshake)
+		diff = os.difftime(os.time(), d.latestHandshake)
+		printf(" • Latest Handshake: ")
+		printf("%s (\27[97m%s ago\27[m)\n", last, dhms(diff))
+	end
 end
 
 function loadPeerNames()

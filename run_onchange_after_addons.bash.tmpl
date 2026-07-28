@@ -36,7 +36,7 @@ WGSCRIPTS[wg-json]="{{ include "scripts/wg-json" | sha256sum }}"
 WGSCRIPTS[wg-status]="{{ include "scripts/wg-status" | sha256sum }}"
 
 main() {
-	echo -e "\e[34m[LUA Libs And Scripts]\e[m"
+	echo -e "\e[34m[Libs And Scripts]\e[m"
 	command -v lua > /dev/null || {
 		echo -e "\e[1;31mlua not found!\e[m"
 		return
@@ -49,6 +49,7 @@ main() {
 }
 
 deploy_libs() {
+	echo -e "\e[1mLua Libs\e[m"
 	luaversion=$(lua -e 'print(string.match(_VERSION, "(%d%.%d)"))')
 	dst="${LUA_SHARE_DIR}/${luaversion}"
 	for key in "${!LUALIBS[@]}"; do
@@ -63,7 +64,7 @@ deploy_libs() {
 }
 
 deploy_luascripts() {
-	echo -e "\e[34m[Lua Scripts]\e[m"
+	echo -e "\e[1mLua Scripts\e[m"
 	for luascript in "${!LUASCRIPTS[@]}"; do
 		sudo install --compare -D --target "/usr/local/bin" --mode 0755 \
 		"{{ joinPath .chezmoi.sourceDir "scripts/${luascript}" | quote }}" && {
@@ -75,7 +76,7 @@ deploy_luascripts() {
 }
 
 deploy_wgscripts() {
-	echo -e "\e[34m[WireGuard Scripts]\e[m"
+	echo -e "\e[1mWireGuard Scripts\e[m"
 	for wgscript in "${!WGSCRIPTS[@]}"; do
 		sudo install --compare -D --target "/usr/local/bin" --mode 0755 \
 		"{{ joinPath .chezmoi.sourceDir "scripts/${wgscript}" | quote }}" && {

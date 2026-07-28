@@ -4,6 +4,7 @@
 version = "20260728-3"
 wgdump = {} -- output of wg-json
 peerNames = {} -- mapping pubkey-peername
+display = env("WG_STATUS_DISPLAY") or "full"
 
 function main()
 	checkroot() -- cannot run wg-json if not root
@@ -23,19 +24,42 @@ end
 
 function processInterfaces(ifaces)
 	for _,name in ipairs(ifaces) do
-		printf("\27[1;7m%-64.64s\27[m\n", name)
+		printf("\27[1;4m%-64.64s\27[m\n", name)
 		local pubkeys = {}
 		for pubkey in pairs(wgdump[name].peers) do
 			append(pubkeys, pubkey)
 		end
 		table.sort(pubkeys)
 		for _,pubkey in ipairs(pubkeys) do
-			display(name, pubkey)
+			if display == "full" then
+				fulldisplay(name, pubkey)
+			else
+				summary(name, pubkey)
+			end
 		end
 	end
 end
 
-function display(name, pubkey)
+function summary(name, pubkey)
+	local d = wgdump[name].peers[pubkey]
+	printf("\27[1;97m%-8.8s\27[m ", getNameFromPubkey(pubkey))
+	if d.allowedIps then
+		printf("%16.16s", concat(d.allowedIps," "))
+	end
+	if d.transferTx then
+		printf("%12.12s", "TX="..bfmt(d.transferTx))
+	end
+	if d.transferRx then
+		printf("%12.12s", "RX="..bfmt(d.transferRx))
+	end
+	if d.latestHandshake then
+		last = os.date("%Y-%m-%d %H:%M:%S", d.latestHandshake)
+		diff = os.difftime(os.time(), d.latestHandshake)
+		printf("   \27[97m%s\27[m\n", dhms(diff))
+	end
+end
+
+function fulldisplay(name, pubkey)
 	local d = wgdump[name].peers[pubkey]
 	printf("\27[4mpeer\27[m: ")
 	printf("\27[1;97m%s\27[m ", getNameFromPubkey(pubkey))

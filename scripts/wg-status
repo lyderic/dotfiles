@@ -1,6 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
+version = "20260728-1"
 wgdump = {} -- output of wg-json
 peerNames = {} -- mapping pubkey-peername
 
@@ -40,7 +41,7 @@ function display(name, pubkey)
 	printf("\27[1;97m%s\27[m ", getNameFromPubkey(pubkey))
 	printf("\27[3m%s\27[m\n", pubkey)
 	printf(" • Endpoint: %s (keepalive=%ds)\n",
-		d.endpoint, d.persistentKeepalive)
+		d.endpoint, d.persistentKeepalive or 0)
 	printf(" • Allowed IPs: %s\n", concat(d.allowedIps," "))
 	printf(" • Transfers: TX=%s RX=%s\n",
 		bfmt(d.transferTx), bfmt(d.transferRx))

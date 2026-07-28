@@ -30,3 +30,4 @@ gpg:
 {{- end }}
 
 lua/
+scripts/

@@ -79,9 +79,9 @@ deploy_wgscripts() {
 	for wgscript in "${!WGSCRIPTS[@]}"; do
 		sudo install --compare -D --target "/usr/local/bin" --mode 0755 \
 		"{{ joinPath .chezmoi.sourceDir "scripts/${wgscript}" | quote }}" && {
-			echo -e "\e[1;32mOK\e[m ${script}"
+			echo -e "\e[1;32mOK\e[m ${wgscript}"
 		} || {
-			echo -e "\e[1;31mFAIL!\e[m ${script}"
+			echo -e "\e[1;31mFAIL!\e[m ${wgscript}"
 		}
 	done
 }

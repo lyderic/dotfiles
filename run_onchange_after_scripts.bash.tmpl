@@ -2,7 +2,7 @@
 
 set -e
 
-VERSION="20260727-0"
+VERSION="20260728-0"
 
 # To force a trigger of this file, even if no changes have 
 # occured, increment this:
@@ -30,7 +30,7 @@ install_wgscripts() {
 	echo -e "\e[34m[WireGuard Scripts]\e[m"
 	for wgscript in "${!WGSCRIPTS[@]}"; do
 		sudo install --compare -D --target "/usr/local/bin" --mode 0755 \
-		"{{ joinPath .chezmoi.sourceDir "bin/${wgscript}" | quote }}" && {
+		"{{ joinPath .chezmoi.sourceDir "scripts/${wgscript}" | quote }}" && {
 			echo -e "\e[1;32mOK\e[m ${script}"
 		} || {
 			echo -e "\e[1;31mFAIL!\e[m ${script}"

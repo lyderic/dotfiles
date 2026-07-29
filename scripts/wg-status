@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260729-1"
+version = "20260729-2"
 wgdump = {} -- output of wg-json
 peerNames = {} -- mapping pubkey-peername
 
@@ -61,8 +61,10 @@ function processInterfaces(ifaces)
 				append(never, peer.name)
 			end
 		end
-		printf("\27[2;3mInactives: %s\27[m ", concat(never, " "))
-		print()
+		if #never > 0 then
+		printf("\27[2;3mInactives: %s\27[m\n",
+			concat(never, " "))
+		end
 	end
 end
 

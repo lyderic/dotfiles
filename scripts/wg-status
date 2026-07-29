@@ -1,16 +1,15 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260728-3"
+version = "20260729-0"
 wgdump = {} -- output of wg-json
 peerNames = {} -- mapping pubkey-peername
-display = env("WG_STATUS_DISPLAY") or "full"
 
 function main()
 	checkroot() -- cannot run wg-json if not root
 	wgdump = json.decode(ea("wg-json")) -- global
 	peerNames = loadPeerNames() -- global
-	local ifaces = {}
+	local ifaces = {} -- we do this to sort
 	if #arg == 0 then
 		for iface in pairs(wgdump) do append(ifaces, iface) end
 	else
@@ -22,43 +21,57 @@ function main()
 	processInterfaces(ifaces)
 end
 
+-- ifacename: wireguard interface names (wgXX)
+-- peerspubkeys: peers pubkeys
 function processInterfaces(ifaces)
-	for _,name in ipairs(ifaces) do
-		printf("\27[1;4m%-64.64s\27[m\n", name)
-		local pubkeys = {}
-		for pubkey in pairs(wgdump[name].peers) do
-			append(pubkeys, pubkey)
+	for _,ifacename in ipairs(ifaces) do
+		local peerspubkeys = {}
+		for pubkey in pairs(wgdump[ifacename].peers) do
+			append(peerspubkeys, pubkey)
 		end
-		table.sort(pubkeys)
-		for _,pubkey in ipairs(pubkeys) do
-			if display == "full" then
-				fulldisplay(name, pubkey)
-			else
-				summary(name, pubkey)
-			end
+		table.sort(peerspubkeys)
+		printf("\27[1;4m")
+		printf("%-7.7s ", ifacename)
+		printf("%-4.4s  ", "Id") -- id = 4 first chars of pubkey
+		printf("%-20.20s", "IP")
+		printf("%-8.8s", "TX")
+		printf("%-8.8s", "RX")
+		printf("%-12.12s", "Last")
+		print("\27[m")
+		for _,pubkey in ipairs(peerspubkeys) do
+			displayPeer(ifacename, pubkey)
 		end
 	end
 end
 
-function summary(name, pubkey)
+function displayPeer(name, pubkey)
 	local d = wgdump[name].peers[pubkey]
-	printf("\27[1;97m%-8.8s\27[m ", getNameFromPubkey(pubkey))
-	if d.allowedIps then
-		printf("%16.16s", concat(d.allowedIps," "))
-	end
-	if d.transferTx then
-		printf("%12.12s", "TX="..bfmt(d.transferTx))
-	end
-	if d.transferRx then
-		printf("%12.12s", "RX="..bfmt(d.transferRx))
-	end
+	local color = "\27[32m" -- green if active
+	local diff = 0
 	if d.latestHandshake then
-		last = os.date("%Y-%m-%d %H:%M:%S", d.latestHandshake)
 		diff = os.difftime(os.time(), d.latestHandshake)
-		printf("   \27[97m%s\27[m\n", dhms(diff))
 	end
+	-- blue if inactive
+	if diff == 0 then color = "\27[2m" end
+	if diff > 125 then color = "\27[34m" end
+	printf("%s%-7.7s ", color, getNameFromPubkey(pubkey))
+	printf("%-4.4s  ", pubkey)
+	if d.allowedIps then
+		local ip = d.allowedIps[1]
+		if #d.allowedIps > 1 then ip = ip .. "+" end
+		printf("%-20.20s", ip)
+	end
+	local tx = d.transferTx or 0
+	local rx = d.transferRx or 0
+	printf("%-8.8s", bfmt(tx))
+	printf("%-8.8s", bfmt(rx))
+	local last = dhms(diff)
+	if diff == 0 then last = "never" end
+	printf("%-12.12s", last)
+	print("\27[m")
 end
 
+-- legacy, unused as takes way too much screen real estate
 function fulldisplay(name, pubkey)
 	local d = wgdump[name].peers[pubkey]
 	printf("\27[4mpeer\27[m: ")
@@ -92,13 +105,13 @@ function loadPeerNames()
 end
 
 function getNameFromPubkey(pubkey)
-	if not peerNames then return "--unset--" end
+	if not peerNames then return "???" end
 	for _,peer in ipairs(peerNames) do
 		if peer.pubkey == pubkey then
 			return peer.name
 		end
 	end
-	return "--unset--"
+	return "???"
 end
 
 function checkroot()

@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260729-4"
+version = "20260729-5"
 wgdump = {} -- output of wg-json
 peerNames = {} -- mapping pubkey-peername
 
@@ -45,7 +45,7 @@ function processInterfaces(ifaces)
 			if peer.last == 0 then
 				peer.color = "\27[2m"
 				peer.ago = "never"
-			elseif peer.diff > 125 then
+			elseif peer.diff > 180 then -- 3 minutes
 				peer.color = "\27[34m"
 			end
 			append(peers, peer)

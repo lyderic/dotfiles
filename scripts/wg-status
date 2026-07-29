@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260729-0"
+version = "20260729-1"
 wgdump = {} -- output of wg-json
 peerNames = {} -- mapping pubkey-peername
 
@@ -25,49 +25,69 @@ end
 -- peerspubkeys: peers pubkeys
 function processInterfaces(ifaces)
 	for _,ifacename in ipairs(ifaces) do
-		local peerspubkeys = {}
-		for pubkey in pairs(wgdump[ifacename].peers) do
-			append(peerspubkeys, pubkey)
+		displayHeaders(ifacename)
+		local peers = {}
+		for pubkey,d in pairs(wgdump[ifacename].peers) do
+			local peer = {}
+			peer.pubkey = pubkey
+			peer.name = getNameFromPubkey(pubkey)
+			peer.endpoint = d.endpoint
+			peer.ips = d.allowedIps
+			peer.tx = d.transferTx or 0
+			peer.rx = d.transferRx or 0
+			peer.keepalive = d.persistentKeepalive
+			peer.last = d.latestHandshake or 0
+			if peer.last then
+				peer.diff = os.difftime(os.time(), peer.last) or 0
+			end
+			peer.ago = dhms(peer.diff)
+			peer.color = "\27[32m" -- green by default
+			if peer.last == 0 then
+				peer.color = "\27[2m"
+				peer.ago = "never"
+			elseif peer.diff > 125 then
+				peer.color = "\27[34m"
+			end
+			append(peers, peer)
 		end
-		table.sort(peerspubkeys)
-		printf("\27[1;4m")
-		printf("%-7.7s ", ifacename)
-		printf("%-4.4s  ", "Id") -- id = 4 first chars of pubkey
-		printf("%-20.20s", "IP")
-		printf("%-8.8s", "TX")
-		printf("%-8.8s", "RX")
-		printf("%-12.12s", "Last")
-		print("\27[m")
-		for _,pubkey in ipairs(peerspubkeys) do
-			displayPeer(ifacename, pubkey)
+		table.sort(peers, function(a, b)
+			return a.last > b.last
+		end)
+		local never = {}
+		for _, peer in ipairs(peers) do
+			if peer.last > 0 then
+				displayPeer(peer)
+			else
+				append(never, peer.name)
+			end
 		end
+		printf("\27[2;3mInactives: %s\27[m ", concat(never, " "))
+		print()
 	end
 end
 
-function displayPeer(name, pubkey)
-	local d = wgdump[name].peers[pubkey]
-	local color = "\27[32m" -- green if active
-	local diff = 0
-	if d.latestHandshake then
-		diff = os.difftime(os.time(), d.latestHandshake)
-	end
-	-- blue if inactive
-	if diff == 0 then color = "\27[2m" end
-	if diff > 125 then color = "\27[34m" end
-	printf("%s%-7.7s ", color, getNameFromPubkey(pubkey))
-	printf("%-4.4s  ", pubkey)
-	if d.allowedIps then
-		local ip = d.allowedIps[1]
-		if #d.allowedIps > 1 then ip = ip .. "+" end
+function displayPeer(d)
+	printf("%s%-7.7s ", d.color, d.name)
+	printf("%-4.4s  ", d.pubkey)
+	if d.ips then
+		local ip = d.ips[1]
+		if #d.ips > 1 then ip = ip .. "+" end
 		printf("%-20.20s", ip)
 	end
-	local tx = d.transferTx or 0
-	local rx = d.transferRx or 0
-	printf("%-8.8s", bfmt(tx))
-	printf("%-8.8s", bfmt(rx))
-	local last = dhms(diff)
-	if diff == 0 then last = "never" end
-	printf("%-12.12s", last)
+	printf("%-8.8s", bfmt(d.tx))
+	printf("%-8.8s", bfmt(d.rx))
+	printf("%-12.12s", d.ago)
+	print("\27[m")
+end
+
+function displayHeaders(ifacename)
+	printf("\27[1;4m")
+	printf("%-7.7s ", ifacename)
+	printf("%-4.4s  ", "Id") -- id = 4 first chars of pubkey
+	printf("%-20.20s", "IP")
+	printf("%-8.8s", "TX")
+	printf("%-8.8s", "RX")
+	printf("%-12.12s", "Last")
 	print("\27[m")
 end
 

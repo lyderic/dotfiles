@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260729-2"
+version = "20260729-3"
 wgdump = {} -- output of wg-json
 peerNames = {} -- mapping pubkey-peername
 
@@ -53,17 +53,18 @@ function processInterfaces(ifaces)
 		table.sort(peers, function(a, b)
 			return a.last > b.last
 		end)
-		local never = {}
+		local inactives = {}
 		for _, peer in ipairs(peers) do
 			if peer.last > 0 then
 				displayPeer(peer)
 			else
-				append(never, peer.name)
+				append(inactives, peer.name)
 			end
 		end
-		if #never > 0 then
-		printf("\27[2;3mInactives: %s\27[m\n",
-			concat(never, " "))
+		if #inactives > 0 then
+			table.sort(inactives)
+			printf("\27[2;3mInactives: %s\27[m\n",
+				concat(never, " "))
 		end
 	end
 end

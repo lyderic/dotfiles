@@ -6,7 +6,9 @@ alias geo   := base::geolocate
 alias ip    := base::ip
 alias ansi  := base::ansi
 alias h     := _help
+{{ if lookPath "wg-status" -}}
 alias wgw   := wgwatch
+{{- end }}
 
 _help:
 	@just --list --unsorted --alias-style left --color always \

@@ -1,4 +1,4 @@
-common-version := "20260728-0"
+common-version := "20260815-0"
 
 alias up    := base::update
 alias vi    := base::vigilax
@@ -6,11 +6,12 @@ alias geo   := base::geolocate
 alias ip    := base::ip
 alias ansi  := base::ansi
 alias h     := _help
+alias wgw   := wgwatch
 
 _help:
 	@just --list --unsorted --alias-style left --color always \
 		--list-heading= --list-prefix='  ' \
-		| sed -e "s/\[alias: /\[/" | awk 'NF'
+		| sed -e "s/\[alias: /\[/" | awk 'NF' | grep -v 'base::'
 
 # used by vim's ansi plugin
 _wait:
@@ -68,6 +69,11 @@ _services:
 		echo -e "\e[m"
 	done
 	exit 0
+{{- end }}
+
+{{ if lookPath "wg-status" -}}
+wgwatch:
+	@sudo watch -c -n 5 wg-status
 {{- end }}
 
 # BAse CONfiguration files

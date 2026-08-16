@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- GLOBALS
-version = "20260816-0"
+version = "20260317-1"
 url = "https://lola.lyderic.com"
 unamecpu = eo("uname -m")
 
@@ -29,9 +29,7 @@ function main()
 		if not c then goto next end -- binary not found
 		if c.parent ~= "/usr/local/bin" then
 			printf("\27[90m%-8.8s found in %q\27[m\n", c.version, c.parent)
-			if not b.src.debforce then
-				goto next
-			end
+			goto next
 		end
 		if c.cksum == b.cksum and c.size == b.size then
 			printf("\27[90m%-8.8s up to date (sum=%s, size=%s)\27[m\n",

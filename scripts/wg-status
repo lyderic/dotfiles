@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260729-5"
+version = "20260824-1"
 wgdump = {} -- output of wg-json
 peerNames = {} -- mapping pubkey-peername
 
@@ -122,9 +122,16 @@ function fulldisplay(name, pubkey)
 end
 
 function loadPeerNames()
-	local peerPath = "/etc/wireguard/peers.csv"
-	if not abs(peerPath) then return end
-	return load(ea("yq -pcsv -olua %q", peerPath))()
+	local file = "peers.csv"
+	local path = "/dev/shm/"..file
+	if not abs(path) then
+		local url = "https://lola.lyderic.com/"..file
+		local username = "runlola"
+		local password = "tusojos"
+		x("curl -sL -u %s:%s -o %q %q",
+			username, password, path, url)
+	end
+	return load(ea("yq -pcsv -olua %q", path))()
 end
 
 function getNameFromPubkey(pubkey)

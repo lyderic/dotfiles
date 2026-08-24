@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260824-5"
+version = "20260824-6"
 wgdump = {} -- output of wg-json
 peerNames = {} -- mapping pubkey-peername
 cache = "/dev/shm/peers.lua"
@@ -125,25 +125,23 @@ end
 function fetch()
 	local path = "/etc/wireguard/peers.csv"
 	local fh = io.open(path)
-	if not fh then
-		x("curl -u runlola:tusojos -sL "
-		.."https://lola.lyderic.com/peers.csv "
-		.."| yq -p csv -olua > " .. cache)
+	local yq = "yq -pcsv -olua --lua-unquoted"
+	if not fh then -- if no peers.csv, fetch it from lola
+		local url = "https://lola.lyderic.com/peers.csv"
+		local creds = "runlola:tusojos"
+		x("curl -u %s -sL %q | %s > %q", creds, url, yq, cache)
 	else
 		fh:close()
 		print("found " .. path)
-		x("yq -pcsv -olua %q > %q", path, cache)
+		x("yq %q > %q", path, cache)
 	end
 	print("\27[3mpeers cached\27[m")
 end
 
 function loadPeerNames()
 	local fh = io.open(cache)
-	if not fh then fetch() fh = io.open(cache) end
-	local content = fh:read("a")
-	local peerNames = load(content)()
-	fh:close()
-	return peerNames
+	if not fh then fetch() else fh:close() end
+	return loadfile(cache)()
 end
 
 function getNameFromPubkey(pubkey)

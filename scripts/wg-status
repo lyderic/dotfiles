@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260824-6"
+version = "20260824-7"
 wgdump = {} -- output of wg-json
 peerNames = {} -- mapping pubkey-peername
 cache = "/dev/shm/peers.lua"
@@ -133,7 +133,7 @@ function fetch()
 	else
 		fh:close()
 		print("found " .. path)
-		x("yq %q > %q", path, cache)
+		x("%s %q > %q", yq, path, cache)
 	end
 	print("\27[3mpeers cached\27[m")
 end

@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260824-7"
+version = "20260825-1"
 wgdump = {} -- output of wg-json
 peerNames = {} -- mapping pubkey-peername
 cache = "/dev/shm/peers.lua"
@@ -26,11 +26,12 @@ end
 -- peerspubkeys: peers pubkeys
 function processInterfaces(ifaces)
 	for _,ifacename in ipairs(ifaces) do
-		displayHeaders(ifacename)
+		local lines = {}
+		append(lines, headerLine(ifacename))
 		local peers = {}
 		for pubkey,d in pairs(wgdump[ifacename].peers) do
 			local peer = {}
-			peer.pubkey = pubkey
+			peer.id = pubkey:sub(1,4)
 			peer.name = getNameFromPubkey(pubkey)
 			peer.endpoint = d.endpoint
 			peer.ips = d.allowedIps
@@ -57,69 +58,47 @@ function processInterfaces(ifaces)
 		local inactives = {}
 		for _, peer in ipairs(peers) do
 			if peer.last > 0 then
-				displayPeer(peer)
+				append(lines, peerLine(peer))
 			else
 				append(inactives, peer.name)
 			end
 		end
+		display(lines)
 		if #inactives > 0 then
 			table.sort(inactives)
 			printf("\27[2;3mInactives: %s\27[m\n",
 				concat(inactives, " "))
 		end
+		print()
 	end
 end
 
-function displayPeer(d)
-	printf("%s%-7.7s ", d.color, d.name)
-	printf("%-4.4s  ", d.pubkey)
+function display(lines)
+	local column = e("column -t", "w")
+	for _, line in ipairs(lines) do
+		column:write(line.."\n")
+	end
+	column:close()
+end
+
+function headerLine(ifacename)
+	return "\27[1;4m"..ifacename
+	.." Id IP TX RX Last \27[m"
+end
+
+function peerLine(d)
+	local line = {}
+	append(line, d.color..d.name)
+	append(line, d.id)
 	if d.ips then
 		local ip = d.ips[1]
 		if #d.ips > 1 then ip = ip .. "+" end
-		printf("%-20.20s", ip)
+		append(line, ip)
 	end
-	printf("%-8.8s", bfmt(d.tx))
-	printf("%-8.8s", bfmt(d.rx))
-	printf("%-12.12s", d.ago)
-	print("\27[m")
-end
-
-function displayHeaders(ifacename)
-	printf("\27[1;4m")
-	printf("%-7.7s ", ifacename)
-	printf("%-4.4s  ", "Id") -- id = 4 first chars of pubkey
-	printf("%-20.20s", "IP")
-	printf("%-8.8s", "TX")
-	printf("%-8.8s", "RX")
-	printf("%-12.12s", "Last")
-	print("\27[m")
-end
-
--- legacy, unused as takes way too much screen real estate
-function fulldisplay(name, pubkey)
-	local d = wgdump[name].peers[pubkey]
-	printf("\27[4mpeer\27[m: ")
-	printf("\27[1;97m%s\27[m ", getNameFromPubkey(pubkey))
-	printf("\27[3m%s\27[m\n", pubkey)
-	printf(" • Endpoint: %s ", d.endpoint)
-	local keepalive = d.persistentKeepalive or 0
-	if keepalive > 0 then
-		printf("(keepalive=%ds)", keepalive)
-	end
-	print()
-	if d.allowedIps then
-		printf(" • Allowed IPs: %s\n", concat(d.allowedIps," "))
-	end
-	if d.transferTx and d.transferRx then
-		printf(" • Transfers: TX=%s RX=%s\n",
-			bfmt(d.transferTx), bfmt(d.transferRx))
-	end
-	if d.latestHandshake then
-		last = os.date("%Y-%m-%d %H:%M:%S", d.latestHandshake)
-		diff = os.difftime(os.time(), d.latestHandshake)
-		printf(" • Latest Handshake: ")
-		printf("%s (\27[97m%s ago\27[m)\n", last, dhms(diff))
-	end
+	append(line, bfmt(d.tx))
+	append(line, bfmt(d.rx))
+	append(line, d.ago.."\27[m")
+	return concat(line, " ")
 end
 
 function fetch()

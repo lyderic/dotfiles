@@ -1,76 +1,64 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260825-1"
-wgdump = {} -- output of wg-json
+version = "20260830-0"
 peerNames = {} -- mapping pubkey-peername
 cache = "/dev/shm/peers.lua"
 
 function main()
-	checkroot() -- cannot run wg-json if not root
-	wgdump = json.decode(ea("wg-json")) -- global
 	peerNames = loadPeerNames() -- global
-	local ifaces = {} -- we do this to sort
-	if #arg == 0 then
-		for iface in pairs(wgdump) do append(ifaces, iface) end
-	else
-		for iface in pairs(wgdump) do
-			if iface == arg[1] then append(ifaces, iface) end
-		end
+	local name = arg[1] or "all"
+	local ifaces = wg(name)
+	for _,iface in ipairs(ifaces) do
+		processInterface(iface)
 	end
-	table.sort(ifaces)
-	processInterfaces(ifaces)
 end
 
--- ifacename: wireguard interface names (wgXX)
--- peerspubkeys: peers pubkeys
-function processInterfaces(ifaces)
-	for _,ifacename in ipairs(ifaces) do
-		local lines = {}
-		append(lines, headerLine(ifacename))
-		local peers = {}
-		for pubkey,d in pairs(wgdump[ifacename].peers) do
-			local peer = {}
-			peer.id = pubkey:sub(1,4)
-			peer.name = getNameFromPubkey(pubkey)
-			peer.endpoint = d.endpoint
-			peer.ips = d.allowedIps
-			peer.tx = d.transferTx or 0
-			peer.rx = d.transferRx or 0
-			peer.keepalive = d.persistentKeepalive
-			peer.last = d.latestHandshake or 0
-			if peer.last then
-				peer.diff = os.difftime(os.time(), peer.last) or 0
-			end
-			peer.ago = dhms(peer.diff)
-			peer.color = "\27[32m" -- green by default
-			if peer.last == 0 then
-				peer.color = "\27[2m"
-				peer.ago = "never"
-			elseif peer.diff > 180 then -- 3 minutes
-				peer.color = "\27[34m"
-			end
-			append(peers, peer)
+function processInterface(iface)
+	local lines = {}
+	append(lines, headerLine(iface.name))
+	local peers = {}
+	for pubkey,d in pairs(iface.peers) do
+		local peer = {}
+		peer.id = pubkey:sub(1,4)
+		peer.name = getNameFromPubkey(pubkey)
+		peer.endpoint = d.endpoint
+		peer.ips = d.allowedIps
+		peer.tx = d.tx or 0
+		peer.rx = d.rx or 0
+		peer.keepalive = d.keepalive
+		peer.last = d.last or 0
+		if peer.last then
+			peer.diff = os.difftime(os.time(), peer.last) or 0
 		end
-		table.sort(peers, function(a, b)
-			return a.last > b.last
-		end)
-		local inactives = {}
-		for _, peer in ipairs(peers) do
-			if peer.last > 0 then
-				append(lines, peerLine(peer))
-			else
-				append(inactives, peer.name)
-			end
+		peer.ago = dhms(peer.diff)
+		peer.color = "\27[32m" -- green by default
+		if peer.last == 0 then
+			peer.color = "\27[2m"
+			peer.ago = "never"
+		elseif peer.diff > 180 then -- 3 minutes
+			peer.color = "\27[34m"
 		end
-		display(lines)
-		if #inactives > 0 then
-			table.sort(inactives)
-			printf("\27[2;3mInactives: %s\27[m\n",
-				concat(inactives, " "))
-		end
-		print()
+		append(peers, peer)
 	end
+	table.sort(peers, function(a, b)
+		return a.last > b.last
+	end)
+	local inactives = {}
+	for _, peer in ipairs(peers) do
+		if peer.last > 0 then
+			append(lines, peerLine(peer))
+		else
+			append(inactives, peer.name)
+		end
+	end
+	display(lines)
+	if #inactives > 0 then
+		table.sort(inactives)
+		printf("\27[2;3mInactives: %s\27[m\n",
+			concat(inactives, " "))
+	end
+	print()
 end
 
 function display(lines)
@@ -133,12 +121,89 @@ function getNameFromPubkey(pubkey)
 	return "???"
 end
 
-function checkroot()
-	local uid = tonumber(eo("id -u"))
-	if uid ~= 0 then
-		printf("UID=%d\nyou're not root!\n", uid)
-		os.exit(22)
+------------------------------------------------------------
+-- wg parser
+------------------------------------------------------------
+
+function wg(wgname)
+	local buffer = {}
+	for outline in e("wg show "..wgname.." dump"):lines() do
+		if wgname ~= "all" then
+			line = wgname .. "\t" .. outline
+		else
+			line = outline
+		end
+		local bits = split(line)
+		local name = bits[1]
+		if #bits == 5 then
+			buffer[name] = parseInterface(bits)
+		elseif #bits == 9 then
+			local pubkey = bits[2]
+			buffer[name].peers[pubkey] = parsePeer(bits)
+		else
+			print("\27[33m!!! this line is weird:")
+			print(line.."\27[m")
+		end
 	end
+	local ifnames = {}
+	for ifname in pairs(buffer) do
+		append(ifnames, ifname)
+	end
+	table.sort(ifnames)
+	local ifaces = {}
+	for _,name in ipairs(ifnames) do
+		buffer[name].name = name
+		append(ifaces, buffer[name])
+	end
+	return ifaces
+end
+
+function parseInterface(b)
+	return {
+		key = b[2],
+		pubkey = b[3],
+		listenport = b[4],
+		fwmark = b[5],
+		peers = {},
+	}
+end
+
+function parsePeer(b)
+	return {
+		pskey = b[3],
+		endpoint = b[4],
+		allowedIps = parseIPs(b[5]),
+		last = tonumber(b[6]),
+		rx = tonumber(b[7]),
+		tx = tonumber(b[8]),
+		keepalive = tonumber(b[9]),
+	}
+end
+
+function parseIPs(b)
+	local ips = {}
+	if b == "(none)" or b == "" then
+		return ips
+	end
+	for ip in b:gmatch("[^,]+") do
+		append(ips, ip)
+	end
+	return ips
+end
+
+function split(line)
+	local fields = {}
+	local start = 1
+	while true do
+		local pos = line:find("\t", start, true)
+		if not pos then
+			append(fields, line:sub(start))
+			break
+		end
+		append(fields, line:sub(start, pos - 1))
+		start = pos + 1
+	end
+	return fields
 end
 
 main()

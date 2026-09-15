@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- GLOBALS
-version = "20260317-1"
+version = "20260915-0"
 url = "https://lola.lyderic.com"
 unamecpu = eo("uname -m")
 
@@ -86,7 +86,7 @@ function deploy(binary, b)
 		return
 	end
 	local dst="/usr/local/bin/"..binary
-	if not x("xzcat %q | sudo install -C -v -m 0755 -o root -g root /dev/stdin %q", buf, dst) then
+	if not x("xzcat %q | sudo %s -C -v -m 0755 -o root -g root /dev/stdin %q", buf, getInstall(), dst) then
 		printf("\27[31mDeployment of %q failed!\27[m\n", dst)
 	end
 	local dversion = eo("/usr/local/bin/%s %s", binary, b.src.v_info)
@@ -123,6 +123,17 @@ end
 -- or to force the reinstall of a installed binary
 function installone(binary, b)
 	deploy(binary)
+end
+
+-- Make sure we use GNU install, as Ubuntu is using uutils now
+function getInstall()
+	local fh = io.open("/usr/bin/gnuinstall")
+	if fh then
+		fh:close()
+		return "/usr/bin/gnuinstall"
+	else
+		return "install"
+	end
 end
 
 main()

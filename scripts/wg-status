@@ -1,9 +1,9 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260830-0"
+version = "20260927-0"
 peerNames = {} -- mapping pubkey-peername
-cache = "/dev/shm/peers.lua"
+csv = "/dev/shm/peers.csv"
 
 function main()
 	peerNames = loadPeerNames() -- global
@@ -32,12 +32,12 @@ function processInterface(iface)
 			peer.diff = os.difftime(os.time(), peer.last) or 0
 		end
 		peer.ago = dhms(peer.diff)
-		peer.color = "\27[32m" -- green by default
+		peer.color = "\27[00;32m" -- green by default
 		if peer.last == 0 then
-			peer.color = "\27[2m"
+			peer.color = "\27[00;02m"
 			peer.ago = "never"
 		elseif peer.diff > 180 then -- 3 minutes
-			peer.color = "\27[34m"
+			peer.color = "\27[00;34m"
 		end
 		append(peers, peer)
 	end
@@ -55,13 +55,59 @@ function processInterface(iface)
 	display(lines)
 	if #inactives > 0 then
 		table.sort(inactives)
-		printf("\27[2;3mInactives: %s\27[m\n",
+		printf("\27[02;03mInactives: %s\27[m\n",
 			concat(inactives, " "))
 	end
 	print()
 end
 
 function display(lines)
+	print(columnize(lines))
+	--print()
+	--displayColumn(lines)
+end
+
+-- 'lines' is a table of strings: "field1 field2 [...]"
+-- fields are separated by spaces
+-- 'sep' is the output separator
+function columnize(lines, sep)
+	sep = sep or "  "
+	local rows = {}
+	for _, line in ipairs(lines) do
+		local fields = {}
+		for field in line:gmatch("%S+") do
+			fields[#fields + 1] = field
+		end
+		append(rows, fields)
+	end
+	-- Find the max width needed for each column
+	local widths = {}
+	for _, row in ipairs(rows) do
+		for i, field in ipairs(row) do
+			local len = #field
+			if not widths[i] or len > widths[i] then
+				widths[i] = len
+			end
+		end
+	end
+	-- Build each output line, padding all columns except
+	-- the last
+	local out = {}
+	for _, row in ipairs(rows) do
+		local parts = {}
+		for i, field in ipairs(row) do
+			if i < #row then
+				parts[i] = field .. string.rep(" ", widths[i] - #field)
+			else
+				parts[i] = field -- last column: no trailing padding
+			end
+		end
+		append(out, concat(parts, sep))
+	end
+	return concat(out, "\n")
+end
+
+function displayColumn(lines)
 	local column = e("column -t", "w")
 	for _, line in ipairs(lines) do
 		column:write(line.."\n")
@@ -70,7 +116,7 @@ function display(lines)
 end
 
 function headerLine(ifacename)
-	return "\27[1;4m"..ifacename
+	return "\27[01;04m"..ifacename
 	.." Id IP TX RX Last \27[m"
 end
 
@@ -85,30 +131,32 @@ function peerLine(d)
 	end
 	append(line, bfmt(d.tx))
 	append(line, bfmt(d.rx))
-	append(line, d.ago.."\27[m")
+	--append(line, d.ago.."\27[m")
+	append(line, d.ago)
+	append(line, "\27[m")
 	return concat(line, " ")
 end
 
 function fetch()
+	local fh = io.open(csv)
+	if fh then fh:close() return end
 	local path = "/etc/wireguard/peers.csv"
-	local fh = io.open(path)
-	local yq = "yq -pcsv -olua --lua-unquoted"
+	fh = io.open(path)
 	if not fh then -- if no peers.csv, fetch it from lola
 		local url = "https://lola.lyderic.com/peers.csv"
 		local creds = "runlola:tusojos"
-		x("curl -u %s -sL %q | %s > %q", creds, url, yq, cache)
+		x("curl -u %s -sL %q > %q", creds, url, csv)
 	else
 		fh:close()
-		print("found " .. path)
-		x("%s %q > %q", yq, path, cache)
+		x("cp -iv %q %q", path, csv)
 	end
-	print("\27[3mpeers cached\27[m")
+	print("\27[00;03mcsv peers cached\27[m")
 end
 
 function loadPeerNames()
-	local fh = io.open(cache)
-	if not fh then fetch() else fh:close() end
-	return loadfile(cache)()
+	fetch()
+	local ftcsv = require('ftcsv')
+	return ftcsv.parse(csv)
 end
 
 function getNameFromPubkey(pubkey)

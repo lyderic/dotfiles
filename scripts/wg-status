@@ -1,7 +1,7 @@
 #!/usr/bin/env -S lua -llee
 
 -- globals
-version = "20260927-0"
+version = "20260928-0"
 peerNames = {} -- mapping pubkey-peername
 csv = "/dev/shm/peers.csv"
 
@@ -52,19 +52,13 @@ function processInterface(iface)
 			append(inactives, peer.name)
 		end
 	end
-	display(lines)
+	print(columnize(lines))
 	if #inactives > 0 then
 		table.sort(inactives)
 		printf("\27[02;03mInactives: %s\27[m\n",
 			concat(inactives, " "))
 	end
 	print()
-end
-
-function display(lines)
-	print(columnize(lines))
-	--print()
-	--displayColumn(lines)
 end
 
 -- 'lines' is a table of strings: "field1 field2 [...]"
@@ -105,14 +99,6 @@ function columnize(lines, sep)
 		append(out, concat(parts, sep))
 	end
 	return concat(out, "\n")
-end
-
-function displayColumn(lines)
-	local column = e("column -t", "w")
-	for _, line in ipairs(lines) do
-		column:write(line.."\n")
-	end
-	column:close()
 end
 
 function headerLine(ifacename)

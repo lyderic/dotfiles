@@ -1,7 +1,9 @@
-#!/usr/bin/env -S lua -llee
+#!/usr/bin/lua
+
+require("lee")
 
 -- globals
-version = "20260928-0"
+version = "20260928-1"
 peerNames = {} -- mapping pubkey-peername
 csv = "/dev/shm/peers.csv"
 

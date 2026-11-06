@@ -111,8 +111,13 @@ _bacon:
 			echo -e "${dst}: \e[32madded\e[m"
 		}
 	done
+	sudo chown -R "${USER}":  "${bacondir}" || {
+		echo -e "\e[31mfailed to change ownership of ${bacondir}!!!\e[m"
+	} && {
+		echo -e "\e[32mAll good. All of ${bacondir} belongs to ${USER}\e[m"
+	}
 	echo -e "\e[34m[bacon content]\e[m"
-	tree -a --noreport "${bacondir}"
+	tree -apu --noreport "${bacondir}"
 
 # MODULES
 # base commands and tools

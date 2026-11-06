@@ -80,44 +80,23 @@ wgwatch:
 
 # BAse CONfiguration files
 # To use:
-# in ~/justfile, create a variable 'baconfiles' e.g.:
-# baconfiles := "/path/to/file /path/to/dir /path/to/another"
-# When you run 'just _bacon' all these files will be put in
-# ~/.bacon.tgz for backup along with the justfile and .env* files
-# This is useful for systemd services in /etc/systemd/system and
+# When you run 'just _bacon', the global justfile and all these
+# files in the optional 'baconfiles' variable will be copied
+# into ~/.bacon.
+# This is useful for systemd services in /etc/systemd/system 
 # and other configuration files
 _bacon:
 	#!/bin/bash
-	[ -z "${baconfiles}" ] && exit 0
+	set -eu
 	bacondir="${HOME}/.bacon"
+	baconfiles="${HOME}/justfile ${baconfiles}"
 	# we overwrite ~/.bacon always
 	sudo rm -r "${bacondir}"
 	mkdir -pv "${bacondir}"
-	for path in ${baconfiles}; do
-		sudo [ -e "${path}" ] || {
-			echo -e "\e[31m${path}: path not found!\e[m"
-			continue
-		}
-		[[ "$path" == /* ]] || {
-			echo -e "\e[31m${path}: not an absolute path!\e[m"
-			continue
-		}
-		parent=$(dirname "${path}")
-		basename=$(basename "${path}")
-		dstdir="${bacondir}/${parent#/}"
-		mkdir -p "${dstdir}"
-		dst="${dstdir}/${basename}"
-		sudo cp -r "${path}" "${dst}" && {
-			echo -e "${dst}: \e[32madded\e[m"
-		}
-	done
-	sudo chown -R "${USER}":  "${bacondir}" || {
-		echo -e "\e[31mfailed to change ownership of ${bacondir}!!!\e[m"
-	} && {
-		echo -e "\e[32mAll good. All of ${bacondir} belongs to ${USER}\e[m"
-	}
-	echo -e "\e[34m[bacon content]\e[m"
-	tree -apu --noreport "${bacondir}"
+	sudo tar -cPf - ${baconfiles} | tar -xvf - -C "${bacondir}"
+	echo -ne "\e[32mbacon successful: "
+	find "${bacondir}" -type f | wc -l
+	echo -ne "\e[m"
 
 # MODULES
 # base commands and tools
